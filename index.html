@@ -5,24 +5,146 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PCL LIVE Admin</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;padding:15px;background:#101522;color:white;font-family:Arial}
+:root{
+ --red:#e10600;
+ --bg:#0b0d12;
+ --card:#171b24;
+ --card2:#202633;
+ --white:#fff;
+ --muted:#aab2c0;
+}
+body{
+ margin:0;padding:14px;
+ background:var(--bg);
+ color:var(--white);
+ font-family:Arial,sans-serif;
+}
 .container{max-width:650px;margin:auto}
-h1{text-align:center;color:#ff3030}
-.card{background:#202a3b;padding:16px;border-radius:12px;margin:14px 0}
-input,select,button{width:100%;padding:12px;margin:6px 0;border:0;border-radius:7px;font-size:16px}
-button{background:#e10600;color:white;font-weight:bold}
+h1{
+ text-align:center;
+ color:#fff;
+ font-size:25px;
+ margin:15px 0 22px;
+ letter-spacing:1px;
+}
+h3{
+ font-size:20px;
+ margin:5px 0 18px;
+}
+.card{
+ background:var(--card);
+ border:1px solid #2b303b;
+ padding:18px;
+ border-radius:18px;
+ margin:15px 0;
+ box-shadow:0 7px 22px #0005;
+}
+input,select{
+ width:100%;
+ padding:15px;
+ margin:7px 0;
+ border:1px solid #343b49;
+ border-radius:11px;
+ background:#f4f5f7;
+ color:#171717;
+ font-size:16px;
+ min-height:54px;
+}
+button{
+ width:100%;
+ padding:15px 10px;
+ margin:6px 0;
+ border:0;
+ border-radius:11px;
+ background:var(--red);
+ color:white;
+ font-size:17px;
+ font-weight:800;
+ cursor:pointer;
+ min-height:55px;
+}
+button:active{transform:scale(.97)}
 button:disabled{opacity:.5}
-.secondary{background:#475569}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
-.grid button{margin:0}
-.score{font-size:36px;text-align:center;font-weight:bold}
+.secondary{background:#303a4b}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:9px;
+}
+.grid button{
+ margin:0;
+ min-height:66px;
+ font-size:22px;
+}
+.score{
+ font-size:54px;
+ text-align:center;
+ font-weight:900;
+ letter-spacing:1px;
+ margin:12px 0 3px;
+ color:#fff;
+}
 .center{text-align:center}
-.hidden{display:none}
-small{color:#cbd5e1}
-#message{white-space:pre-wrap;color:#ffd166}
+#currentMatchTitle{
+ color:#ff514b;
+ text-align:center;
+}
+#overs{
+ font-size:18px;
+ color:#d5d9e1;
+}
+#inningsInfo{
+ color:#b9c1ce;
+ font-size:15px;
+}
+small{color:var(--muted)}
+.hidden{display:none!important}
+#message,#saveMsg,#playerMsg,#loginMsg{
+ white-space:pre-wrap;
+ color:#ffd166;
+ font-size:14px;
+}
+#scoring .card:first-child{
+ background:linear-gradient(145deg,#252b39,#151922);
+ border:1px solid #48404a;
+}
+#scoring .card:first-child .score{
+ color:#fff;
+}
+#scoring .card:nth-child(3) .grid button{
+ background:#252b38;
+ border:1px solid #414958;
+}
+#scoring .card:nth-child(3) .grid button:nth-child(5),
+#scoring .card:nth-child(3) .grid button:nth-child(6){
+ background:var(--red);
+ border-color:var(--red);
+}
+#scoring .card:nth-child(4) .grid button{
+ background:#30394a;
+ font-size:15px;
+}
+#scoring .card:nth-child(5) button{
+ background:#a90000;
+}
+#matchList p{
+ background:#252b38;
+ padding:12px;
+ border-radius:9px;
+ color:#fff;
+}
+@media(max-width:380px){
+ body{padding:9px}
+ .card{padding:14px}
+ .score{font-size:46px}
+ .grid{gap:6px}
+ .grid button{min-height:58px}
+}
 </style>
+
 </head>
 <body>
 <div class="container">
