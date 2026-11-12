@@ -3,19 +3,25 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PCL LIVE Admin</title>
 <style>
-body{margin:0;background:#101522;color:white;font-family:Arial,sans-serif;padding:18px}
-.container{max-width:600px;margin:auto}
-h1{color:#ff3030;text-align:center}
-.card{background:#202a3b;padding:18px;border-radius:12px;margin:15px 0}
-input,select,button{width:100%;padding:13px;margin:8px 0;box-sizing:border-box;border:0;border-radius:7px;font-size:16px}
+*{box-sizing:border-box}
+body{margin:0;padding:15px;background:#101522;color:white;font-family:Arial}
+.container{max-width:650px;margin:auto}
+h1{text-align:center;color:#ff3030}
+.card{background:#202a3b;padding:16px;border-radius:12px;margin:14px 0}
+input,select,button{width:100%;padding:12px;margin:6px 0;border:0;border-radius:7px;font-size:16px}
 button{background:#e10600;color:white;font-weight:bold}
+button:disabled{opacity:.5}
 .secondary{background:#475569}
-.match{background:#303c50;padding:12px;border-radius:8px;margin:10px 0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.grid button{margin:0}
+.score{font-size:36px;text-align:center;font-weight:bold}
+.center{text-align:center}
 .hidden{display:none}
 small{color:#cbd5e1}
+#message{white-space:pre-wrap;color:#ffd166}
 </style>
 </head>
 <body>
@@ -32,53 +38,116 @@ small{color:#cbd5e1}
 
 <div id="dashboard" class="hidden">
 <div class="card">
-<h2>Welcome Admin!</h2>
+Welcome Admin!
 <button class="secondary" id="logoutBtn">LOGOUT</button>
 </div>
 
 <div class="card">
 <h3>➕ नया मैच बनाएँ</h3>
-
-<input id="matchName" placeholder="Match Name (जैसे PCL Final)">
+<input id="matchName" placeholder="Match Name">
 <select id="team1"></select>
 <select id="team2"></select>
 <input id="matchDate" type="date">
-
-<h3>Toss</h3>
-<select id="tossWinner">
-<option value="">Toss Winner चुनें</option>
-</select>
+<select id="tossWinner"><option value="">Toss Winner</option></select>
 <select id="decision">
 <option value="">पहले क्या करेंगे?</option>
 <option value="Batting">Batting</option>
 <option value="Bowling">Bowling</option>
 </select>
-
 <button id="saveMatch">SAVE MATCH</button>
 <p id="saveMsg"></p>
 </div>
 
 <div class="card">
-<h3>📋 मैच की सूची</h3>
-<div id="matchList">मैच लोड हो रहे हैं...</div>
+<h3>📋 मैच चुनें</h3>
+<select id="matchSelect">
+<option value="">मैच चुनें</option>
+</select>
+<button id="loadMatch" class="secondary">मैच खोलें</button>
+<div id="matchList"></div>
+</div>
+
+<div id="scoring" class="hidden">
+<div class="card">
+<h3 id="currentMatchTitle">Live Match</h3>
+<div class="score" id="score">0/0</div>
+<div class="center" id="overs">0.0 Overs</div>
+<p class="center" id="inningsInfo">पहली पारी</p>
+</div>
+
+<div class="card">
+<h3>खिलाड़ियों के नाम</h3>
+<input id="striker" placeholder="Striker / बल्लेबाज">
+<input id="nonStriker" placeholder="Non-striker / दूसरा बल्लेबाज">
+<input id="bowler" placeholder="Bowler / गेंदबाज">
+<input id="totalOvers" type="number" min="1" max="50" value="10" placeholder="मैच के ओवर">
+<button id="savePlayers" class="secondary">खिलाड़ियों की जानकारी सेव करें</button>
+<p id="playerMsg"></p>
+</div>
+
+<div class="card">
+<h3>रन जोड़ें</h3>
+<div class="grid">
+<button data-run="0">0</button>
+<button data-run="1">1</button>
+<button data-run="2">2</button>
+<button data-run="3">3</button>
+<button data-run="4">4</button>
+<button data-run="6">6</button>
+</div>
+</div>
+
+<div class="card">
+<h3>Extras</h3>
+<div class="grid">
+<button id="wide">Wide +1</button>
+<button id="noball">No Ball +1</button>
+<button id="bye">Bye</button>
+<button id="legbye">Leg Bye</button>
+</div>
+<small>Bye और Leg Bye में कुल रन पूछे जाएँगे।</small>
+</div>
+
+<div class="card">
+<h3>Wicket</h3>
+<select id="wicketType">
+<option value="Bowled">Bowled</option>
+<option value="Caught">Caught</option>
+<option value="LBW">LBW</option>
+<option value="Run Out">Run Out</option>
+<option value="Stumped">Stumped</option>
+<option value="Hit Wicket">Hit Wicket</option>
+</select>
+<input id="nextBatter" placeholder="नए बल्लेबाज का नाम">
+<button id="wicket">WICKET</button>
+</div>
+
+<div class="card">
+<h3>पारी नियंत्रण</h3>
+<button id="endInnings" class="secondary">पहली पारी समाप्त करें</button>
+<button id="undo" class="secondary">↩ पिछली गेंद Undo</button>
+<p id="message"></p>
+</div>
+
+<div class="card">
+<h3>वर्तमान पारी का विवरण</h3>
+<p id="battingDetails"></p>
+<p id="bowlingDetails"></p>
+</div>
 </div>
 </div>
 </div>
 
 <script type="module">
-import {initializeApp} from
-"https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-
+import {initializeApp} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
 import {
-getAuth, signInWithEmailAndPassword, signOut,
-onAuthStateChanged
+getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-
 import {
-getDatabase, ref, push, set, onValue
+getDatabase,ref,push,set,onValue,update
 } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
 
-// अपनी Firebase Config यहाँ डालें
+// यहाँ अपनी पुरानी Firebase Config ज्यों की त्यों रखें
 const firebaseConfig = {
 apiKey: "AIzaSyBSDKTq4r-z7XbHpkCkzwc5bkD-IvFokEY",
 authDomain: "pcl-live-b6221.firebaseapp.com",
@@ -89,155 +158,252 @@ messagingSenderId: "569868359276",
 appId: "1:569868359276:web:4cea96b5d8447871352a49"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getDatabase(app);
 
-const teams = [
-"Patjori Warriors",
-"Mithapur Kings",
-"Star Eleven",
-"Royal Tigers",
-"Super Strikers",
-"Rising Lions",
-"Thunder Boys",
-"Dynamic XI",
-"Power Hitters",
-"Master Blasters",
-"Young Champs",
-"Fire Fighters"
+const teams=[
+"Patjori Warriors","Mithapur Kings","Star Eleven",
+"Royal Tigers","Super Strikers","Rising Lions",
+"Thunder Boys","Dynamic XI","Power Hitters",
+"Master Blasters","Young Champs","Fire Fighters"
 ];
 
-const team1 = document.getElementById("team1");
-const team2 = document.getElementById("team2");
-const tossWinner = document.getElementById("tossWinner");
+const $=id=>document.getElementById(id);
+const team1=$("team1"),team2=$("team2"),toss=$("tossWinner");
 
-teams.forEach(team => {
-team1.add(new Option(team,team));
-team2.add(new Option(team,team));
-tossWinner.add(new Option(team,team));
+teams.forEach(t=>{
+team1.add(new Option(t,t));
+team2.add(new Option(t,t));
+toss.add(new Option(t,t));
 });
 
-const loginBox = document.getElementById("loginBox");
-const dashboard = document.getElementById("dashboard");
-const loginMsg = document.getElementById("loginMsg");
+let selectedId=null;
+let selectedMatch=null;
+let state=null;
+let undoStack=[];
 
-document.getElementById("loginBtn").onclick = async () => {
-loginMsg.textContent = "Login हो रहा है...";
-try {
-await signInWithEmailAndPassword(
-auth,
-document.getElementById("email").value,
-document.getElementById("password").value
-);
-} catch(error) {
-loginMsg.textContent = "Login Error: " + error.message;
-}
+function freshState(match){
+return {
+runs:0,wickets:0,balls:0,innings:1,
+battingTeam:match.battingFirst,
+bowlingTeam:match.battingFirst===match.team1?match.team2:match.team1,
+striker:"",nonStriker:"",bowler:"",
+totalOvers:10,extras:0,history:[],
+status:"Live"
 };
-
-onAuthStateChanged(auth, user => {
-if(user) {
-loginBox.classList.add("hidden");
-dashboard.classList.remove("hidden");
-loadMatches();
-} else {
-dashboard.classList.add("hidden");
-loginBox.classList.remove("hidden");
 }
-});
 
-document.getElementById("logoutBtn").onclick = () => signOut(auth);
+function oversText(balls){
+return Math.floor(balls/6)+"."+(balls%6);
+}
 
-document.getElementById("saveMatch").onclick = async () => {
-const user = auth.currentUser;
-if(!user) return;
+function showScore(){
+if(!state)return;
+$("score").textContent=state.runs+"/"+state.wickets;
+$("overs").textContent=oversText(state.balls)+" Overs";
+$("inningsInfo").textContent=
+"पारी "+state.innings+" | "+state.battingTeam+" बल्लेबाजी";
+$("battingDetails").textContent=
+"Striker: "+state.striker+" | Non-striker: "+state.nonStriker;
+$("bowlingDetails").textContent="Bowler: "+state.bowler;
+$("striker").value=state.striker;
+$("nonStriker").value=state.nonStriker;
+$("bowler").value=state.bowler;
+$("totalOvers").value=state.totalOvers;
+}
 
-const name = document.getElementById("matchName").value.trim();
-const a = team1.value;
-const b = team2.value;
-const date = document.getElementById("matchDate").value;
-const toss = tossWinner.value;
-const decision = document.getElementById("decision").value;
-const msg = document.getElementById("saveMsg");
+function saveLive(){
+if(!selectedId||!state)return Promise.reject("मैच नहीं चुना गया");
+const data={
+...state,
+matchName:selectedMatch.matchName,
+team1:selectedMatch.team1,
+team2:selectedMatch.team2,
+updatedAt:Date.now()
+};
+return Promise.all([
+set(ref(db,"matches/"+selectedId+"/live"),data),
+set(ref(db,"publicScore"),{matchId:selectedId,...data})
+]);
+}
 
-if(!name || !date || !toss || !decision) {
-msg.textContent = "सभी जानकारी भरें।";
+function addDelivery({runs=0,extra=0,kind="Run",legal=true,wicket=false,wicketType=""}={}){
+if(!state||state.status!=="Live")return;
+if(state.wickets>=10){$("message").textContent="सभी विकेट गिर चुके हैं।";return;}
+if(state.balls>=state.totalOvers*6){
+$("message").textContent="ओवर पूरे हो गए।";return;
+}
+if(!state.striker||!state.nonStriker||!state.bowler){
+$("message").textContent="पहले दोनों बल्लेबाज और गेंदबाज के नाम भरकर सेव करें।";
 return;
 }
 
-if(a === b) {
-msg.textContent = "दो अलग-अलग टीमें चुनें।";
-return;
-}
+undoStack.push(JSON.stringify(state));
+state.history=state.history||[];
 
-msg.textContent = "मैच सेव हो रहा है...";
-
-const battingFirst = decision === "Batting" ? toss :
-(toss === a ? b : a);
-
-const match = {
-matchName: name,
-team1: a,
-team2: b,
-matchDate: date,
-tossWinner: toss,
-tossDecision: decision,
-battingFirst: battingFirst,
-status: "Upcoming",
-createdAt: Date.now(),
-createdBy: user.uid
+const delivery={
+runs,extra,kind,legal,wicket,wicketType,
+striker:state.striker,bowler:state.bowler,
+time:Date.now()
 };
 
-try {
-const newMatch = push(ref(db,"matches"));
-await set(newMatch,match);
-msg.textContent = "मैच सफलतापूर्वक सेव हो गया! ✅";
+state.runs+=runs+extra;
+state.extras+=extra;
+if(legal)state.balls++;
+if(wicket)state.wickets++;
 
-document.getElementById("matchName").value = "";
-document.getElementById("matchDate").value = "";
-tossWinner.value = "";
-document.getElementById("decision").value = "";
-} catch(error) {
-msg.textContent = "सेव नहीं हुआ: " + error.message;
+state.history.push(delivery);
+
+if(runs%2===1 && !wicket){
+[state.striker,state.nonStriker]=[state.nonStriker,state.striker];
 }
+if(legal && state.balls%6===0){
+[state.striker,state.nonStriker]=[state.nonStriker,state.striker];
+}
+
+if(wicket){
+const next=$("nextBatter").value.trim();
+if(next){
+state.striker=next;
+$("nextBatter").value="";
+}else{
+state.striker="";
+}
+}
+
+showScore();
+$("message").textContent="गेंद सेव हो रही है...";
+saveLive().then(()=>{
+$("message").textContent="स्कोर Firebase में सेव हो गया ✅";
+}).catch(e=>{
+$("message").textContent="Save Error: "+e.message;
+});
+}
+
+$("loginBtn").onclick=async()=>{
+$("loginMsg").textContent="Login हो रहा है...";
+try{
+await signInWithEmailAndPassword(auth,$("email").value,$("password").value);
+}catch(e){$("loginMsg").textContent="Login Error: "+e.message;}
 };
 
-function loadMatches() {
-onValue(ref(db,"matches"), snapshot => {
-const list = document.getElementById("matchList");
-list.innerHTML = "";
+$("logoutBtn").onclick=()=>signOut(auth);
 
-if(!snapshot.exists()) {
-list.textContent = "अभी कोई मैच नहीं बनाया गया है।";
-return;
+onAuthStateChanged(auth,user=>{
+$("loginBox").classList.toggle("hidden",!!user);
+$("dashboard").classList.toggle("hidden",!user);
+if(user)loadMatches();
+});
+
+$("saveMatch").onclick=async()=>{
+const name=$("matchName").value.trim();
+const a=team1.value,b=team2.value,date=$("matchDate").value;
+const tw=toss.value,decision=$("decision").value;
+if(!name||!date||!tw||!decision){$("saveMsg").textContent="सभी जानकारी भरें।";return;}
+if(a===b){$("saveMsg").textContent="दो अलग-अलग टीमें चुनें।";return;}
+const battingFirst=decision==="Batting"?tw:(tw===a?b:a);
+try{
+const r=push(ref(db,"matches"));
+await set(r,{
+matchName:name,team1:a,team2:b,matchDate:date,
+tossWinner:tw,tossDecision:decision,battingFirst,
+status:"Upcoming",createdAt:Date.now(),
+createdBy:auth.currentUser.uid
+});
+$("saveMsg").textContent="मैच सेव हो गया ✅";
+$("matchName").value="";
+}catch(e){$("saveMsg").textContent=e.message;}
+};
+
+function loadMatches(){
+onValue(ref(db,"matches"),snap=>{
+const select=$("matchSelect");
+select.innerHTML='<option value="">मैच चुनें</option>';
+$("matchList").innerHTML="";
+if(!snap.exists())return;
+snap.forEach(c=>{
+const m=c.val();
+select.add(new Option(m.matchName+" - "+m.team1+" VS "+m.team2,c.key));
+const p=document.createElement("p");
+p.textContent=m.matchName+" | "+m.team1+" VS "+m.team2;
+$("matchList").appendChild(p);
+});
+});
 }
 
-snapshot.forEach(child => {
-const m = child.val();
-const div = document.createElement("div");
-div.className = "match";
+$("loadMatch").onclick=async()=>{
+const id=$("matchSelect").value;
+if(!id){$("message").textContent="पहले मैच चुनें।";return;}
+const snap=await import("https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js")
+.then(mod=>mod.get(ref(db,"matches/"+id)));
+if(!snap.exists())return;
+selectedId=id;
+selectedMatch=snap.val();
+state=selectedMatch.live||freshState(selectedMatch);
+undoStack=[];
+$("currentMatchTitle").textContent=selectedMatch.matchName;
+$("scoring").classList.remove("hidden");
+showScore();
+$("message").textContent="मैच खुल गया। खिलाड़ी भरकर सेव करें।";
+};
 
-const heading = document.createElement("b");
-heading.textContent = m.matchName || "Match";
-
-const details = document.createElement("p");
-details.textContent =
-(m.team1 || "") + " VS " + (m.team2 || "") +
-" | " + (m.matchDate || "");
-
-const status = document.createElement("small");
-status.textContent =
-"Toss: " + (m.tossWinner || "") +
-" | पहले Batting: " + (m.battingFirst || "");
-
-div.append(heading,details,status);
-list.appendChild(div);
-});
-}, error => {
-document.getElementById("matchList").textContent =
-"डेटा लोड नहीं हुआ: " + error.message;
-});
+$("savePlayers").onclick=()=>{
+if(!state)return;
+state.striker=$("striker").value.trim();
+state.nonStriker=$("nonStriker").value.trim();
+state.bowler=$("bowler").value.trim();
+state.totalOvers=Number($("totalOvers").value)||10;
+if(!state.striker||!state.nonStriker||!state.bowler){
+$("playerMsg").textContent="तीनों नाम भरें।";return;
 }
+if(state.striker===state.nonStriker){
+$("playerMsg").textContent="दो अलग बल्लेबाजों के नाम भरें।";return;
+}
+showScore();
+saveLive().then(()=>$("playerMsg").textContent="खिलाड़ी सेव हो गए ✅")
+.catch(e=>$("playerMsg").textContent=e.message);
+};
+
+document.querySelectorAll("[data-run]").forEach(btn=>{
+btn.onclick=()=>addDelivery({runs:Number(btn.dataset.run)});
+});
+
+$("wide").onclick=()=>addDelivery({extra:1,kind:"Wide",legal:false});
+$("noball").onclick=()=>addDelivery({extra:1,kind:"No Ball",legal:false});
+
+$("bye").onclick=()=>{
+const n=Number(prompt("कुल Bye रन कितने?"));
+if(Number.isInteger(n)&&n>=1&&n<=6)
+addDelivery({runs:0,extra:n,kind:"Bye",legal:true});
+};
+$("legbye").onclick=()=>{
+const n=Number(prompt("कुल Leg Bye रन कितने?"));
+if(Number.isInteger(n)&&n>=1&&n<=6)
+addDelivery({runs:0,extra:n,kind:"Leg Bye",legal:true});
+};
+
+$("wicket").onclick=()=>{
+const type=$("wicketType").value;
+if(!confirm(type+" विकेट दर्ज करें?"))return;
+addDelivery({wicket:true,wicketType:type,kind:"Wicket"});
+};
+
+$("undo").onclick=async()=>{
+if(!undoStack.length){$("message").textContent="Undo के लिए पिछली गेंद उपलब्ध नहीं है।";return;}
+state=JSON.parse(undoStack.pop());
+showScore();
+try{await saveLive();$("message").textContent="पिछली गेंद हटाई गई।";}
+catch(e){$("message").textContent="Undo Error: "+e.message;}
+};
+
+$("endInnings").onclick=async()=>{
+if(!state)return;
+if(!confirm("क्या यह पारी समाप्त करनी है?"))return;
+state.status="Innings Ended";
+await saveLive();
+$("message").textContent="पारी समाप्त हुई। दूसरी पारी का सेटअप अगले अपडेट में जोड़ेंगे।";
+};
 </script>
 </body>
 </html>
