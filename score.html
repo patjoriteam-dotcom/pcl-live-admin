@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -911,6 +912,7 @@ onValue(ref(db,"pointsTable"),snap=>{
  }
 
  const data=snap.val();
+
  const teams=Array.isArray(data.teams)
   ?data.teams
   :Object.values(data.teams||{});
@@ -933,10 +935,10 @@ onValue(ref(db,"pointsTable"),snap=>{
 
   return `
    <tr>
-    <td>${i+1}. ${safe(t.name||t.team||"Team")}</td>
-    <td>${num(t.matches??t.played)}</td>
-    <td>${num(t.wins??t.won)}</td>
-    <td>${num(t.losses??t.lost)}</td>
+    <td>${i+1}. ${safe(t.team||t.name||"Team")}</td>
+    <td>${num(t.match??t.matches??t.played)}</td>
+    <td>${num(t.win??t.wins??t.won)}</td>
+    <td>${num(t.loss??t.losses??t.lost)}</td>
     <td><b>${num(t.points)}</b></td>
     <td class="${cls}">${nrrText}</td>
    </tr>`;
@@ -946,6 +948,7 @@ onValue(ref(db,"pointsTable"),snap=>{
   data.updatedAt
    ?"Last Updated: "+new Date(data.updatedAt).toLocaleString("en-IN")
    :"";
+
 },error=>{
  console.error("Points Table Error:",error);
  el("publicPointsTable").innerHTML=
@@ -955,4 +958,3 @@ onValue(ref(db,"pointsTable"),snap=>{
 
 </body>
 </html>
-
