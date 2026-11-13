@@ -122,13 +122,25 @@ function render(data){
  el("message").textContent=data.status||"लाइव स्कोर";
  el("lastWicket").textContent=data.lastWicket||"—";
 
- const bats=data.batStats||{};
- let batRows=Object.entries(bats);
- if(data.striker)batRows.sort((a,b)=>a[0]===data.striker?-1:b[0]===data.striker?1:0);
- el("batTable").innerHTML=batRows.length?batRows.map(([name,s])=>{
+const bats=data.batStats||{};
+
+// पुराने बल्लेबाजों का क्रम बरकरार रखें
+const names=Object.keys(bats);
+
+// नए बल्लेबाज को सूची के आखिर में जोड़ें
+[data.nonStriker,data.striker].forEach(name=>{
+ if(name && !names.includes(name)) names.push(name);
+});
+
+const batRows=names.map(name=>[
+ name,
+ bats[name]||{runs:0,balls:0,fours:0,sixes:0}
+]);
+
+el("batTable").innerHTML=batRows.length?batRows.map(([name,s])=>{
  const sr=s.balls?(s.runs*100/s.balls).toFixed(1):"0.0";
  return `<tr><td>${safe(name)} ${name===data.striker?"*":""}</td><td class="right">${s.runs||0}</td><td class="right">${s.balls||0}</td><td class="right">${s.fours||0}</td><td class="right">${s.sixes||0}</td><td class="right">${sr}</td></tr>`;
- }).join(""):'<tr><td colspan="6">बल्लेबाज़ी आँकड़े उपलब्ध नहीं</td></tr>';
+}).join(""):'<tr><td colspan="6">बल्लेबाज़ी आँकड़े उपलब्ध नहीं</td></tr>';
 
  const bowls=data.bowlStats||{};
  const bowlRows=Object.entries(bowls);
