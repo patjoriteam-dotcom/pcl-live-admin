@@ -40,380 +40,168 @@ button{font-family:inherit}
  color:var(--gold);
  font-weight:800;
 }
-.topbar h1{
- margin:5px 0 2px;
- font-size:25px;
- font-weight:900;
-}
-.topbar p{
- margin:0;
- color:#b9c5d5;
- font-size:11px;
- letter-spacing:1px;
-}
-.container{
- max-width:760px;
- margin:auto;
- padding:12px;
-}
+.topbar h1{margin:5px 0 2px;font-size:25px;font-weight:900}
+.topbar p{margin:0;color:#b9c5d5;font-size:11px;letter-spacing:1px}
+.container{max-width:760px;margin:auto;padding:12px}
 .hero{
  background:linear-gradient(145deg,#071426,#142d4d);
- color:white;
- border-radius:17px;
- padding:17px;
+ color:white;border-radius:17px;padding:17px;
  box-shadow:0 8px 22px #07142625;
- position:relative;
- overflow:hidden;
+ position:relative;overflow:hidden;
 }
 .hero:after{
- content:"🏏";
- position:absolute;
- right:8px;
- top:35px;
- font-size:85px;
- opacity:.07;
+ content:"🏏";position:absolute;right:8px;top:35px;
+ font-size:85px;opacity:.07;
 }
 .hero-top{
- display:flex;
- justify-content:space-between;
- align-items:center;
- gap:8px;
- position:relative;
- z-index:1;
+ display:flex;justify-content:space-between;
+ align-items:center;gap:8px;position:relative;z-index:1;
 }
-.live{
- color:#ff6875;
- font-size:11px;
- font-weight:900;
- letter-spacing:1px;
-}
+.live{color:#ff6875;font-size:11px;font-weight:900;letter-spacing:1px}
 .live-dot{
- display:inline-block;
- width:8px;
- height:8px;
- border-radius:50%;
- background:#ff5364;
- margin-right:5px;
+ display:inline-block;width:8px;height:8px;border-radius:50%;
+ background:#ff5364;margin-right:5px;
  box-shadow:0 0 0 4px #ff536422;
 }
 .status-pill{
- border:1px solid #ffffff30;
- color:#d9e3ef;
- padding:5px 9px;
- border-radius:20px;
- font-size:10px;
+ border:1px solid #ffffff30;color:#d9e3ef;
+ padding:5px 9px;border-radius:20px;font-size:10px;
 }
-.match-title{
- font-size:17px;
- font-weight:800;
- margin:17px 0 3px;
- position:relative;
- z-index:1;
-}
-.match-sub{
- color:#aebed1;
- font-size:11px;
-}
-.score-area{
- text-align:center;
- padding:16px 0 9px;
- position:relative;
- z-index:1;
-}
-.score{
- font-size:48px;
- line-height:1.2;
- font-weight:900;
- letter-spacing:1px;
- color:white;
-}
-.overs{
- color:var(--gold2);
- font-size:13px;
- margin-top:4px;
- font-weight:700;
-}
-.innings-label{
- color:#bdc9d8;
- font-size:12px;
- margin-top:6px;
-}
-.team-line{
- display:flex;
- justify-content:center;
- gap:8px;
- color:#c6d2e1;
- font-size:11px;
- margin-top:10px;
-}
+.match-title{font-size:17px;font-weight:800;margin:17px 0 3px;position:relative;z-index:1}
+.match-sub{color:#aebed1;font-size:11px}
+.score-area{text-align:center;padding:16px 0 9px;position:relative;z-index:1}
+.score{font-size:48px;line-height:1.2;font-weight:900;letter-spacing:1px;color:white}
+.overs{color:var(--gold2);font-size:13px;margin-top:4px;font-weight:700}
+.innings-label{color:#bdc9d8;font-size:12px;margin-top:6px}
+.team-line{display:flex;justify-content:center;gap:8px;color:#c6d2e1;font-size:11px;margin-top:10px}
 .target{
- margin-top:13px;
- background:#ffffff12;
- border:1px solid #ffffff22;
- border-radius:12px;
- padding:12px;
- position:relative;
- z-index:1;
+ margin-top:13px;background:#ffffff12;border:1px solid #ffffff22;
+ border-radius:12px;padding:12px;position:relative;z-index:1;
 }
-.target-title{
- color:var(--gold2);
- font-size:12px;
- font-weight:800;
-}
-.need{
- font-size:23px;
- font-weight:900;
- margin:4px 0;
- color:white;
-}
-.target-detail{
- font-size:12px;
- color:#d2dceb;
-}
-.stats{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:8px;
- margin-top:10px;
-}
-.stat{
- background:#ffffff12;
- border:1px solid #ffffff18;
- border-radius:9px;
- padding:9px;
- text-align:center;
-}
-.stat b{
- display:block;
- font-size:19px;
- color:var(--gold2);
-}
-.stat span{
- color:#c1cddd;
- font-size:10px;
-}
+.target-title{color:var(--gold2);font-size:12px;font-weight:800}
+.need{font-size:23px;font-weight:900;margin:4px 0;color:white}
+.target-detail{font-size:12px;color:#d2dceb}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.stat{background:#ffffff12;border:1px solid #ffffff18;border-radius:9px;padding:9px;text-align:center}
+.stat b{display:block;font-size:19px;color:var(--gold2)}
+.stat span{color:#c1cddd;font-size:10px}
 .result{
- margin-top:13px;
- background:#123c32;
- border:1px solid #2c8c70;
- border-radius:11px;
- color:#aaffdc;
- padding:13px;
- font-weight:800;
- font-size:14px;
- text-align:center;
- line-height:1.8;
- position:relative;
- z-index:1;
+ margin-top:13px;background:#123c32;border:1px solid #2c8c70;
+ border-radius:11px;color:#aaffdc;padding:13px;font-weight:800;
+ font-size:14px;text-align:center;line-height:1.8;position:relative;z-index:1;
 }
 .section-card{
- background:white;
- border-radius:14px;
- padding:14px;
- margin-top:12px;
+ background:white;border-radius:14px;padding:14px;margin-top:12px;
  box-shadow:0 3px 12px #10233e0c;
 }
 .section-title{
- display:flex;
- align-items:center;
- gap:8px;
- font-size:15px;
- font-weight:900;
- margin:0 0 12px;
- color:#14243b;
+ display:flex;align-items:center;gap:8px;font-size:15px;
+ font-weight:900;margin:0 0 12px;color:#14243b;
 }
-.section-title .line{
- height:3px;
- width:25px;
- border-radius:5px;
- background:var(--gold);
-}
+.section-title .line{height:3px;width:25px;border-radius:5px;background:var(--gold)}
 .innings-summary{
- background:#f2f5f9;
- border:1px solid #e5eaf0;
- border-radius:11px;
- padding:12px;
- margin-top:8px;
+ background:#f2f5f9;border:1px solid #e5eaf0;
+ border-radius:11px;padding:12px;margin-top:8px;
 }
-.summary-top{
- display:flex;
- justify-content:space-between;
- gap:8px;
- align-items:center;
- font-size:12px;
- font-weight:800;
-}
-.summary-score{
- font-size:24px;
- font-weight:900;
- margin-top:6px;
- color:#10233e;
-}
-.summary-overs{
- font-size:11px;
- color:#64748b;
-}
-.team-tabs{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:9px;
-}
+.summary-top{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:12px;font-weight:800}
+.summary-score{font-size:24px;font-weight:900;margin-top:6px;color:#10233e}
+.summary-overs{font-size:11px;color:#64748b}
+.team-tabs{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .team-btn{
- border:1px solid #dce3ec;
- background:#f5f7fa;
- color:#24354c;
- border-radius:11px;
- padding:12px 7px;
- font-weight:900;
- font-size:12px;
- cursor:pointer;
+ border:1px solid #dce3ec;background:#f5f7fa;color:#24354c;
+ border-radius:11px;padding:12px 7px;font-weight:900;font-size:12px;cursor:pointer;
 }
-.team-btn.active{
- background:var(--navy);
- border-color:var(--gold);
- color:var(--gold2);
- box-shadow:0 4px 12px #07142620;
-}
-.team-btn small{
- display:block;
- font-size:11px;
- font-weight:500;
- margin-top:5px;
- color:inherit;
-}
+.team-btn.active{background:var(--navy);border-color:var(--gold);color:var(--gold2);box-shadow:0 4px 12px #07142620}
+.team-btn small{display:block;font-size:11px;font-weight:500;margin-top:5px;color:inherit}
 .team-btn:disabled{opacity:.45;cursor:not-allowed}
-.selected-info{
- font-size:12px;
- color:#64748b;
- margin-top:10px;
-}
+.selected-info{font-size:12px;color:#64748b;margin-top:10px}
 .table-wrap{overflow-x:auto}
-table{
- width:100%;
- border-collapse:collapse;
- font-size:12px;
- min-width:330px;
-}
-th,td{
- padding:10px 6px;
- border-bottom:1px solid #edf0f4;
- text-align:left;
- white-space:nowrap;
-}
-th{
- color:#748196;
- font-size:10px;
- font-weight:800;
- background:#f7f9fb;
-}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:330px}
+th,td{padding:10px 6px;border-bottom:1px solid #edf0f4;text-align:left;white-space:nowrap}
+th{color:#748196;font-size:10px;font-weight:800;background:#f7f9fb}
 .right{text-align:right}
 .player-name{font-weight:800;color:#17283f}
-.player-detail{
- display:block;
- color:#77869a;
- font-size:10px;
- margin-top:3px;
- white-space:normal;
-}
-.ball{
- display:flex;
- justify-content:space-between;
- gap:10px;
- padding:10px 2px;
- border-bottom:1px solid #edf0f4;
- font-size:12px;
-}
+.player-detail{display:block;color:#77869a;font-size:10px;margin-top:3px;white-space:normal}
+.ball{display:flex;justify-content:space-between;gap:10px;padding:10px 2px;border-bottom:1px solid #edf0f4;font-size:12px}
 .ball:last-child{border:0}
 .ball strong{color:#152842}
-.ball-result{
- font-weight:900;
- color:#152842;
-}
+.ball-result{font-weight:900;color:#152842}
 .wicket{color:var(--red)}
-.empty{
- text-align:center;
- color:#8995a6;
- padding:17px 5px;
- font-size:12px;
+.empty{text-align:center;color:#8995a6;padding:17px 5px;font-size:12px}
+.last-wicket{background:#fff5f4;border:1px solid #ffe0dc;color:#9e3b35;border-radius:9px;padding:11px;font-size:12px}
+.points-table{min-width:430px}
+.points-table th,.points-table td{padding:11px 7px;text-align:center}
+.points-table th:first-child,.points-table td:first-child{text-align:left}
+.points-table td:first-child{font-weight:800;color:#17283f}
+.points-table .positive{color:#15966b;font-weight:900}
+.points-table .negative{color:#e04452;font-weight:900}
+.points-table .zero{color:#64748b;font-weight:800}
+.points-updated{color:#8491a3;font-size:10px;margin-top:8px;text-align:right}
+
+/* RECENT MATCHES */
+.recent-match{
+ border:1px solid #e3e9f0;border-radius:12px;
+ padding:12px;margin-top:9px;background:#fff;
 }
-.last-wicket{
- background:#fff5f4;
- border:1px solid #ffe0dc;
- color:#9e3b35;
- border-radius:9px;
- padding:11px;
- font-size:12px;
+.recent-head{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.recent-name{font-weight:900;font-size:13px;color:#14243b}
+.completed-tag{
+ background:#e7f8f0;color:#13845d;padding:4px 8px;
+ border-radius:20px;font-size:10px;font-weight:900;
+}
+.recent-date{font-size:10px;color:#8491a3;margin-top:5px}
+.recent-scores{
+ display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;
+}
+.recent-team{
+ background:#f3f6fa;border-radius:8px;padding:9px;
+ font-size:11px;color:#526176;
+}
+.recent-team b{display:block;font-size:17px;color:#14243b;margin-top:3px}
+.recent-result{font-size:11px;color:#14845e;font-weight:800;margin-top:9px;line-height:1.6}
+.view-score-btn{
+ width:100%;border:0;background:var(--navy);color:var(--gold2);
+ border-radius:9px;padding:11px;margin-top:10px;
+ font-weight:900;font-size:12px;cursor:pointer;
+}
+.back-live-btn{
+ width:100%;border:0;background:#147b58;color:white;
+ border-radius:9px;padding:12px;margin:0 0 10px;
+ font-weight:900;font-size:13px;cursor:pointer;
+}
+.archive-label{
+ background:#fff3d7;color:#865b09;border:1px solid #f0d28d;
+ border-radius:8px;padding:9px;font-size:11px;font-weight:800;
+ margin-bottom:10px;
 }
 
-/* POINTS TABLE */
-.points-table{
- min-width:430px;
+/* JAMUI TIMES PROMOTION */
+.promo-card{
+ background:linear-gradient(145deg,#071426,#173557);
+ border-radius:15px;padding:17px;color:white;text-align:center;
 }
-.points-table th,
-.points-table td{
- padding:11px 7px;
- text-align:center;
+.promo-brand{font-size:21px;color:var(--gold);font-weight:900}
+.promo-slogan{font-size:12px;color:#e5edf7;margin-top:4px}
+.promo-text{font-size:11px;color:#b9c8da;margin:12px 0}
+.social-links{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.social-btn{
+ display:block;text-decoration:none;border-radius:9px;
+ padding:11px 6px;font-size:12px;font-weight:900;color:white;
 }
-.points-table th:first-child,
-.points-table td:first-child{
- text-align:left;
-}
-.points-table td:first-child{
- font-weight:800;
- color:#17283f;
-}
-.points-table .positive{
- color:#15966b;
- font-weight:900;
-}
-.points-table .negative{
- color:#e04452;
- font-weight:900;
-}
-.points-table .zero{
- color:#64748b;
- font-weight:800;
-}
-.points-updated{
- color:#8491a3;
- font-size:10px;
- margin-top:8px;
- text-align:right;
-}
+.youtube{background:#e62117}
+.facebook{background:#1877f2}
+.instagram{background:linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)}
+.whatsapp{background:#159b5b;grid-column:1/-1}
+.promo-footer{font-size:10px;color:#aabbd0;margin-top:12px}
 .footer{
- margin-top:15px;
- background:#071426;
- color:white;
- text-align:center;
- padding:23px 12px;
- border-top:3px solid var(--gold);
+ margin-top:15px;background:#071426;color:white;text-align:center;
+ padding:23px 12px;border-top:3px solid var(--gold);
 }
-.footer .powered{
- font-size:10px;
- letter-spacing:3px;
- color:#aab8ca;
-}
-.footer .brand{
- color:var(--gold);
- font-size:24px;
- font-weight:900;
- margin:5px 0;
-}
-.footer .tag{
- color:#dbe3ed;
- font-size:12px;
-}
-.footer .network{
- color:#9eacbe;
- font-size:10px;
- margin-top:8px;
-}
-.footer .pcl{
- color:var(--gold2);
- font-size:11px;
- margin-top:12px;
- font-weight:800;
-}
+.footer .powered{font-size:10px;letter-spacing:3px;color:#aab8ca}
+.footer .brand{color:var(--gold);font-size:24px;font-weight:900;margin:5px 0}
+.footer .tag{color:#dbe3ed;font-size:12px}
+.footer .network{color:#9eacbe;font-size:10px;margin-top:8px}
+.footer .pcl{color:var(--gold2);font-size:11px;margin-top:12px;font-weight:800}
 @media(max-width:390px){
  .container{padding:8px}
  .score{font-size:41px}
@@ -424,7 +212,6 @@ th{
 </head>
 
 <body>
-
 <header class="topbar">
  <div class="league">PATJORI CRICKET LEAGUE</div>
  <h1>🏆 PCL LIVE SCORE</h1>
@@ -438,61 +225,47 @@ th{
   <div class="live" id="liveStatus"><span class="live-dot"></span>LIVE MATCH</div>
   <div class="status-pill" id="matchStatus">MATCH CENTER</div>
  </div>
-
  <div class="match-title" id="matchName">मैच लोड हो रहा है...</div>
  <div class="match-sub" id="matchSubtitle">PCL • LIVE MATCH CENTER</div>
-
  <div class="score-area">
   <div class="score" id="currentScore">0/0</div>
   <div class="overs" id="currentOvers">0.0 ओवर</div>
   <div class="innings-label" id="currentInnings">पारी की जानकारी</div>
   <div class="team-line" id="teams"></div>
  </div>
-
  <div id="targetInfo"></div>
  <div id="resultInfo"></div>
 </section>
 
 <section class="section-card">
  <h3 class="section-title"><span class="line"></span>📊 MATCH SCORE SUMMARY</h3>
- <div id="inningsSummaries">
-  <div class="empty">स्कोर लोड हो रहा है...</div>
- </div>
+ <div id="inningsSummaries"><div class="empty">स्कोर लोड हो रहा है...</div></div>
+</section>
+
+<!-- RECENT MATCH HISTORY -->
+<section class="section-card" id="recentSection">
+ <h3 class="section-title"><span class="line"></span>🏆 RECENT COMPLETED MATCHES</h3>
+ <div id="recentMatches"><div class="empty">पुराने मैच लोड हो रहे हैं...</div></div>
 </section>
 
 <section class="section-card">
  <h3 class="section-title"><span class="line"></span>🏆 PCL POINTS TABLE</h3>
  <div class="table-wrap">
   <table class="points-table">
-   <thead>
-    <tr>
-     <th>TEAM</th>
-     <th>MP</th>
-     <th>W</th>
-     <th>L</th>
-     <th>PTS</th>
-     <th>NRR</th>
-    </tr>
-   </thead>
-   <tbody id="publicPointsTable">
-    <tr><td colspan="6">Points Table लोड हो रही है...</td></tr>
-   </tbody>
+   <thead><tr><th>TEAM</th><th>MP</th><th>W</th><th>L</th><th>PTS</th><th>NRR</th></tr></thead>
+   <tbody id="publicPointsTable"><tr><td colspan="6">Points Table लोड हो रही है...</td></tr></tbody>
   </table>
  </div>
  <div class="points-updated" id="pointsUpdated"></div>
 </section>
 
-<section class="section-card">
+<section class="section-card" id="scorecardSection">
+ <div id="archiveNotice"></div>
+ <button id="backLiveBtn" class="back-live-btn" style="display:none" type="button">← वापस LIVE SCORE पर जाएँ</button>
  <h3 class="section-title"><span class="line"></span>🏏 INNINGS SCORECARD</h3>
  <div class="team-tabs">
-  <button class="team-btn active" id="firstTeamBtn" type="button">
-   1st INNINGS
-   <small id="firstTeamName">टीम 1</small>
-  </button>
-  <button class="team-btn" id="secondTeamBtn" type="button">
-   2nd INNINGS
-   <small id="secondTeamName">टीम 2</small>
-  </button>
+  <button class="team-btn active" id="firstTeamBtn" type="button">1st INNINGS<small id="firstTeamName">टीम 1</small></button>
+  <button class="team-btn" id="secondTeamBtn" type="button">2nd INNINGS<small id="secondTeamName">टीम 2</small></button>
  </div>
  <div id="selectedInningsInfo" class="selected-info"></div>
 </section>
@@ -501,19 +274,8 @@ th{
  <h3 class="section-title"><span class="line"></span>🏏 BATTING SCORECARD</h3>
  <div class="table-wrap">
   <table>
-   <thead>
-    <tr>
-     <th>BATSMAN</th>
-     <th class="right">R</th>
-     <th class="right">B</th>
-     <th class="right">4s</th>
-     <th class="right">6s</th>
-     <th class="right">SR</th>
-    </tr>
-   </thead>
-   <tbody id="batTable">
-    <tr><td colspan="6">स्कोर उपलब्ध नहीं</td></tr>
-   </tbody>
+   <thead><tr><th>BATSMAN</th><th class="right">R</th><th class="right">B</th><th class="right">4s</th><th class="right">6s</th><th class="right">SR</th></tr></thead>
+   <tbody id="batTable"><tr><td colspan="6">स्कोर उपलब्ध नहीं</td></tr></tbody>
   </table>
  </div>
 </section>
@@ -522,17 +284,8 @@ th{
  <h3 class="section-title"><span class="line"></span>🎯 BOWLING SCORECARD</h3>
  <div class="table-wrap">
   <table>
-   <thead>
-    <tr>
-     <th>BOWLER</th>
-     <th class="right">OV</th>
-     <th class="right">RUNS</th>
-     <th class="right">WKTS</th>
-    </tr>
-   </thead>
-   <tbody id="bowlTable">
-    <tr><td colspan="4">स्कोर उपलब्ध नहीं</td></tr>
-   </tbody>
+   <thead><tr><th>BOWLER</th><th class="right">OV</th><th class="right">RUNS</th><th class="right">WKTS</th></tr></thead>
+   <tbody id="bowlTable"><tr><td colspan="4">स्कोर उपलब्ध नहीं</td></tr></tbody>
   </table>
  </div>
 </section>
@@ -545,6 +298,23 @@ th{
 <section class="section-card">
  <h3 class="section-title"><span class="line"></span>⚡ LAST WICKET</h3>
  <div id="lastWicket" class="last-wicket">अभी कोई विकेट नहीं</div>
+</section>
+
+<!-- THE JAMUI TIMES PROMOTION -->
+<section class="section-card">
+ <h3 class="section-title"><span class="line"></span>📢 FOLLOW THE JAMUI TIMES</h3>
+ <div class="promo-card">
+  <div class="promo-brand">THE JAMUI TIMES</div>
+  <div class="promo-slogan">ख़बर वही जो होगा सही</div>
+  <div class="promo-text">बिहार-झारखंड और आपके गाँव की हर जरूरी खबर से जुड़े रहें। हमारे सोशल मीडिया प्लेटफॉर्म को Follow और Subscribe करें।</div>
+  <div class="social-links">
+   <a class="social-btn youtube" href="https://youtube.com/@thejamuitimes?si=_XZh985G91cpgdnI" target="_blank" rel="noopener">▶ YouTube Subscribe</a>
+   <a class="social-btn facebook" href="https://www.facebook.com/share/1A1yRsrK1H/" target="_blank" rel="noopener">f Facebook Follow</a>
+   <a class="social-btn instagram" href="https://www.instagram.com/rahulpandeythejamuitimes?exln=YmV1bzM5eGNmaHFn" target="_blank" rel="noopener">◎ Instagram Follow</a>
+   <a class="social-btn whatsapp" href="https://wa.me/919973453819?text=Namaste%20The%20Jamui%20Times%2C%20main%20apne%20area%20ki%20khabar%20bhejna%20chahta%20hoon." target="_blank" rel="noopener">✆ WhatsApp पर अपनी खबर भेजें</a>
+  </div>
+  <div class="promo-footer">THE JAMUI TIMES • Digital News & Media Network</div>
+ </div>
 </section>
 
 </main>
@@ -577,43 +347,30 @@ const el=id=>document.getElementById(id);
 
 let latestData=null;
 let selectedInnings=1;
+let archiveSelected=false;
+let liveData=null;
 
 function safe(v){
  return String(v??"").replace(/[&<>"']/g,c=>({
   "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
  }[c]));
 }
-
 function num(v){return Number(v||0)}
-
 function totalOvers(data){
- return Math.max(1,num(
-  data?.totalOvers||
-  latestData?.totalOvers||
-  latestData?.innings1?.totalOvers||
-  10
- ));
+ return Math.max(1,num(data?.totalOvers||latestData?.totalOvers||latestData?.innings1?.totalOvers||10));
 }
-
 function overs(b){
  b=num(b);
  return Math.floor(b/6)+"."+(b%6);
 }
-
-function oversWithLimit(data){
- return overs(data?.balls)+" / "+totalOvers(data)+" ओवर";
-}
-
-function rate(runs,balls){
- return balls>0?(runs/(balls/6)).toFixed(2):"0.00";
-}
+function oversWithLimit(data){return overs(data?.balls)+" / "+totalOvers(data)+" ओवर"}
+function rate(runs,balls){return balls>0?(runs/(balls/6)).toFixed(2):"0.00"}
 
 function getFirst(data){
  if(data.innings1)return data.innings1;
  if(num(data.innings)===1)return data;
  return null;
 }
-
 function getSecond(data){
  if(data.innings2)return data.innings2;
  if(num(data.innings)===2)return data;
@@ -624,99 +381,63 @@ function renderSummary(data){
  const first=getFirst(data);
  const second=getSecond(data);
  let html="";
-
  if(first){
-  html+=`
-  <div class="innings-summary">
-   <div class="summary-top">
-    <span>1️⃣ ${safe(first.battingTeam||data.team1||"पहली पारी")}</span>
-    <span>1ST INNINGS</span>
-   </div>
+  html+=`<div class="innings-summary">
+   <div class="summary-top"><span>1️⃣ ${safe(first.battingTeam||data.team1||"पहली पारी")}</span><span>1ST INNINGS</span></div>
    <div class="summary-score">${num(first.runs)}/${num(first.wickets)}</div>
    <div class="summary-overs">${oversWithLimit(first)}</div>
   </div>`;
  }
-
  if(second){
-  html+=`
-  <div class="innings-summary">
-   <div class="summary-top">
-    <span>2️⃣ ${safe(second.battingTeam||data.team2||"दूसरी पारी")}</span>
-    <span>2ND INNINGS</span>
-   </div>
+  html+=`<div class="innings-summary">
+   <div class="summary-top"><span>2️⃣ ${safe(second.battingTeam||data.team2||"दूसरी पारी")}</span><span>2ND INNINGS</span></div>
    <div class="summary-score">${num(second.runs)}/${num(second.wickets)}</div>
    <div class="summary-overs">${oversWithLimit(second)}</div>
   </div>`;
  }else{
-  html+=`
-  <div class="innings-summary">
-   <div class="summary-top"><span>2️⃣ दूसरी पारी</span></div>
-   <div class="empty">अभी शुरू नहीं हुई है</div>
-  </div>`;
+  html+=`<div class="innings-summary"><div class="summary-top"><span>2️⃣ दूसरी पारी</span></div><div class="empty">अभी शुरू नहीं हुई है</div></div>`;
  }
-
- el("inningsSummaries").innerHTML=html;
+ el("inningsSummaries").innerHTML=html||'<div class="empty">स्कोर उपलब्ध नहीं है</div>';
 }
 
 function renderTarget(data){
  const first=getFirst(data);
  el("targetInfo").innerHTML="";
-
  const status=String(data.status||"").toLowerCase();
  if(status==="completed"||status==="innings ended")return;
  if(num(data.innings)!==2||!first)return;
-
  const target=num(first.runs)+1;
  const needed=Math.max(0,target-num(data.runs));
  const maxBalls=totalOvers(data)*6;
  const ballsLeft=Math.max(0,maxBalls-num(data.balls));
  const crr=rate(data.runs,data.balls);
  const rrr=ballsLeft>0?(needed/(ballsLeft/6)).toFixed(2):"—";
-
- el("targetInfo").innerHTML=`
- <div class="target">
+ el("targetInfo").innerHTML=`<div class="target">
   <div class="target-title">🎯 TARGET: ${target} RUNS</div>
   <div class="need">${needed===0?"लक्ष्य हासिल!":needed+" रन चाहिए"}</div>
   <div class="target-detail">${ballsLeft} गेंदें बाकी</div>
   <div class="stats">
-   <div class="stat">
-    <b>${crr}</b>
-    <span>Current Run Rate</span>
-   </div>
-   <div class="stat">
-    <b>${rrr}</b>
-    <span>Required Run Rate</span>
-   </div>
+   <div class="stat"><b>${crr}</b><span>Current Run Rate</span></div>
+   <div class="stat"><b>${rrr}</b><span>Required Run Rate</span></div>
   </div>
  </div>`;
 }
 
 function getDismissals(history){
  const result={};
-
  (history||[]).forEach(d=>{
   if(!d.wicket||!d.striker)return;
-
   const wt=String(d.wicketType||"").toLowerCase();
   let detail="out";
-
-  if(wt.includes("caught"))
-   detail=d.fielder?"c "+d.fielder+" b "+(d.bowler||""):"caught b "+(d.bowler||"");
-  else if(wt.includes("bowled"))
-   detail="b "+(d.bowler||"");
-  else if(wt.includes("lbw"))
-   detail="lbw b "+(d.bowler||"");
-  else if(wt.includes("run out"))
-   detail="run out"+(d.fielder?" ("+d.fielder+")":"");
-  else if(wt.includes("stumped"))
-   detail="st "+(d.fielder||"")+" b "+(d.bowler||"");
-  else if(wt.includes("hit wicket"))
-   detail="hit wicket b "+(d.bowler||"");
+  if(wt.includes("caught"))detail=d.fielder?"c "+d.fielder+" b "+(d.bowler||""):"caught b "+(d.bowler||"");
+  else if(wt.includes("bowled"))detail="b "+(d.bowler||"");
+  else if(wt.includes("lbw"))detail="lbw b "+(d.bowler||"");
+  else if(wt.includes("run out"))detail="run out"+(d.fielder?" ("+d.fielder+")":"");
+  else if(wt.includes("stumped"))detail="st "+(d.fielder||"")+" b "+(d.bowler||"");
+  else if(wt.includes("hit wicket"))detail="hit wicket b "+(d.bowler||"");
   else detail=String(d.wicketType||"out");
-
   result[d.striker]=detail;
  });
-
  return result;
 }
 
@@ -733,161 +454,103 @@ function renderScorecard(data){
  const bats=data.batStats||{};
  const history=Array.isArray(data.history)?data.history:[];
  const names=[];
-
  history.forEach(d=>{
-  [d.striker,d.nonStriker].forEach(n=>{
-   if(n&&!names.includes(n))names.push(n);
-  });
+  [d.striker,d.nonStriker].forEach(n=>{if(n&&!names.includes(n))names.push(n)});
  });
-
- [data.striker,data.nonStriker].forEach(n=>{
-  if(n&&!names.includes(n))names.push(n);
- });
-
- Object.keys(bats).forEach(n=>{
-  if(n&&!names.includes(n))names.push(n);
- });
-
+ [data.striker,data.nonStriker].forEach(n=>{if(n&&!names.includes(n))names.push(n)});
+ Object.keys(bats).forEach(n=>{if(n&&!names.includes(n))names.push(n)});
  const dismissals=getDismissals(history);
 
  const rows=names.map(name=>{
   const s=bats[name]||{};
-  const runs=num(s.runs);
-  const balls=num(s.balls);
+  const runs=num(s.runs),balls=num(s.balls);
   const sr=balls?(runs*100/balls).toFixed(1):"0.0";
-  const detail=dismissals[name]||
-   (name===data.striker||name===data.nonStriker?"NOT OUT":"");
-
+  const detail=dismissals[name]||(name===data.striker||name===data.nonStriker?"NOT OUT":"");
   return `<tr>
-   <td>
-    <span class="player-name">${safe(name)} ${name===data.striker?"*":""}</span>
-    <small class="player-detail">${safe(detail)}</small>
-   </td>
-   <td class="right">${runs}</td>
-   <td class="right">${balls}</td>
-   <td class="right">${num(s.fours)}</td>
-   <td class="right">${num(s.sixes)}</td>
-   <td class="right">${sr}</td>
+   <td><span class="player-name">${safe(name)} ${name===data.striker?"*":""}</span><small class="player-detail">${safe(detail)}</small></td>
+   <td class="right">${runs}</td><td class="right">${balls}</td>
+   <td class="right">${num(s.fours)}</td><td class="right">${num(s.sixes)}</td><td class="right">${sr}</td>
   </tr>`;
  });
-
- el("batTable").innerHTML=rows.length?rows.join("") :
- '<tr><td colspan="6">बल्लेबाज़ी आँकड़े उपलब्ध नहीं</td></tr>';
+ el("batTable").innerHTML=rows.length?rows.join(""):'<tr><td colspan="6">बल्लेबाज़ी आँकड़े उपलब्ध नहीं</td></tr>';
 
  const bowls=data.bowlStats||{};
  const bowlRows=Object.entries(bowls);
-
  el("bowlTable").innerHTML=bowlRows.length?
- bowlRows.map(([name,s])=>`
-  <tr>
-   <td><span class="player-name">${safe(name)} ${name===data.bowler?"*":""}</span></td>
-   <td class="right">${overs(s.balls)}</td>
-   <td class="right">${num(s.runs)}</td>
-   <td class="right">${num(s.wickets)}</td>
-  </tr>`).join("") :
- '<tr><td colspan="4">गेंदबाज़ी स्कोर उपलब्ध नहीं</td></tr>';
+ bowlRows.map(([name,s])=>`<tr>
+  <td><span class="player-name">${safe(name)} ${name===data.bowler?"*":""}</span></td>
+  <td class="right">${overs(s.balls)}</td><td class="right">${num(s.runs)}</td><td class="right">${num(s.wickets)}</td>
+ </tr>`).join(""):'<tr><td colspan="4">गेंदबाज़ी स्कोर उपलब्ध नहीं</td></tr>';
 
  const recent=history.slice(-12).reverse();
-
  el("ballList").innerHTML=recent.length?
  recent.map(d=>{
   const isWicket=!!d.wicket;
   const result=isWicket?"WICKET":num(d.runs)+num(d.extra)+" रन";
-  return `
-   <div class="ball">
-    <span>${safe(d.bowler||"")} → ${safe(d.striker||"")}</span>
-    <span class="ball-result ${isWicket?"wicket":""}">
-     ${result}${d.wicketType?" ("+safe(d.wicketType)+")":""}
-    </span>
-   </div>`;
+  return `<div class="ball">
+   <span>${safe(d.bowler||"")} → ${safe(d.striker||"")}</span>
+   <span class="ball-result ${isWicket?"wicket":""}">${result}${d.wicketType?" ("+safe(d.wicketType)+")":""}</span>
+  </div>`;
  }).join(""):"अभी कोई गेंद नहीं";
 
  el("selectedInningsInfo").textContent=
-  (data.battingTeam||"टीम")+" बल्लेबाज़ी | "+
-  num(data.runs)+"/"+num(data.wickets)+
-  " ("+oversWithLimit(data)+")";
-
+  (data.battingTeam||"टीम")+" बल्लेबाज़ी | "+num(data.runs)+"/"+num(data.wickets)+" ("+oversWithLimit(data)+")";
  el("lastWicket").textContent=data.lastWicket||"अभी कोई विकेट नहीं";
 }
 
 function selectInnings(n){
  selectedInnings=n;
  if(!latestData)return;
-
  const first=getFirst(latestData);
  const second=getSecond(latestData);
  const chosen=n===1?first:second;
-
  el("firstTeamBtn").classList.toggle("active",n===1);
  el("secondTeamBtn").classList.toggle("active",n===2);
-
  renderScorecard(chosen);
 }
-
 el("firstTeamBtn").addEventListener("click",()=>selectInnings(1));
 el("secondTeamBtn").addEventListener("click",()=>selectInnings(2));
 
 function render(data){
  if(!data)return;
  latestData=data;
-
- el("matchName").textContent=data.matchName||
-  ((data.team1||"")+" VS "+(data.team2||""));
-
+ el("matchName").textContent=data.matchName||((data.team1||"")+" VS "+(data.team2||""));
  el("currentScore").textContent=num(data.runs)+"/"+num(data.wickets);
  el("currentOvers").textContent=oversWithLimit(data);
-
- el("currentInnings").textContent=
-  "पारी "+num(data.innings||1)+" | "+(data.battingTeam||"");
-
- el("teams").textContent=(data.team1||"")+"  VS  "+(data.team2||"");
+ el("currentInnings").textContent="पारी "+num(data.innings||1)+" | "+(data.battingTeam||"");
+ el("teams").textContent=(data.team1||"")+" VS "+(data.team2||"");
 
  const status=data.status||"Live";
- const completed=String(status).toLowerCase()==="completed";
- const ended=String(status).toLowerCase()==="innings ended";
+ const lowerStatus=String(status).toLowerCase();
+ const completed=lowerStatus==="completed";
+ const ended=lowerStatus==="innings ended";
 
- el("liveStatus").innerHTML=completed?
-  "● MATCH COMPLETED":
-  ended?"● INNINGS ENDED":'<span class="live-dot"></span>LIVE MATCH';
-
+ el("liveStatus").innerHTML=completed?"● MATCH COMPLETED":ended?"● INNINGS ENDED":'<span class="live-dot"></span>LIVE MATCH';
  el("liveStatus").style.color=completed?"#35d39a":ended?"#e8bd62":"#ff6875";
  el("matchStatus").textContent=completed?"FULL TIME":ended?"INNINGS BREAK":"LIVE";
-
- el("matchSubtitle").textContent=
-  "PCL MATCH CENTER • "+totalOvers(data)+" OVERS";
+ el("matchSubtitle").textContent="PCL MATCH CENTER • "+totalOvers(data)+" OVERS";
 
  renderSummary(data);
  renderTarget(data);
+ el("resultInfo").innerHTML=completed&&data.resultText?`<div class="result">🏆 ${safe(data.resultText)}</div>`:"";
 
- if(completed&&data.resultText){
-  el("resultInfo").innerHTML=
-   `<div class="result">🏆 ${safe(data.resultText)}</div>`;
- }else{
-  el("resultInfo").innerHTML="";
- }
-
- const first=getFirst(data);
- const second=getSecond(data);
-
- el("firstTeamName").textContent=
-  first?.battingTeam||data.team1||"पहली पारी";
-
- el("secondTeamName").textContent=
-  second?.battingTeam||
-  first?.bowlingTeam||
-  data.team2||
-  "दूसरी पारी";
-
+ const first=getFirst(data),second=getSecond(data);
+ el("firstTeamName").textContent=first?.battingTeam||data.team1||"पहली पारी";
+ el("secondTeamName").textContent=second?.battingTeam||first?.bowlingTeam||data.team2||"दूसरी पारी";
  el("secondTeamBtn").disabled=!second;
-
  if(selectedInnings===2&&!second)selectedInnings=1;
  selectInnings(selectedInnings);
 }
 
+/* LIVE SCORE */
 onValue(ref(db,"publicScore"),snap=>{
  if(snap.exists()){
-  render(snap.val());
- }else{
+  liveData=snap.val();
+  if(!archiveSelected){
+   selectedInnings=1;
+   render(liveData);
+  }
+ }else if(!archiveSelected){
   el("matchName").textContent="अभी कोई लाइव मैच उपलब्ध नहीं है";
   el("liveStatus").textContent="● NO LIVE MATCH";
   el("currentScore").textContent="—";
@@ -900,61 +563,129 @@ onValue(ref(db,"publicScore"),snap=>{
  console.error(error);
 });
 
+/* RECENT COMPLETED MATCHES */
+function scoreText(inn){
+ if(!inn)return "—";
+ return num(inn.runs)+"/"+num(inn.wickets)+" ("+overs(inn.balls)+")";
+}
+function matchDateText(m){
+ const d=m.matchDate||"";
+ if(d)return d;
+ if(m.createdAt)return new Date(m.createdAt).toLocaleDateString("en-IN");
+ return "तारीख उपलब्ध नहीं";
+}
+function openArchive(match){
+ if(!match||!match.live)return;
+ archiveSelected=true;
+ selectedInnings=1;
+ const data={
+  ...match.live,
+  matchName:match.live.matchName||match.matchName||"PCL Match",
+  team1:match.live.team1||match.team1||"",
+  team2:match.live.team2||match.team2||"",
+  totalOvers:match.live.totalOvers||match.totalOvers||10,
+  status:"Completed",
+  resultText:match.live.resultText||match.resultText||"मैच पूरा हुआ"
+ };
+ render(data);
+ el("archiveNotice").innerHTML='<div class="archive-label">📚 आप पुराना मैच देख रहे हैं: '+safe(data.matchName)+'</div>';
+ el("backLiveBtn").style.display="block";
+ el("scorecardSection").scrollIntoView({behavior:"smooth",block:"start"});
+}
+el("backLiveBtn").addEventListener("click",()=>{
+ archiveSelected=false;
+ selectedInnings=1;
+ el("archiveNotice").innerHTML="";
+ el("backLiveBtn").style.display="none";
+ if(liveData)render(liveData);
+ else{
+  el("matchName").textContent="अभी कोई लाइव मैच उपलब्ध नहीं है";
+  el("currentScore").textContent="—";
+ }
+});
+
+onValue(ref(db,"matches"),snap=>{
+ const box=el("recentMatches");
+ if(!snap.exists()){
+  box.innerHTML='<div class="empty">अभी कोई पुराना मैच उपलब्ध नहीं है।</div>';
+  return;
+ }
+ const all=snap.val();
+ const completed=Object.entries(all).map(([id,m])=>({id,...m}))
+  .filter(m=>String(m.live?.status||"").toLowerCase()==="completed")
+  .sort((a,b)=>num(b.live?.updatedAt||b.updatedAt||b.createdAt)-num(a.live?.updatedAt||a.updatedAt||a.createdAt));
+
+ if(!completed.length){
+  box.innerHTML='<div class="empty">अभी कोई Completed Match उपलब्ध नहीं है।</div>';
+  return;
+ }
+
+ box.innerHTML=completed.slice(0,30).map(m=>{
+  const live=m.live||{};
+  const first=live.innings1||null;
+  const second=live.innings2||null;
+  const teamA=first?.battingTeam||m.battingFirst||m.team1||"पहली टीम";
+  const teamB=second?.battingTeam||first?.bowlingTeam||m.team2||"दूसरी टीम";
+  const result=live.resultText||m.resultText||"मैच पूरा हुआ";
+  return `<div class="recent-match">
+   <div class="recent-head">
+    <div class="recent-name">${safe(m.matchName||live.matchName||"PCL Match")}</div>
+    <span class="completed-tag">COMPLETED</span>
+   </div>
+   <div class="recent-date">📅 ${safe(matchDateText(m))}</div>
+   <div class="recent-scores">
+    <div class="recent-team">${safe(teamA)}<b>${scoreText(first)}</b></div>
+    <div class="recent-team">${safe(teamB)}<b>${scoreText(second)}</b></div>
+   </div>
+   <div class="recent-result">🏆 ${safe(result)}</div>
+   <button class="view-score-btn" type="button" data-match-id="${safe(m.id)}">पूरा SCORECARD देखें →</button>
+  </div>`;
+ }).join("");
+
+ box.querySelectorAll("[data-match-id]").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+   const match=completed.find(m=>m.id===btn.dataset.matchId);
+   openArchive(match);
+  });
+ });
+},error=>{
+ console.error("Match History Error:",error);
+ el("recentMatches").innerHTML='<div class="empty">Match History लोड नहीं हो पाई। Firebase Rules जाँचें।</div>';
+});
+
 /* PUBLIC POINTS TABLE */
 onValue(ref(db,"pointsTable"),snap=>{
  const tbody=el("publicPointsTable");
-
  if(!snap.exists()){
-  tbody.innerHTML=
-   '<tr><td colspan="6">अभी Points Table उपलब्ध नहीं है</td></tr>';
+  tbody.innerHTML='<tr><td colspan="6">अभी Points Table उपलब्ध नहीं है</td></tr>';
   el("pointsUpdated").textContent="";
   return;
  }
-
  const data=snap.val();
-
- const teams=Array.isArray(data.teams)
-  ?data.teams
-  :Object.values(data.teams||{});
-
+ const teams=Array.isArray(data.teams)?data.teams:Object.values(data.teams||{});
  if(!teams.length){
-  tbody.innerHTML=
-   '<tr><td colspan="6">अभी कोई टीम उपलब्ध नहीं है</td></tr>';
+  tbody.innerHTML='<tr><td colspan="6">अभी कोई टीम उपलब्ध नहीं है</td></tr>';
   return;
  }
-
- teams.sort((a,b)=>
-  num(b.points)-num(a.points)||
-  num(b.nrr)-num(a.nrr)
- );
-
+ teams.sort((a,b)=>num(b.points)-num(a.points)||num(b.nrr)-num(a.nrr));
  tbody.innerHTML=teams.map((t,i)=>{
   const nrr=num(t.nrr);
   const nrrText=(nrr>0?"+":"")+nrr.toFixed(3);
   const cls=nrr>0?"positive":nrr<0?"negative":"zero";
-
-  return `
-   <tr>
-    <td>${i+1}. ${safe(t.team||t.name||"Team")}</td>
-    <td>${num(t.match??t.matches??t.played)}</td>
-    <td>${num(t.win??t.wins??t.won)}</td>
-    <td>${num(t.loss??t.losses??t.lost)}</td>
-    <td><b>${num(t.points)}</b></td>
-    <td class="${cls}">${nrrText}</td>
-   </tr>`;
+  return `<tr>
+   <td>${i+1}. ${safe(t.team||t.name||"Team")}</td>
+   <td>${num(t.match??t.matches??t.played)}</td>
+   <td>${num(t.win??t.wins??t.won)}</td>
+   <td>${num(t.loss??t.losses??t.lost)}</td>
+   <td><b>${num(t.points)}</b></td>
+   <td class="${cls}">${nrrText}</td>
+  </tr>`;
  }).join("");
-
- el("pointsUpdated").textContent=
-  data.updatedAt
-   ?"Last Updated: "+new Date(data.updatedAt).toLocaleString("en-IN")
-   :"";
-
+ el("pointsUpdated").textContent=data.updatedAt?"Last Updated: "+new Date(data.updatedAt).toLocaleString("en-IN"):"";
 },error=>{
  console.error("Points Table Error:",error);
- el("publicPointsTable").innerHTML=
-  '<tr><td colspan="6">Points Table लोड नहीं हो पाई</td></tr>';
+ el("publicPointsTable").innerHTML='<tr><td colspan="6">Points Table लोड नहीं हो पाई</td></tr>';
 });
 </script>
-
 </body>
 </html>
