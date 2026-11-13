@@ -217,7 +217,25 @@ function fillSelects(){
  bowlers.forEach(n=>{b.add(new Option(n,n));c.add(new Option(n,n));});
  if(state.bowler&&bowlers.includes(state.bowler))b.value=state.bowler;
 }
-function showScore(){
+function saveInningsResult(){
+ return {
+  runs:state.runs,
+  wickets:state.wickets,
+  balls:state.balls,
+  battingTeam:state.battingTeam,
+  bowlingTeam:state.bowlingTeam,
+  batStats:JSON.parse(JSON.stringify(state.batStats||{})),
+  bowlStats:JSON.parse(JSON.stringify(state.bowlStats||{})),
+  history:JSON.parse(JSON.stringify(state.history||{}))
+ };
+}
+
+function updateInningsButton(){
+ const btn=$("startSecondInnings");
+ if(!btn)return;
+ btn.classList.toggle("hidden",state.innings!==1||state.status!=="Innings Ended");
+}
+ function showScore(){
  if(!state)return;
 
  state.batStats=state.batStats||{};
