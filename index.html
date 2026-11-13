@@ -206,12 +206,35 @@ function fillSelects(){
 }
 function showScore(){
  if(!state)return;
+
+ state.batStats=state.batStats||{};
+ state.bowlStats=state.bowlStats||{};
+
  $("score").textContent=state.runs+"/"+state.wickets;
  $("overs").textContent=oversText(state.balls)+" ओवर";
  $("inningsInfo").textContent="पारी "+state.innings+" | "+state.battingTeam+" बल्लेबाज़ी";
  $("currentBowlerText").textContent="गेंदबाज़: "+(state.bowler||"गेंदबाज़ चुनें");
- $("battingDetails").textContent="स्ट्राइकर: "+(state.striker||"—")+" | नॉन-स्ट्राइकर: "+(state.nonStriker||"—");
- $("bowlingDetails").textContent="गेंदबाज़ी टीम: "+state.bowlingTeam+" | गेंदबाज़: "+(state.bowler||"—");
+
+ function batterLine(name){
+  if(!name)return "";
+  const s=state.batStats[name]||{runs:0,balls:0,fours:0,sixes:0};
+  const sr=s.balls?(s.runs*100/s.balls).toFixed(1):"0.0";
+  return name+": "+s.runs+" रन ("+s.balls+" गेंद) | 4s: "+s.fours+" | 6s: "+s.sixes+" | SR: "+sr;
+ }
+
+ $("battingDetails").textContent=
+  "बल्लेबाज़ी\n"+
+  batterLine(state.striker)+"\n"+
+  batterLine(state.nonStriker);
+
+ const b=state.bowlStats[state.bowler]||{balls:0,runs:0,wickets:0};
+ $("bowlingDetails").textContent=
+  "गेंदबाज़ी टीम: "+state.bowlingTeam+"\n"+
+  "गेंदबाज़: "+(state.bowler||"—")+
+  " | ओवर: "+oversText(b.balls)+
+  " | रन: "+b.runs+
+  " | विकेट: "+b.wickets;
+
  $("lastWicket").textContent=state.lastWicket||"";
  $("striker").value=state.striker||"";
  $("nonStriker").value=state.nonStriker||"";
@@ -236,30 +259,67 @@ function addDelivery({runs=0,extra=0,kind="Run",legal=true,wicket=false,wicketTy
  if(state.wickets>=10){say("msg","सभी 10 विकेट गिर चुके हैं");return;}
  if(state.balls>=state.totalOvers*6){say("msg","ओवर पूरे हो गए हैं");return;}
  if(!state.striker||!state.nonStriker||!state.bowler){
- say("msg","पहले दोनों बल्लेबाज़ और गेंदबाज़ चुनकर सेव करें");return;
+  say("msg","पहले दोनों बल्लेबाज़ और गेंदबाज़ चुनकर सेव करें");return;
  }
 
  undoStack.push(JSON.stringify(state));
 
+ state.batStats=state.batStats||{};
+ state.bowlStats=state.bowlStats||{};
+
+ const batter=state.striker;
+ const bowler=state.bowler;
+
+ if(!state.batStats[batter]){
+  state.batStats[batter]={runs:0,balls:0,fours:0,sixes:0};
+ }
+ if(!state.bowlStats[bowler]){
+  state.bowlStats[bowler]={balls:0,runs:0,wickets:0};
+ }
+
+ const bs=state.batStats[batter];
+ const bw=state.bowlStats[bowler];
+
+ bs.runs+=runs;
+ if(kind!=="Wide"&&kind!=="No Ball")bs.balls++;
+ if(kind==="Run"&&runs===4)bs.fours++;
+ if(kind==="Run"&&runs===6)bs.sixes++;
+
+ const isBye=kind==="Bye"||kind==="Leg Bye";
+ bw.runs+=isBye?runs:runs+extra;
+
+ if(legal)bw.balls++;
+
+ if(wicket){
+  const wt=String(wicketType).toLowerCase();
+  const notBowlerWicket=
+   wt.includes("run out")||
+   wt.includes("रन आउट")||
+   wt.includes("retired hurt")||
+   wt.includes("obstructing")||
+   wt.includes("timed out");
+
+  if(!notBowlerWicket)bw.wickets++;
+ }
+
  const d={
   runs,extra,kind,legal,wicket,wicketType,fielder,
-  striker:state.striker,
-  nonStriker:state.nonStriker,
-  bowler:state.bowler,
-  facedBall:kind!=="Wide",
-  time:Date.now()
+  striker:batter,nonStriker:state.nonStriker,
+  bowler:bowler,time:Date.now()
  };
 
  state.runs+=runs+extra;
  state.extras+=extra;
-
  if(legal)state.balls++;
  if(wicket)state.wickets++;
 
  state.history=state.history||[];
  state.history.push(d);
 
- if(runs%2===1&&!wicket){
+ let rotateRuns=runs;
+ if(kind==="Wide")rotateRuns=Math.max(0,extra-1);
+
+ if(rotateRuns%2===1&&!wicket){
   [state.striker,state.nonStriker]=[state.nonStriker,state.striker];
  }
 
