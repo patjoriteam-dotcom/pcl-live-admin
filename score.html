@@ -133,16 +133,28 @@ function render(data){
 const bats=data.batStats||{};
 
 // पुराने बल्लेबाजों का क्रम बरकरार रखें
-const names=Object.keys(bats);
 
-// नए बल्लेबाज को सूची के आखिर में जोड़ें
+const names=[];
+
+// गेंदों की हिस्ट्री से बल्लेबाज़ों का असली क्रम
+(data.history||[]).forEach(d=>{
+  [d.striker,d.nonStriker].forEach(name=>{
+    if(name && !names.includes(name)){
+      names.push(name);
+    }
+  });
+});
+
+// अभी क्रीज़ पर मौजूद बल्लेबाज़
 [data.nonStriker,data.striker].forEach(name=>{
- if(name && !names.includes(name)) names.push(name);
+  if(name && !names.includes(name)){
+    names.push(name);
+  }
 });
 
 const batRows=names.map(name=>[
- name,
- bats[name]||{runs:0,balls:0,fours:0,sixes:0}
+  name,
+  bats[name]||{runs:0,balls:0,fours:0,sixes:0}
 ]);
 
 
