@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -344,6 +343,42 @@ th{
  padding:11px;
  font-size:12px;
 }
+
+/* POINTS TABLE */
+.points-table{
+ min-width:430px;
+}
+.points-table th,
+.points-table td{
+ padding:11px 7px;
+ text-align:center;
+}
+.points-table th:first-child,
+.points-table td:first-child{
+ text-align:left;
+}
+.points-table td:first-child{
+ font-weight:800;
+ color:#17283f;
+}
+.points-table .positive{
+ color:#15966b;
+ font-weight:900;
+}
+.points-table .negative{
+ color:#e04452;
+ font-weight:900;
+}
+.points-table .zero{
+ color:#64748b;
+ font-weight:800;
+}
+.points-updated{
+ color:#8491a3;
+ font-size:10px;
+ margin-top:8px;
+ text-align:right;
+}
 .footer{
  margin-top:15px;
  background:#071426;
@@ -422,6 +457,28 @@ th{
  <div id="inningsSummaries">
   <div class="empty">स्कोर लोड हो रहा है...</div>
  </div>
+</section>
+
+<section class="section-card">
+ <h3 class="section-title"><span class="line"></span>🏆 PCL POINTS TABLE</h3>
+ <div class="table-wrap">
+  <table class="points-table">
+   <thead>
+    <tr>
+     <th>TEAM</th>
+     <th>MP</th>
+     <th>W</th>
+     <th>L</th>
+     <th>PTS</th>
+     <th>NRR</th>
+    </tr>
+   </thead>
+   <tbody id="publicPointsTable">
+    <tr><td colspan="6">Points Table लोड हो रही है...</td></tr>
+   </tbody>
+  </table>
+ </div>
+ <div class="points-updated" id="pointsUpdated"></div>
 </section>
 
 <section class="section-card">
@@ -830,7 +887,6 @@ onValue(ref(db,"publicScore"),snap=>{
  if(snap.exists()){
   render(snap.val());
  }else{
-  el("message")?.textContent;
   el("matchName").textContent="अभी कोई लाइव मैच उपलब्ध नहीं है";
   el("liveStatus").textContent="● NO LIVE MATCH";
   el("currentScore").textContent="—";
@@ -842,7 +898,61 @@ onValue(ref(db,"publicScore"),snap=>{
  el("liveStatus").textContent="● CONNECTION ERROR";
  console.error(error);
 });
+
+/* PUBLIC POINTS TABLE */
+onValue(ref(db,"pointsTable"),snap=>{
+ const tbody=el("publicPointsTable");
+
+ if(!snap.exists()){
+  tbody.innerHTML=
+   '<tr><td colspan="6">अभी Points Table उपलब्ध नहीं है</td></tr>';
+  el("pointsUpdated").textContent="";
+  return;
+ }
+
+ const data=snap.val();
+ const teams=Array.isArray(data.teams)
+  ?data.teams
+  :Object.values(data.teams||{});
+
+ if(!teams.length){
+  tbody.innerHTML=
+   '<tr><td colspan="6">अभी कोई टीम उपलब्ध नहीं है</td></tr>';
+  return;
+ }
+
+ teams.sort((a,b)=>
+  num(b.points)-num(a.points)||
+  num(b.nrr)-num(a.nrr)
+ );
+
+ tbody.innerHTML=teams.map((t,i)=>{
+  const nrr=num(t.nrr);
+  const nrrText=(nrr>0?"+":"")+nrr.toFixed(3);
+  const cls=nrr>0?"positive":nrr<0?"negative":"zero";
+
+  return `
+   <tr>
+    <td>${i+1}. ${safe(t.name||t.team||"Team")}</td>
+    <td>${num(t.matches??t.played)}</td>
+    <td>${num(t.wins??t.won)}</td>
+    <td>${num(t.losses??t.lost)}</td>
+    <td><b>${num(t.points)}</b></td>
+    <td class="${cls}">${nrrText}</td>
+   </tr>`;
+ }).join("");
+
+ el("pointsUpdated").textContent=
+  data.updatedAt
+   ?"Last Updated: "+new Date(data.updatedAt).toLocaleString("en-IN")
+   :"";
+},error=>{
+ console.error("Points Table Error:",error);
+ el("publicPointsTable").innerHTML=
+  '<tr><td colspan="6">Points Table लोड नहीं हो पाई</td></tr>';
+});
 </script>
 
 </body>
 </html>
+
