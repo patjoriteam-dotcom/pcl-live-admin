@@ -244,7 +244,7 @@ function updateInningsButton(){
 
  $("score").textContent=state.runs+"/"+state.wickets;
  $("overs").textContent=oversText(state.balls)+" ओवर";
- $("inningsInfo").textContent="पारी "+state.innings+" | "+state.battingTeam+" बल्लेबाज़ी";
+ $("inningsInfo").textContent="पारी "+state.innings+" | "+state.battingTeam+" बल्लेबाज़ी"+(state.resultText?" | "+state.resultText:"");
  $("currentBowlerText").textContent="गेंदबाज़: "+(state.bowler||"गेंदबाज़ चुनें");
 
  function batterLine(name){
