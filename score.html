@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PCL LIVE SCORE</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f1f3f6;color:#172033;font-family:'Noto Sans Devanagari',Arial,sans-serif}
+header{background:#101b32;color:white;padding:17px 14px;text-align:center}
+header h2{margin:0;font-size:23px}
+header p{margin:5px 0 0;color:#cbd5e1;font-size:12px}
+.container{max-width:760px;margin:auto;padding:12px}
+.card{background:white;border-radius:12px;padding:15px;margin-bottom:12px;box-shadow:0 2px 9px #00000012}
+.live{color:#d71920;font-weight:800;font-size:13px}
+.match{font-weight:700;margin-top:8px}
+.score{font-size:35px;font-weight:800;margin:10px 0 2px}
+.muted{color:#64748b;font-size:13px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.tab{border:0;border-radius:8px;padding:10px 13px;background:#e2e8f0;font-weight:700}
+.tab.active{background:#172033;color:white}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:10px 5px;border-bottom:1px solid #e5e7eb}
+th{color:#64748b;font-weight:600}
+.right{text-align:right}
+.section{font-weight:800;margin:4px 0 12px}
+.status{font-size:13px;color:#64748b}
+footer{text-align:center;color:#64748b;font-size:12px;padding:15px}
+</style>
+</head>
+<body>
+<header>
+<h2>🏏 PCL LIVE SCORE</h2>
+<p>PATORI CRICKET LEAGUE</p>
+</header>
+<div class="container">
+<div class="card">
+<div class="live">● LIVE MATCH</div>
+<div class="match" id="matchName">मैच की जानकारी लोड हो रही है...</div>
+<div class="score" id="score">0/0</div>
+<div id="overs" class="muted">0.0 ओवर</div>
+<p id="innings" class="status">पारी की जानकारी</p>
+<p id="teams" class="status"></p>
+<p id="message" class="status">Firebase से कनेक्ट हो रहा है...</p>
+</div>
+
+<div class="tabs">
+<button class="tab active" onclick="showTab('bat',this)">बल्लेबाज़ी</button>
+<button class="tab" onclick="showTab('bowl',this)">गेंदबाज़ी</button>
+<button class="tab" onclick="showTab('ball',this)">गेंद-दर-गेंद</button>
+</div>
+
+<div class="card" id="batPanel">
+<div class="section">🏏 बल्लेबाज़ी स्कोरकार्ड</div>
+<table>
+<thead><tr><th>बल्लेबाज़</th><th class="right">रन</th><th class="right">गेंद</th><th class="right">4s</th><th class="right">6s</th><th class="right">SR</th></tr></thead>
+<tbody id="batTable"><tr><td colspan="6">स्कोर उपलब्ध नहीं</td></tr></tbody>
+</table>
+</div>
+
+<div class="card" id="bowlPanel" style="display:none">
+<div class="section">🎯 गेंदबाज़ी स्कोरकार्ड</div>
+<table>
+<thead><tr><th>गेंदबाज़</th><th class="right">ओवर</th><th class="right">रन</th><th class="right">विकेट</th></tr></thead>
+<tbody id="bowlTable"><tr><td colspan="4">स्कोर उपलब्ध नहीं</td></tr></tbody>
+</table>
+</div>
+
+<div class="card" id="ballPanel" style="display:none">
+<div class="section">📋 हाल की गेंदें</div>
+<div id="ballList" class="status">अभी कोई गेंद नहीं</div>
+</div>
+
+<div class="card">
+<div class="section">आखिरी विकेट</div>
+<p id="lastWicket" class="status">—</p>
+</div>
+</div>
+<footer>THE JAMUI TIMES | PCL LIVE SCORE</footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+/* अपनी index.html में मौजूद Firebase config यहाँ कॉपी करें */
+const firebaseConfig = {
+  apiKey: "AIzaSyBSDKTq4r-z7XbHpkCkzwc5bkD-IvFokEY",
+  authDomain: "pcl-live-b6221.firebaseapp.com",
+  databaseURL: "https://pcl-live-b6221-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "pcl-live-b6221",
+  storageBucket: "pcl-live-b6221.firebasestorage.app",
+  messagingSenderId: "569868359276",
+  appId: "1:569868359276:web:4cea96b5d8447871352a49"
+};
+
+const app=initializeApp(firebaseConfig);
+const db=getDatabase(app);
+const safe=(v)=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const el=id=>document.getElementById(id);
+
+function showTab(tab,btn){
+ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+ btn.classList.add("active");
+ el("batPanel").style.display=tab==="bat"?"block":"none";
+ el("bowlPanel").style.display=tab==="bowl"?"block":"none";
+ el("ballPanel").style.display=tab==="ball"?"block":"none";
+}
+window.showTab=showTab;
+
+function overs(balls){
+ return Math.floor(Number(balls||0)/6)+"."+(Number(balls||0)%6);
+}
+function render(data){
+ if(!data)return;
+ el("matchName").textContent=data.matchName||((data.team1||"") +" VS "+(data.team2||""));
+ el("score").textContent=(data.runs||0)+"/"+(data.wickets||0);
+ el("overs").textContent=overs(data.balls)+" ओवर";
+ el("innings").textContent="पारी "+(data.innings||1)+" | "+(data.battingTeam||"");
+ el("teams").textContent=(data.team1||"")+" VS "+(data.team2||"");
+ el("message").textContent=data.status||"लाइव स्कोर";
+ el("lastWicket").textContent=data.lastWicket||"—";
+
+ const bats=data.batStats||{};
+ let batRows=Object.entries(bats);
+ if(data.striker)batRows.sort((a,b)=>a[0]===data.striker?-1:b[0]===data.striker?1:0);
+ el("batTable").innerHTML=batRows.length?batRows.map(([name,s])=>{
+ const sr=s.balls?(s.runs*100/s.balls).toFixed(1):"0.0";
+ return `<tr><td>${safe(name)} ${name===data.striker?"*":""}</td><td class="right">${s.runs||0}</td><td class="right">${s.balls||0}</td><td class="right">${s.fours||0}</td><td class="right">${s.sixes||0}</td><td class="right">${sr}</td></tr>`;
+ }).join(""):'<tr><td colspan="6">बल्लेबाज़ी आँकड़े उपलब्ध नहीं</td></tr>';
+
+ const bowls=data.bowlStats||{};
+ const bowlRows=Object.entries(bowls);
+ el("bowlTable").innerHTML=bowlRows.length?bowlRows.map(([name,s])=>
+ `<tr><td>${safe(name)} ${name===data.bowler?"*":""}</td><td class="right">${overs(s.balls)}</td><td class="right">${s.runs||0}</td><td class="right">${s.wickets||0}</td></tr>`
+ ).join(""):'<tr><td colspan="4">गेंदबाज़ी आँकड़े उपलब्ध नहीं</td></tr>';
+
+ const history=Array.isArray(data.history)?data.history.slice(-12).reverse():[];
+ el("ballList").innerHTML=history.length?history.map(d=>
+ `<div style="padding:8px 0;border-bottom:1px solid #e5e7eb">${safe(d.bowler||"")} → ${safe(d.striker||"")} : <b>${d.wicket?"WICKET":(d.runs||0)+(d.extra||0)+" रन"}</b>${d.wicketType?" ("+safe(d.wicketType)+")":""}</div>`
+ ).join(""):"अभी कोई गेंद नहीं";
+}
+
+onValue(ref(db,"publicScore"),snap=>{
+ if(snap.exists()){
+ render(snap.val());
+ el("message").textContent="लाइव स्कोर अपडेट हो रहा है ✓";
+ }else{
+ el("message").textContent="अभी कोई लाइव मैच उपलब्ध नहीं है";
+ }
+},error=>{
+ el("message").textContent="स्कोर लोड नहीं हुआ: "+error.message;
+});
+</script>
+</body>
+</html>
