@@ -535,10 +535,34 @@ $("undo").addEventListener("click",async()=>{
 });
 $("endInnings").addEventListener("click",async()=>{
  if(!state)return;
+ if(state.status!=="Live")return;
  if(!confirm("क्या यह पारी समाप्त करनी है?"))return;
- state.status="Innings Ended";
- try{await saveLive();say("msg","पारी समाप्त हो गई");}
- catch(e){say("msg","सेव त्रुटि: "+e.message);}
+
+ if(state.innings===1){
+  state.innings1=saveInningsResult();
+  state.status="Innings Ended";
+ }else{
+  state.innings2=saveInningsResult();
+  const target=state.innings1.runs+1;
+
+  if(state.runs>=target){
+   state.resultText=state.battingTeam+" ने "+(10-state.wickets)+" विकेट से मैच जीता।";
+  }else if(state.runs===state.innings1.runs){
+   state.resultText="मैच टाई हुआ।";
+  }else{
+   state.resultText=state.innings1.battingTeam+" ने "+(state.innings1.runs-state.runs)+" रन से मैच जीता।";
+  }
+  state.status="Completed";
+ }
+
+ try{
+  await saveLive();
+  showScore();
+  updateInningsButton();
+  say("msg",state.innings===1?"पहली पारी समाप्त। अब दूसरी पारी शुरू करें।":state.resultText);
+ }catch(e){
+  say("msg","सेव त्रुटि: "+e.message);
+ }
 });
 window.addEventListener("error",e=>say("msg","JavaScript त्रुटि: "+e.message));
 $("startSecondInnings").addEventListener("click",async()=>{
