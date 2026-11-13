@@ -537,6 +537,43 @@ $("endInnings").addEventListener("click",async()=>{
  catch(e){say("msg","सेव त्रुटि: "+e.message);}
 });
 window.addEventListener("error",e=>say("msg","JavaScript त्रुटि: "+e.message));
+$("startSecondInnings").addEventListener("click",async()=>{
+ if(!state||state.innings!==1||!state.innings1)return;
+
+ if(!confirm("क्या दूसरी पारी शुरू करनी है?"))return;
+
+ const first=state.innings1;
+
+ state.runs=0;
+ state.wickets=0;
+ state.balls=0;
+ state.extras=0;
+ state.innings=2;
+
+ state.battingTeam=first.bowlingTeam;
+ state.bowlingTeam=first.battingTeam;
+
+ state.striker="";
+ state.nonStriker="";
+ state.bowler="";
+
+ state.batStats={};
+ state.bowlStats={};
+ state.history=[];
+ state.lastWicket="";
+ state.status="Live";
+ undoStack=[];
+ pendingExtra=null;
+
+ try{
+  await saveLive();
+  showScore();
+  $("startSecondInnings").classList.add("hidden");
+  say("msg","दूसरी पारी शुरू! दोनों बल्लेबाज़ और गेंदबाज़ चुनें।");
+ }catch(e){
+  say("msg","सेव त्रुटि: "+e.message);
+ }
+});
 </script>
 </body>
 </html>
