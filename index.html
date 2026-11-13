@@ -367,8 +367,18 @@ $("savePlayers").addEventListener("click",async()=>{
 document.querySelectorAll("[data-run]").forEach(btn=>{
  btn.addEventListener("click",()=>addDelivery({runs:Number(btn.dataset.run)}));
 });
-$("wide").addEventListener("click",()=>addDelivery({extra:1,kind:"Wide",legal:false}));
-$("noball").addEventListener("click",()=>addDelivery({extra:1,kind:"No Ball",legal:false}));
+$("wide").addEventListener("click",()=>{
+ const n=Number(prompt("Wide पर 1 रन के अलावा कितने अतिरिक्त रन बने? पीछे से चौका लगा तो 4 लिखें।","0"));
+ if(Number.isInteger(n)&&n>=0&&n<=6){
+   addDelivery({extra:1+n,kind:"Wide",legal:false});
+ }
+});
+$("noball").addEventListener("click",()=>{
+ const n=Number(prompt("No Ball पर बैट से कितने रन बने?","0"));
+ if(Number.isInteger(n)&&n>=0&&n<=6){
+   addDelivery({runs:n,extra:1,kind:"No Ball",legal:false});
+ }
+});
 $("bye").addEventListener("click",()=>{
  const n=Number(prompt("कितने बाई रन?"));
  if(Number.isInteger(n)&&n>=1&&n<=6)addDelivery({extra:n,kind:"Bye",legal:true});
