@@ -4,153 +4,499 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PCL LIVE SCORE</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#071426">
+<title>PCL | Premium Live Cricket Score</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#f1f3f6;color:#172033;font-family:'Noto Sans Devanagari',Arial,sans-serif}
-header{background:#101b32;color:white;padding:17px 14px;text-align:center}
-header h2{margin:0;font-size:23px}
-header p{margin:5px 0 0;color:#cbd5e1;font-size:12px}
-.container{max-width:760px;margin:auto;padding:10px}
-.card{background:white;border-radius:12px;padding:14px;margin-bottom:11px;box-shadow:0 2px 9px #00000012}
-.live{color:#d71920;font-weight:800;font-size:13px}
-.match{font-weight:800;margin-top:8px}
-.score{font-size:36px;font-weight:800;margin:9px 0 2px}
-.muted{color:#64748b;font-size:13px}
-.status{font-size:13px;color:#64748b}
-.team-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.team-btn{border:2px solid #dbe2ea;background:white;color:#172033;border-radius:10px;padding:12px 7px;font-family:inherit;font-weight:800}
-.team-btn.active{background:#172033;color:white;border-color:#172033}
-.team-btn:disabled{cursor:not-allowed}
-.team-btn small{display:block;font-weight:500;font-size:11px;margin-top:4px}
-.section{font-weight:800;margin:3px 0 12px}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{text-align:left;padding:9px 5px;border-bottom:1px solid #e5e7eb}
-th{color:#64748b;font-weight:600}
+:root{
+ --navy:#071426;
+ --navy2:#10233e;
+ --gold:#e8bd62;
+ --gold2:#ffe2a0;
+ --white:#fff;
+ --muted:#a9b7ca;
+ --green:#35d39a;
+ --red:#ff5364;
+}
+body{
+ margin:0;
+ background:#edf1f6;
+ color:#152238;
+ font-family:'Noto Sans Devanagari',Arial,sans-serif;
+}
+button{font-family:inherit}
+.topbar{
+ background:var(--navy);
+ color:white;
+ padding:15px 14px;
+ text-align:center;
+ border-bottom:3px solid var(--gold);
+}
+.topbar .league{
+ font-size:11px;
+ letter-spacing:3px;
+ color:var(--gold);
+ font-weight:800;
+}
+.topbar h1{
+ margin:5px 0 2px;
+ font-size:25px;
+ font-weight:900;
+}
+.topbar p{
+ margin:0;
+ color:#b9c5d5;
+ font-size:11px;
+ letter-spacing:1px;
+}
+.container{
+ max-width:760px;
+ margin:auto;
+ padding:12px;
+}
+.hero{
+ background:linear-gradient(145deg,#071426,#142d4d);
+ color:white;
+ border-radius:17px;
+ padding:17px;
+ box-shadow:0 8px 22px #07142625;
+ position:relative;
+ overflow:hidden;
+}
+.hero:after{
+ content:"🏏";
+ position:absolute;
+ right:8px;
+ top:35px;
+ font-size:85px;
+ opacity:.07;
+}
+.hero-top{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:8px;
+ position:relative;
+ z-index:1;
+}
+.live{
+ color:#ff6875;
+ font-size:11px;
+ font-weight:900;
+ letter-spacing:1px;
+}
+.live-dot{
+ display:inline-block;
+ width:8px;
+ height:8px;
+ border-radius:50%;
+ background:#ff5364;
+ margin-right:5px;
+ box-shadow:0 0 0 4px #ff536422;
+}
+.status-pill{
+ border:1px solid #ffffff30;
+ color:#d9e3ef;
+ padding:5px 9px;
+ border-radius:20px;
+ font-size:10px;
+}
+.match-title{
+ font-size:17px;
+ font-weight:800;
+ margin:17px 0 3px;
+ position:relative;
+ z-index:1;
+}
+.match-sub{
+ color:#aebed1;
+ font-size:11px;
+}
+.score-area{
+ text-align:center;
+ padding:16px 0 9px;
+ position:relative;
+ z-index:1;
+}
+.score{
+ font-size:48px;
+ line-height:1.2;
+ font-weight:900;
+ letter-spacing:1px;
+ color:white;
+}
+.overs{
+ color:var(--gold2);
+ font-size:13px;
+ margin-top:4px;
+ font-weight:700;
+}
+.innings-label{
+ color:#bdc9d8;
+ font-size:12px;
+ margin-top:6px;
+}
+.team-line{
+ display:flex;
+ justify-content:center;
+ gap:8px;
+ color:#c6d2e1;
+ font-size:11px;
+ margin-top:10px;
+}
+.target{
+ margin-top:13px;
+ background:#ffffff12;
+ border:1px solid #ffffff22;
+ border-radius:12px;
+ padding:12px;
+ position:relative;
+ z-index:1;
+}
+.target-title{
+ color:var(--gold2);
+ font-size:12px;
+ font-weight:800;
+}
+.need{
+ font-size:23px;
+ font-weight:900;
+ margin:4px 0;
+ color:white;
+}
+.target-detail{
+ font-size:12px;
+ color:#d2dceb;
+}
+.stats{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px;
+ margin-top:10px;
+}
+.stat{
+ background:#ffffff12;
+ border:1px solid #ffffff18;
+ border-radius:9px;
+ padding:9px;
+ text-align:center;
+}
+.stat b{
+ display:block;
+ font-size:19px;
+ color:var(--gold2);
+}
+.stat span{
+ color:#c1cddd;
+ font-size:10px;
+}
+.result{
+ margin-top:13px;
+ background:#123c32;
+ border:1px solid #2c8c70;
+ border-radius:11px;
+ color:#aaffdc;
+ padding:13px;
+ font-weight:800;
+ font-size:14px;
+ text-align:center;
+ line-height:1.8;
+ position:relative;
+ z-index:1;
+}
+.section-card{
+ background:white;
+ border-radius:14px;
+ padding:14px;
+ margin-top:12px;
+ box-shadow:0 3px 12px #10233e0c;
+}
+.section-title{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ font-size:15px;
+ font-weight:900;
+ margin:0 0 12px;
+ color:#14243b;
+}
+.section-title .line{
+ height:3px;
+ width:25px;
+ border-radius:5px;
+ background:var(--gold);
+}
+.innings-summary{
+ background:#f2f5f9;
+ border:1px solid #e5eaf0;
+ border-radius:11px;
+ padding:12px;
+ margin-top:8px;
+}
+.summary-top{
+ display:flex;
+ justify-content:space-between;
+ gap:8px;
+ align-items:center;
+ font-size:12px;
+ font-weight:800;
+}
+.summary-score{
+ font-size:24px;
+ font-weight:900;
+ margin-top:6px;
+ color:#10233e;
+}
+.summary-overs{
+ font-size:11px;
+ color:#64748b;
+}
+.team-tabs{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:9px;
+}
+.team-btn{
+ border:1px solid #dce3ec;
+ background:#f5f7fa;
+ color:#24354c;
+ border-radius:11px;
+ padding:12px 7px;
+ font-weight:900;
+ font-size:12px;
+ cursor:pointer;
+}
+.team-btn.active{
+ background:var(--navy);
+ border-color:var(--gold);
+ color:var(--gold2);
+ box-shadow:0 4px 12px #07142620;
+}
+.team-btn small{
+ display:block;
+ font-size:11px;
+ font-weight:500;
+ margin-top:5px;
+ color:inherit;
+}
+.team-btn:disabled{opacity:.45;cursor:not-allowed}
+.selected-info{
+ font-size:12px;
+ color:#64748b;
+ margin-top:10px;
+}
+.table-wrap{overflow-x:auto}
+table{
+ width:100%;
+ border-collapse:collapse;
+ font-size:12px;
+ min-width:330px;
+}
+th,td{
+ padding:10px 6px;
+ border-bottom:1px solid #edf0f4;
+ text-align:left;
+ white-space:nowrap;
+}
+th{
+ color:#748196;
+ font-size:10px;
+ font-weight:800;
+ background:#f7f9fb;
+}
 .right{text-align:right}
-.summary{background:#edf3ff;padding:11px;border-radius:9px;margin-top:10px;line-height:1.9}
-.target{background:#fff7e6;color:#8a5200;padding:13px;border-radius:10px;margin-top:10px;font-weight:700;line-height:1.9}
-.target-big{font-size:23px;font-weight:800}
-.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
-.stat{background:#f1f5f9;border-radius:9px;padding:10px;text-align:center}
-.stat b{display:block;font-size:19px}
-.stat span{font-size:11px;color:#64748b}
-.result{background:#e8f7ed;color:#166534;padding:12px;border-radius:9px;font-weight:800;margin-top:10px;line-height:1.8}
-.empty{text-align:center;color:#64748b;padding:20px 8px;font-size:13px}
-footer{text-align:center;background:#171717;color:white;padding:22px 10px;margin-top:15px}
-footer .brand{font-size:23px;font-weight:800;color:#E10600;margin:5px 0}
-footer .tag{font-size:13px}
+.player-name{font-weight:800;color:#17283f}
+.player-detail{
+ display:block;
+ color:#77869a;
+ font-size:10px;
+ margin-top:3px;
+ white-space:normal;
+}
+.ball{
+ display:flex;
+ justify-content:space-between;
+ gap:10px;
+ padding:10px 2px;
+ border-bottom:1px solid #edf0f4;
+ font-size:12px;
+}
+.ball:last-child{border:0}
+.ball strong{color:#152842}
+.ball-result{
+ font-weight:900;
+ color:#152842;
+}
+.wicket{color:var(--red)}
+.empty{
+ text-align:center;
+ color:#8995a6;
+ padding:17px 5px;
+ font-size:12px;
+}
+.last-wicket{
+ background:#fff5f4;
+ border:1px solid #ffe0dc;
+ color:#9e3b35;
+ border-radius:9px;
+ padding:11px;
+ font-size:12px;
+}
+.footer{
+ margin-top:15px;
+ background:#071426;
+ color:white;
+ text-align:center;
+ padding:23px 12px;
+ border-top:3px solid var(--gold);
+}
+.footer .powered{
+ font-size:10px;
+ letter-spacing:3px;
+ color:#aab8ca;
+}
+.footer .brand{
+ color:var(--gold);
+ font-size:24px;
+ font-weight:900;
+ margin:5px 0;
+}
+.footer .tag{
+ color:#dbe3ed;
+ font-size:12px;
+}
+.footer .network{
+ color:#9eacbe;
+ font-size:10px;
+ margin-top:8px;
+}
+.footer .pcl{
+ color:var(--gold2);
+ font-size:11px;
+ margin-top:12px;
+ font-weight:800;
+}
 @media(max-width:390px){
- .score{font-size:32px}
- th,td{padding:8px 3px;font-size:11px}
- .container{padding:7px}
- .team-btn{font-size:12px}
+ .container{padding:8px}
+ .score{font-size:41px}
+ .topbar h1{font-size:22px}
+ .section-card{padding:11px}
 }
 </style>
 </head>
+
 <body>
 
-<header>
-<h2>🏏 PCL LIVE SCORE</h2>
-<p>PATORI CRICKET LEAGUE</p>
+<header class="topbar">
+ <div class="league">PATJORI CRICKET LEAGUE</div>
+ <h1>🏆 PCL LIVE SCORE</h1>
+ <p>THE GAME • THE GLORY • THE PRIDE</p>
 </header>
 
-<div class="container">
+<main class="container">
 
-<div class="card">
- <div class="live" id="liveStatus">● LIVE MATCH</div>
- <div class="match" id="matchName">मैच लोड हो रहा है...</div>
- <div class="score" id="currentScore">0/0</div>
- <div class="muted" id="currentOvers">0.0 ओवर</div>
- <p class="status" id="currentInnings">पारी की जानकारी</p>
- <p class="status" id="teams"></p>
+<section class="hero">
+ <div class="hero-top">
+  <div class="live" id="liveStatus"><span class="live-dot"></span>LIVE MATCH</div>
+  <div class="status-pill" id="matchStatus">MATCH CENTER</div>
+ </div>
+
+ <div class="match-title" id="matchName">मैच लोड हो रहा है...</div>
+ <div class="match-sub" id="matchSubtitle">PCL • LIVE MATCH CENTER</div>
+
+ <div class="score-area">
+  <div class="score" id="currentScore">0/0</div>
+  <div class="overs" id="currentOvers">0.0 ओवर</div>
+  <div class="innings-label" id="currentInnings">पारी की जानकारी</div>
+  <div class="team-line" id="teams"></div>
+ </div>
+
  <div id="targetInfo"></div>
  <div id="resultInfo"></div>
- <p class="status" id="message">Firebase से कनेक्ट हो रहा है...</p>
-</div>
+</section>
 
-<div class="card">
- <div class="section">📊 दोनों पारियों का स्कोर</div>
+<section class="section-card">
+ <h3 class="section-title"><span class="line"></span>📊 MATCH SCORE SUMMARY</h3>
  <div id="inningsSummaries">
   <div class="empty">स्कोर लोड हो रहा है...</div>
  </div>
-</div>
+</section>
 
-<div class="card">
- <div class="section">🏏 टीम चुनें — पूरा स्कोरकार्ड देखें</div>
+<section class="section-card">
+ <h3 class="section-title"><span class="line"></span>🏏 INNINGS SCORECARD</h3>
  <div class="team-tabs">
   <button class="team-btn active" id="firstTeamBtn" type="button">
-   पहली पारी
+   1st INNINGS
    <small id="firstTeamName">टीम 1</small>
   </button>
   <button class="team-btn" id="secondTeamBtn" type="button">
-   दूसरी पारी
+   2nd INNINGS
    <small id="secondTeamName">टीम 2</small>
   </button>
  </div>
- <div id="selectedInningsInfo" class="muted"></div>
-</div>
+ <div id="selectedInningsInfo" class="selected-info"></div>
+</section>
 
-<div class="card">
- <div class="section">🏏 बल्लेबाज़ी स्कोरकार्ड</div>
- <div style="overflow-x:auto">
- <table>
-  <thead>
-   <tr>
-    <th>बल्लेबाज़</th>
-    <th class="right">रन</th>
-    <th class="right">गेंद</th>
-    <th class="right">4s</th>
-    <th class="right">6s</th>
-    <th class="right">SR</th>
-   </tr>
-  </thead>
-  <tbody id="batTable">
-   <tr><td colspan="6">स्कोर उपलब्ध नहीं</td></tr>
-  </tbody>
- </table>
+<section class="section-card">
+ <h3 class="section-title"><span class="line"></span>🏏 BATTING SCORECARD</h3>
+ <div class="table-wrap">
+  <table>
+   <thead>
+    <tr>
+     <th>BATSMAN</th>
+     <th class="right">R</th>
+     <th class="right">B</th>
+     <th class="right">4s</th>
+     <th class="right">6s</th>
+     <th class="right">SR</th>
+    </tr>
+   </thead>
+   <tbody id="batTable">
+    <tr><td colspan="6">स्कोर उपलब्ध नहीं</td></tr>
+   </tbody>
+  </table>
  </div>
-</div>
+</section>
 
-<div class="card">
- <div class="section">🎯 गेंदबाज़ी स्कोरकार्ड</div>
- <div style="overflow-x:auto">
- <table>
-  <thead>
-   <tr>
-    <th>गेंदबाज़</th>
-    <th class="right">ओवर</th>
-    <th class="right">रन</th>
-    <th class="right">विकेट</th>
-   </tr>
-  </thead>
-  <tbody id="bowlTable">
-   <tr><td colspan="4">स्कोर उपलब्ध नहीं</td></tr>
-  </tbody>
- </table>
+<section class="section-card">
+ <h3 class="section-title"><span class="line"></span>🎯 BOWLING SCORECARD</h3>
+ <div class="table-wrap">
+  <table>
+   <thead>
+    <tr>
+     <th>BOWLER</th>
+     <th class="right">OV</th>
+     <th class="right">RUNS</th>
+     <th class="right">WKTS</th>
+    </tr>
+   </thead>
+   <tbody id="bowlTable">
+    <tr><td colspan="4">स्कोर उपलब्ध नहीं</td></tr>
+   </tbody>
+  </table>
  </div>
-</div>
+</section>
 
-<div class="card">
- <div class="section">📋 गेंद-दर-गेंद</div>
- <div id="ballList" class="status">अभी कोई गेंद नहीं</div>
-</div>
+<section class="section-card">
+ <h3 class="section-title"><span class="line"></span>📋 BALL BY BALL COMMENTARY</h3>
+ <div id="ballList" class="empty">अभी कोई गेंद नहीं</div>
+</section>
 
-<div class="card">
- <div class="section">आखिरी विकेट</div>
- <p id="lastWicket" class="status">—</p>
-</div>
+<section class="section-card">
+ <h3 class="section-title"><span class="line"></span>⚡ LAST WICKET</h3>
+ <div id="lastWicket" class="last-wicket">अभी कोई विकेट नहीं</div>
+</section>
 
-</div>
+</main>
 
-<footer>
- <div style="font-size:12px;letter-spacing:2px;color:#ccc">POWERED BY</div>
+<footer class="footer">
+ <div class="powered">POWERED BY</div>
  <div class="brand">THE JAMUI TIMES</div>
  <div class="tag">ख़बर वही जो होगा सही</div>
- <div style="font-size:11px;color:#bbb;margin-top:7px">
- PCL LIVE SCORE | Digital News & Media Network
- </div>
+ <div class="network">Digital News & Media Network</div>
+ <div class="pcl">OFFICIAL DIGITAL SCORE PARTNER • PCL</div>
 </footer>
 
 <script type="module">
@@ -223,25 +569,31 @@ function renderSummary(data){
 
  if(first){
   html+=`
-  <div class="summary">
-   <b>1️⃣ पहली पारी — ${safe(first.battingTeam||"टीम 1")}</b><br>
-   <span style="font-size:22px;font-weight:800">${num(first.runs)}/${num(first.wickets)}</span>
-   &nbsp; (${oversWithLimit(first)})
+  <div class="innings-summary">
+   <div class="summary-top">
+    <span>1️⃣ ${safe(first.battingTeam||data.team1||"पहली पारी")}</span>
+    <span>1ST INNINGS</span>
+   </div>
+   <div class="summary-score">${num(first.runs)}/${num(first.wickets)}</div>
+   <div class="summary-overs">${oversWithLimit(first)}</div>
   </div>`;
  }
 
  if(second){
   html+=`
-  <div class="summary">
-   <b>2️⃣ दूसरी पारी — ${safe(second.battingTeam||"टीम 2")}</b><br>
-   <span style="font-size:22px;font-weight:800">${num(second.runs)}/${num(second.wickets)}</span>
-   &nbsp; (${oversWithLimit(second)})
+  <div class="innings-summary">
+   <div class="summary-top">
+    <span>2️⃣ ${safe(second.battingTeam||data.team2||"दूसरी पारी")}</span>
+    <span>2ND INNINGS</span>
+   </div>
+   <div class="summary-score">${num(second.runs)}/${num(second.wickets)}</div>
+   <div class="summary-overs">${oversWithLimit(second)}</div>
   </div>`;
  }else{
   html+=`
-  <div class="summary">
-   <b>2️⃣ दूसरी पारी</b><br>
-   <span class="muted">अभी शुरू नहीं हुई है</span>
+  <div class="innings-summary">
+   <div class="summary-top"><span>2️⃣ दूसरी पारी</span></div>
+   <div class="empty">अभी शुरू नहीं हुई है</div>
   </div>`;
  }
 
@@ -253,8 +605,6 @@ function renderTarget(data){
  el("targetInfo").innerHTML="";
 
  const status=String(data.status||"").toLowerCase();
-
- // मैच पूरा होने के बाद लक्ष्य का लाइव संदेश नहीं दिखेगा
  if(status==="completed"||status==="innings ended")return;
  if(num(data.innings)!==2||!first)return;
 
@@ -265,11 +615,11 @@ function renderTarget(data){
  const crr=rate(data.runs,data.balls);
  const rrr=ballsLeft>0?(needed/(ballsLeft/6)).toFixed(2):"—";
 
- let html=`
+ el("targetInfo").innerHTML=`
  <div class="target">
-  <div>🎯 लक्ष्य: ${target} रन</div>
-  <div class="target-big">${needed===0?"लक्ष्य हासिल!":needed+" रन चाहिए"}</div>
-  <div>${ballsLeft} गेंदें बाकी</div>
+  <div class="target-title">🎯 TARGET: ${target} RUNS</div>
+  <div class="need">${needed===0?"लक्ष्य हासिल!":needed+" रन चाहिए"}</div>
+  <div class="target-detail">${ballsLeft} गेंदें बाकी</div>
   <div class="stats">
    <div class="stat">
     <b>${crr}</b>
@@ -281,8 +631,6 @@ function renderTarget(data){
    </div>
   </div>
  </div>`;
-
- el("targetInfo").innerHTML=html;
 }
 
 function getDismissals(history){
@@ -320,7 +668,7 @@ function renderScorecard(data){
   el("bowlTable").innerHTML='<tr><td colspan="4">गेंदबाज़ी का स्कोर उपलब्ध नहीं</td></tr>';
   el("ballList").innerHTML="अभी कोई गेंद नहीं";
   el("selectedInningsInfo").textContent="इस पारी का स्कोर अभी उपलब्ध नहीं है।";
-  el("lastWicket").textContent="—";
+  el("lastWicket").textContent="अभी कोई विकेट नहीं";
   return;
  }
 
@@ -338,7 +686,6 @@ function renderScorecard(data){
   if(n&&!names.includes(n))names.push(n);
  });
 
- // उन बल्लेबाजों को भी शामिल करें जिनके आंकड़े मौजूद हैं
  Object.keys(bats).forEach(n=>{
   if(n&&!names.includes(n))names.push(n);
  });
@@ -355,8 +702,8 @@ function renderScorecard(data){
 
   return `<tr>
    <td>
-    <b>${safe(name)} ${name===data.striker?"*":""}</b>
-    <small style="display:block;color:#64748b;font-size:10px">${safe(detail)}</small>
+    <span class="player-name">${safe(name)} ${name===data.striker?"*":""}</span>
+    <small class="player-detail">${safe(detail)}</small>
    </td>
    <td class="right">${runs}</td>
    <td class="right">${balls}</td>
@@ -375,29 +722,34 @@ function renderScorecard(data){
  el("bowlTable").innerHTML=bowlRows.length?
  bowlRows.map(([name,s])=>`
   <tr>
-   <td>${safe(name)} ${name===data.bowler?"*":""}</td>
+   <td><span class="player-name">${safe(name)} ${name===data.bowler?"*":""}</span></td>
    <td class="right">${overs(s.balls)}</td>
    <td class="right">${num(s.runs)}</td>
    <td class="right">${num(s.wickets)}</td>
   </tr>`).join("") :
- '<tr><td colspan="4">गेंदबाज़ी आँकड़े उपलब्ध नहीं</td></tr>';
+ '<tr><td colspan="4">गेंदबाज़ी स्कोर उपलब्ध नहीं</td></tr>';
 
  const recent=history.slice(-12).reverse();
 
  el("ballList").innerHTML=recent.length?
- recent.map(d=>`
-  <div style="padding:8px 0;border-bottom:1px solid #e5e7eb">
-   ${safe(d.bowler||"")} → ${safe(d.striker||"")} :
-   <b>${d.wicket?"WICKET":num(d.runs)+num(d.extra)+" रन"}</b>
-   ${d.wicketType?" ("+safe(d.wicketType)+")":""}
-  </div>`).join(""):"अभी कोई गेंद नहीं";
+ recent.map(d=>{
+  const isWicket=!!d.wicket;
+  const result=isWicket?"WICKET":num(d.runs)+num(d.extra)+" रन";
+  return `
+   <div class="ball">
+    <span>${safe(d.bowler||"")} → ${safe(d.striker||"")}</span>
+    <span class="ball-result ${isWicket?"wicket":""}">
+     ${result}${d.wicketType?" ("+safe(d.wicketType)+")":""}
+    </span>
+   </div>`;
+ }).join(""):"अभी कोई गेंद नहीं";
 
  el("selectedInningsInfo").textContent=
   (data.battingTeam||"टीम")+" बल्लेबाज़ी | "+
   num(data.runs)+"/"+num(data.wickets)+
   " ("+oversWithLimit(data)+")";
 
- el("lastWicket").textContent=data.lastWicket||"—";
+ el("lastWicket").textContent=data.lastWicket||"अभी कोई विकेट नहीं";
 }
 
 function selectInnings(n){
@@ -430,21 +782,26 @@ function render(data){
  el("currentInnings").textContent=
   "पारी "+num(data.innings||1)+" | "+(data.battingTeam||"");
 
- el("teams").textContent=(data.team1||"")+" VS "+(data.team2||"");
+ el("teams").textContent=(data.team1||"")+"  VS  "+(data.team2||"");
 
  const status=data.status||"Live";
+ const completed=String(status).toLowerCase()==="completed";
+ const ended=String(status).toLowerCase()==="innings ended";
 
- el("liveStatus").textContent=
-  status==="Completed"?"● MATCH COMPLETED":
-  status==="Innings Ended"?"● INNINGS ENDED":"● LIVE MATCH";
+ el("liveStatus").innerHTML=completed?
+  "● MATCH COMPLETED":
+  ended?"● INNINGS ENDED":'<span class="live-dot"></span>LIVE MATCH';
 
- el("liveStatus").style.color=
-  status==="Completed"?"#16803c":"#d71920";
+ el("liveStatus").style.color=completed?"#35d39a":ended?"#e8bd62":"#ff6875";
+ el("matchStatus").textContent=completed?"FULL TIME":ended?"INNINGS BREAK":"LIVE";
+
+ el("matchSubtitle").textContent=
+  "PCL MATCH CENTER • "+totalOvers(data)+" OVERS";
 
  renderSummary(data);
  renderTarget(data);
 
- if(status==="Completed"&&data.resultText){
+ if(completed&&data.resultText){
   el("resultInfo").innerHTML=
    `<div class="result">🏆 ${safe(data.resultText)}</div>`;
  }else{
@@ -464,22 +821,26 @@ function render(data){
   "दूसरी पारी";
 
  el("secondTeamBtn").disabled=!second;
- el("secondTeamBtn").style.opacity=second?"1":".55";
 
  if(selectedInnings===2&&!second)selectedInnings=1;
-
  selectInnings(selectedInnings);
 }
 
 onValue(ref(db,"publicScore"),snap=>{
  if(snap.exists()){
   render(snap.val());
-  el("message").textContent="लाइव स्कोर अपडेट हो रहा है ✓";
  }else{
-  el("message").textContent="अभी कोई लाइव मैच उपलब्ध नहीं है";
+  el("message")?.textContent;
+  el("matchName").textContent="अभी कोई लाइव मैच उपलब्ध नहीं है";
+  el("liveStatus").textContent="● NO LIVE MATCH";
+  el("currentScore").textContent="—";
+  el("currentOvers").textContent="";
+  el("inningsSummaries").innerHTML='<div class="empty">अभी कोई स्कोर उपलब्ध नहीं है।</div>';
  }
 },error=>{
- el("message").textContent="स्कोर लोड नहीं हुआ: "+error.message;
+ el("matchName").textContent="स्कोर लोड नहीं हुआ";
+ el("liveStatus").textContent="● CONNECTION ERROR";
+ console.error(error);
 });
 </script>
 
