@@ -291,6 +291,10 @@ function addDelivery({runs=0,extra=0,kind="Run",legal=true,wicket=false,wicketTy
  say("msg","पारी समाप्त है। दूसरी पारी शुरू करें।");
  return;
  }
+ if(state.innings===2 && state.innings1 && state.runs>=state.innings1.runs+1){
+ say("msg","लक्ष्य हासिल! अब पारी समाप्त करें।");
+ return;
+ }
  if(state.wickets>=10){say("msg","सभी 10 विकेट गिर चुके हैं");return;}
  if(state.balls>=state.totalOvers*6){say("msg","ओवर पूरे हो गए हैं");return;}
  if(!state.striker||!state.nonStriker||!state.bowler){
