@@ -192,12 +192,18 @@ let selectedId=null,selectedMatch=null,state=null,undoStack=[],pendingExtra=null
 const say=(id,msg)=>$(id).textContent=msg;
 
 function freshState(m){
- return {runs:0,wickets:0,balls:0,innings:1,
- battingTeam:m.battingFirst,
- bowlingTeam:m.battingFirst===m.team1?m.team2:m.team1,
- striker:"",nonStriker:"",bowler:"",
- totalOvers:10,extras:0,history:[],status:"Live",
- players:{team1:[],team2:[]},lastWicket:""};
+ return {
+  runs:0,wickets:0,balls:0,innings:1,
+  battingTeam:m.battingFirst,
+  bowlingTeam:m.battingFirst===m.team1?m.team2:m.team1,
+  striker:"",nonStriker:"",bowler:"",
+  totalOvers:10,extras:0,history:[],
+  status:"Live",
+  players:{team1:[],team2:[]},
+  lastWicket:"",
+  innings1:null,
+  innings2:null
+ };
 }
 function oversText(b){return Math.floor(b/6)+"."+(b%6);}
 function playersOf(team){
