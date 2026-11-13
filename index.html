@@ -433,6 +433,7 @@ $("loadMatch").addEventListener("click",async()=>{
  $("scoring").classList.remove("hidden");
  $("dashboard").classList.add("active");
  showScore();
+  updateInningsButton();
  say("msg","मैच खुल गया। पहले खिलाड़ियों की सूची सेव करें।");
  }catch(e){say("msg","मैच खोलने में त्रुटि: "+e.message);}
 });
