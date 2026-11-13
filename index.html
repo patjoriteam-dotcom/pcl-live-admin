@@ -63,12 +63,20 @@ label{font-size:12px;color:#dbeafe}
 
 <div class="card">
 <h3>नया मैच बनाएं</h3>
-<input id="matchName" placeholder="मैच का नाम">
-<select id="team1"></select><select id="team2"></select>
+<input id="matchName" placeholder="मैच नंबर / मैच का नाम">
+<input id="team1" placeholder="पहली टीम का नाम">
+<input id="team2" placeholder="दूसरी टीम का नाम">
+<label>मैच कितने ओवर का होगा?</label>
+<input id="totalOvers" type="number" min="1" max="50" value="10" placeholder="ओवर लिखें">
 <input id="matchDate" type="date">
-<select id="tossWinner"><option value="">टॉस किसने जीता?</option></select>
-<select id="decision"><option value="">टॉस जीतकर क्या करेंगे?</option><option value="Batting">पहले बल्लेबाज़ी</option><option value="Bowling">पहले गेंदबाज़ी</option></select>
-<button id="saveMatch" type="button">मैच सेव करें</button><p id="saveMsg"></p>
+<select id="tossWinner"><option value="">पहले दोनों टीमों के नाम लिखें</option></select>
+<select id="decision">
+<option value="">टॉस जीतकर क्या करेंगे?</option>
+<option value="Batting">पहले बल्लेबाज़ी</option>
+<option value="Bowling">पहले गेंदबाज़ी</option>
+</select>
+<button id="saveMatch" type="button">मैच सेव करें</button>
+<p id="saveMsg"></p>
 </div>
 
 <div class="card">
@@ -88,7 +96,7 @@ label{font-size:12px;color:#dbeafe}
 <p class="center" id="currentBowlerText">गेंदबाज़: —</p>
 </div>
 
-<div class="card" id="rosterPanel">
+<div class="card hidden" id="rosterPanel">
 <h3>दोनों टीमों के 11 खिलाड़ियों के नाम (हर लाइन में एक नाम)</h3>
 <div class="row">
 <div><b id="team1Label"></b><textarea id="team1Players" placeholder="खिलाड़ी 1&#10;खिलाड़ी 2"></textarea></div>
@@ -155,21 +163,17 @@ label{font-size:12px;color:#dbeafe}
 
 <div class="card" style="display:block;width:100%;min-height:200px;">
 <h3>🏏 स्कोर का विवरण</h3>
-
 <h3>बल्लेबाज़ी स्कोरकार्ड</h3>
 <p id="battingDetails">स्कोर उपलब्ध नहीं</p>
-
 <hr>
-
 <h3>🎯 गेंदबाज़ी स्कोरकार्ड</h3>
 <p id="bowlingDetails">स्कोर उपलब्ध नहीं</p>
-
 <p id="lastWicket"></p>
 </div>
 </div>
 </div>
 </div>
-</div>
+
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
 import {getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
@@ -184,13 +188,24 @@ const firebaseConfig={
  messagingSenderId:"569868359276",
  appId:"1:569868359276:web:4cea96b5d8447871352a49"
 };
+
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
 const $=id=>document.getElementById(id);
-const teams=["Patjori Warriors","Mithapur Kings","Star Eleven","Royal Tigers","Super Strikers","Rising Lions","Thunder Boys","Dynamic XI","Power Hitters","Master Blasters","Young Champs","Fire Fighters"];
-for(const id of ["team1","team2","tossWinner"])teams.forEach(t=>$(id).add(new Option(t,t)));
-
 let selectedId=null,selectedMatch=null,state=null,undoStack=[],pendingExtra=null;
+
 const say=(id,msg)=>$(id).textContent=msg;
+const oversText=b=>Math.floor(b/6)+"."+(b%6);
+
+function updateTossOptions(){
+ const a=$("team1").value.trim(),b=$("team2").value.trim();
+ const sel=$("tossWinner"),old=sel.value;
+ sel.innerHTML='<option value="">टॉस किसने जीता?</option>';
+ if(a)sel.add(new Option(a,a));
+ if(b&&b!==a)sel.add(new Option(b,b));
+ if(old===a||old===b)sel.value=old;
+}
+$("team1").addEventListener("input",updateTossOptions);
+$("team2").addEventListener("input",updateTossOptions);
 
 function freshState(m){
  return {
@@ -198,18 +213,18 @@ function freshState(m){
   battingTeam:m.battingFirst,
   bowlingTeam:m.battingFirst===m.team1?m.team2:m.team1,
   striker:"",nonStriker:"",bowler:"",
-  totalOvers:10,extras:0,history:[],
-  status:"Live",
+  totalOvers:Number(m.totalOvers)||10,
+  extras:0,history:[],status:"Live",
   players:{team1:[],team2:[]},
-  lastWicket:"",
-  innings1:null,
-  innings2:null
+  lastWicket:"",innings1:null,innings2:null,
+  batStats:{},bowlStats:{}
  };
 }
-function oversText(b){return Math.floor(b/6)+"."+(b%6);}
+
 function playersOf(team){
  return team===selectedMatch.team1?(state.players.team1||[]):(state.players.team2||[]);
 }
+
 function fillSelects(){
  const bowlers=playersOf(state.bowlingTeam);
  const b=$("bowlerSelect"),c=$("catcherSelect");
@@ -218,13 +233,12 @@ function fillSelects(){
  bowlers.forEach(n=>{b.add(new Option(n,n));c.add(new Option(n,n));});
  if(state.bowler&&bowlers.includes(state.bowler))b.value=state.bowler;
 }
+
 function saveInningsResult(){
  return {
-  runs:state.runs,
-  wickets:state.wickets,
-  balls:state.balls,
-  battingTeam:state.battingTeam,
-  bowlingTeam:state.bowlingTeam,
+  runs:state.runs,wickets:state.wickets,balls:state.balls,
+  battingTeam:state.battingTeam,bowlingTeam:state.bowlingTeam,
+  totalOvers:state.totalOvers,
   batStats:JSON.parse(JSON.stringify(state.batStats||{})),
   bowlStats:JSON.parse(JSON.stringify(state.bowlStats||{})),
   history:JSON.parse(JSON.stringify(state.history||[]))
@@ -232,18 +246,30 @@ function saveInningsResult(){
 }
 
 function updateInningsButton(){
- const btn=$("startSecondInnings");
- if(!btn)return;
- btn.classList.toggle("hidden",state.innings!==1||state.status!=="Innings Ended");
+ $("startSecondInnings").classList.toggle("hidden",
+  !(state&&state.innings===1&&state.status==="Innings Ended"));
 }
- function showScore(){
- if(!state)return;
 
+function makeResult(){
+ const first=state.innings1;
+ const target=first.runs+1;
+ if(state.runs>=target){
+  state.resultText=state.battingTeam+" ने "+(10-state.wickets)+" विकेट से मैच जीता।";
+ }else if(state.runs===first.runs){
+  state.resultText="मैच टाई हुआ।";
+ }else{
+  state.resultText=first.battingTeam+" ने "+(first.runs-state.runs)+" रन से मैच जीता।";
+ }
+ state.status="Completed";
+ state.innings2=saveInningsResult();
+}
+
+function showScore(){
+ if(!state)return;
  state.batStats=state.batStats||{};
  state.bowlStats=state.bowlStats||{};
-
  $("score").textContent=state.runs+"/"+state.wickets;
- $("overs").textContent=oversText(state.balls)+" ओवर";
+ $("overs").textContent=oversText(state.balls)+" / "+state.totalOvers+" ओवर";
  $("inningsInfo").textContent="पारी "+state.innings+" | "+state.battingTeam+" बल्लेबाज़ी"+(state.resultText?" | "+state.resultText:"");
  $("currentBowlerText").textContent="गेंदबाज़: "+(state.bowler||"गेंदबाज़ चुनें");
 
@@ -254,18 +280,12 @@ function updateInningsButton(){
   return name+": "+s.runs+" रन ("+s.balls+" गेंद) | 4s: "+s.fours+" | 6s: "+s.sixes+" | SR: "+sr;
  }
 
- $("battingDetails").textContent=
-  "बल्लेबाज़ी\n"+
-  batterLine(state.striker)+"\n"+
-  batterLine(state.nonStriker);
+ $("battingDetails").textContent="बल्लेबाज़ी\n"+batterLine(state.striker)+"\n"+batterLine(state.nonStriker);
 
  const b=state.bowlStats[state.bowler]||{balls:0,runs:0,wickets:0};
- $("bowlingDetails").textContent=
-  "गेंदबाज़ी टीम: "+state.bowlingTeam+"\n"+
-  "गेंदबाज़: "+(state.bowler||"—")+
-  " | ओवर: "+oversText(b.balls)+
-  " | रन: "+b.runs+
-  " | विकेट: "+b.wickets;
+ $("bowlingDetails").textContent="गेंदबाज़ी टीम: "+state.bowlingTeam+
+  "\nगेंदबाज़: "+(state.bowler||"—")+
+  " | ओवर: "+oversText(b.balls)+" | रन: "+b.runs+" | विकेट: "+b.wickets;
 
  $("lastWicket").textContent=state.lastWicket||"";
  $("striker").value=state.striker||"";
@@ -275,26 +295,25 @@ function updateInningsButton(){
  $("team1Label").textContent=selectedMatch.team1;
  $("team2Label").textContent=selectedMatch.team2;
  fillSelects();
+ updateInningsButton();
 }
+
 async function saveLive(){
  if(!selectedId||!state)throw new Error("पहले मैच खोलें");
  const data={...state,matchName:selectedMatch.matchName,
- team1:selectedMatch.team1,team2:selectedMatch.team2,updatedAt:Date.now()};
+ team1:selectedMatch.team1,team2:selectedMatch.team2,
+ totalOvers:state.totalOvers,updatedAt:Date.now()};
  await Promise.all([
- set(ref(db,"matches/"+selectedId+"/live"),data),
- set(ref(db,"publicScore"),{matchId:selectedId,...data})
+  set(ref(db,"matches/"+selectedId+"/live"),data),
+  set(ref(db,"publicScore"),{matchId:selectedId,...data})
  ]);
 }
 
 function addDelivery({runs=0,extra=0,kind="Run",legal=true,wicket=false,wicketType="",fielder=""}={}){
  if(!state){say("msg","पहले मैच खोलें");return;}
- if(state.status!=="Live"){
- say("msg","पारी समाप्त है। दूसरी पारी शुरू करें।");
- return;
- }
- if(state.innings===2 && state.innings1 && state.runs>=state.innings1.runs+1){
- say("msg","लक्ष्य हासिल! अब पारी समाप्त करें।");
- return;
+ if(state.status!=="Live"){say("msg","यह पारी समाप्त हो चुकी है");return;}
+ if(state.innings===2&&state.innings1&&state.runs>=state.innings1.runs+1){
+  say("msg","लक्ष्य हासिल हो चुका है");return;
  }
  if(state.wickets>=10){say("msg","सभी 10 विकेट गिर चुके हैं");return;}
  if(state.balls>=state.totalOvers*6){say("msg","ओवर पूरे हो गए हैं");return;}
@@ -303,22 +322,12 @@ function addDelivery({runs=0,extra=0,kind="Run",legal=true,wicket=false,wicketTy
  }
 
  undoStack.push(JSON.stringify(state));
-
  state.batStats=state.batStats||{};
  state.bowlStats=state.bowlStats||{};
-
- const batter=state.striker;
- const bowler=state.bowler;
-
- if(!state.batStats[batter]){
-  state.batStats[batter]={runs:0,balls:0,fours:0,sixes:0};
- }
- if(!state.bowlStats[bowler]){
-  state.bowlStats[bowler]={balls:0,runs:0,wickets:0};
- }
-
- const bs=state.batStats[batter];
- const bw=state.bowlStats[bowler];
+ const batter=state.striker,bowler=state.bowler;
+ if(!state.batStats[batter])state.batStats[batter]={runs:0,balls:0,fours:0,sixes:0};
+ if(!state.bowlStats[bowler])state.bowlStats[bowler]={balls:0,runs:0,wickets:0};
+ const bs=state.batStats[batter],bw=state.bowlStats[bowler];
 
  bs.runs+=runs;
  if(kind!=="Wide"&&kind!=="No Ball")bs.balls++;
@@ -327,41 +336,27 @@ function addDelivery({runs=0,extra=0,kind="Run",legal=true,wicket=false,wicketTy
 
  const isBye=kind==="Bye"||kind==="Leg Bye";
  bw.runs+=isBye?runs:runs+extra;
-
  if(legal)bw.balls++;
 
  if(wicket){
   const wt=String(wicketType).toLowerCase();
-  const notBowlerWicket=
-   wt.includes("run out")||
-   wt.includes("रन आउट")||
-   wt.includes("retired hurt")||
-   wt.includes("obstructing")||
-   wt.includes("timed out");
-
+  const notBowlerWicket=wt.includes("run out")||wt.includes("रन आउट")||
+   wt.includes("retired hurt")||wt.includes("obstructing")||wt.includes("timed out");
   if(!notBowlerWicket)bw.wickets++;
  }
 
- const d={
-  runs,extra,kind,legal,wicket,wicketType,fielder,
-  striker:batter,nonStriker:state.nonStriker,
-  bowler:bowler,time:Date.now()
- };
-
+ const d={runs,extra,kind,legal,wicket,wicketType,fielder,
+  striker:batter,nonStriker:state.nonStriker,bowler,time:Date.now()};
  state.runs+=runs+extra;
- state.extras+=extra;
+ state.extras=(state.extras||0)+extra;
  if(legal)state.balls++;
  if(wicket)state.wickets++;
-
  state.history=state.history||[];
  state.history.push(d);
 
  let rotateRuns=runs;
  if(kind==="Wide")rotateRuns=Math.max(0,extra-1);
-
- if(rotateRuns%2===1&&!wicket){
-  [state.striker,state.nonStriker]=[state.nonStriker,state.striker];
- }
+ if(rotateRuns%2===1&&!wicket)[state.striker,state.nonStriker]=[state.nonStriker,state.striker];
 
  if(legal&&state.balls%6===0){
   [state.striker,state.nonStriker]=[state.nonStriker,state.striker];
@@ -374,12 +369,32 @@ function addDelivery({runs=0,extra=0,kind="Run",legal=true,wicket=false,wicketTy
   $("nextBatter").value="";
  }
 
- showScore();
- say("msg","स्कोर सेव हो रहा है…");
+ // पारी और मैच का अपने आप अंत
+ const limit=Number(state.totalOvers||10)*6;
+ if(state.innings===1&&(state.wickets>=10||state.balls>=limit)){
+  state.innings1=saveInningsResult();
+  state.status="Innings Ended";
+  state.striker="";
+  state.nonStriker="";
+  state.bowler="";
+  say("msg","पहली पारी समाप्त! अब दूसरी पारी शुरू करें।");
+ }else if(state.innings===2){
+  const target=state.innings1?state.innings1.runs+1:Infinity;
+  if(state.runs>=target||state.wickets>=10||state.balls>=limit){
+   makeResult();
+   state.striker="";
+   state.nonStriker="";
+   state.bowler="";
+   say("msg",state.resultText);
+  }
+ }
 
- saveLive()
- .then(()=>say("msg","स्कोर Firebase में सेव हो गया ✓"))
- .catch(e=>say("msg","सेव नहीं हुआ: "+e.message));
+ showScore();
+ if(state.status==="Live")say("msg","स्कोर सेव हो रहा है…");
+ saveLive().then(()=>{
+  if(state.status==="Live")say("msg","स्कोर Firebase में सेव हो गया ✓");
+  else say("msg",state.status==="Completed"?state.resultText:"पारी समाप्त! दूसरी पारी शुरू करें।");
+ }).catch(e=>say("msg","सेव नहीं हुआ: "+e.message));
 }
 
 $("loginBtn").addEventListener("click",async()=>{
@@ -388,6 +403,7 @@ $("loginBtn").addEventListener("click",async()=>{
  catch(e){say("loginMsg","Login Error: "+e.message);}
 });
 $("logout").addEventListener("click",()=>signOut(auth));
+
 onAuthStateChanged(auth,user=>{
  $("loginBox").classList.toggle("hidden",!!user);
  $("dashboard").classList.toggle("hidden",!user);
@@ -396,34 +412,56 @@ onAuthStateChanged(auth,user=>{
 
 function loadMatches(){
  onValue(ref(db,"matches"),snap=>{
- const sel=$("matchSelect");
- sel.innerHTML='<option value="">मैच चुनें</option>';
- $("matchList").innerHTML="";
- if(!snap.exists())return;
- snap.forEach(ch=>{
- const m=ch.val();
- sel.add(new Option(m.matchName+" | "+m.team1+" VS "+m.team2,ch.key));
- const p=document.createElement("p");
- p.textContent=m.matchName+" | "+m.team1+" VS "+m.team2;
- $("matchList").appendChild(p);
- });
+  const sel=$("matchSelect");
+  sel.innerHTML='<option value="">मैच चुनें</option>';
+  $("matchList").innerHTML="";
+  if(!snap.exists())return;
+  snap.forEach(ch=>{
+   const m=ch.val();
+   sel.add(new Option(m.matchName+" | "+m.team1+" VS "+m.team2,ch.key));
+   const p=document.createElement("p");
+   p.textContent=m.matchName+" | "+m.team1+" VS "+m.team2+" | "+(m.totalOvers||10)+" ओवर";
+   $("matchList").appendChild(p);
+  });
  },e=>say("saveMsg","मैच लोड त्रुटि: "+e.message));
 }
 
 $("saveMatch").addEventListener("click",async()=>{
- const name=$("matchName").value.trim(),a=$("team1").value,
- b=$("team2").value,date=$("matchDate").value,
- tw=$("tossWinner").value,decision=$("decision").value;
- if(!name||!date||!tw||!decision){say("saveMsg","सभी जानकारी भरें");return;}
- if(a===b){say("saveMsg","दो अलग-अलग टीमें चुनें");return;}
+ const name=$("matchName").value.trim();
+ const a=$("team1").value.trim(),b=$("team2").value.trim();
+ const totalOvers=Number($("totalOvers").value);
+ const date=$("matchDate").value,tw=$("tossWinner").value,decision=$("decision").value;
+
+ if(!name||!a||!b||!date||!tw||!decision||!totalOvers){
+  say("saveMsg","सभी जानकारी भरें");return;
+ }
+ if(a.toLowerCase()===b.toLowerCase()){
+  say("saveMsg","दो अलग-अलग टीमों के नाम लिखें");return;
+ }
+ if(!Number.isInteger(totalOvers)||totalOvers<1||totalOvers>50){
+  say("saveMsg","ओवर 1 से 50 के बीच पूरा नंबर लिखें");return;
+ }
+ if(tw!==a&&tw!==b){
+  say("saveMsg","टॉस जीतने वाली टीम चुनें");return;
+ }
+
  const battingFirst=decision==="Batting"?tw:(tw===a?b:a);
  try{
- const r=push(ref(db,"matches"));
- await set(r,{matchName:name,team1:a,team2:b,matchDate:date,
- tossWinner:tw,tossDecision:decision,battingFirst,status:"Upcoming",
- createdAt:Date.now(),createdBy:auth.currentUser.uid});
- say("saveMsg","मैच सेव हो गया ✓");
- $("matchName").value="";
+  const r=push(ref(db,"matches"));
+  await set(r,{
+   matchName:name,team1:a,team2:b,totalOvers,matchDate:date,
+   tossWinner:tw,tossDecision:decision,battingFirst,
+   status:"Upcoming",createdAt:Date.now(),
+   createdBy:auth.currentUser.uid
+  });
+  say("saveMsg","मैच सेव हो गया ✓");
+  $("matchName").value="";
+  $("team1").value="";
+  $("team2").value="";
+  $("totalOvers").value="10";
+  $("matchDate").value="";
+  $("decision").value="";
+  updateTossOptions();
  }catch(e){say("saveMsg","सेव त्रुटि: "+e.message);}
 });
 
@@ -431,19 +469,22 @@ $("loadMatch").addEventListener("click",async()=>{
  const id=$("matchSelect").value;
  if(!id){say("msg","पहले मैच चुनें");return;}
  try{
- const snap=await get(ref(db,"matches/"+id));
- if(!snap.exists())throw new Error("मैच नहीं मिला");
- selectedId=id;selectedMatch=snap.val();
- state=selectedMatch.live||freshState(selectedMatch);
- state.players=state.players||{team1:[],team2:[]};
- state.history=state.history||[];
- undoStack=[];
- $("currentMatchTitle").textContent=selectedMatch.matchName;
- $("scoring").classList.remove("hidden");
- $("dashboard").classList.add("active");
- showScore();
-  updateInningsButton();
- say("msg","मैच खुल गया। पहले खिलाड़ियों की सूची सेव करें।");
+  const snap=await get(ref(db,"matches/"+id));
+  if(!snap.exists())throw new Error("मैच नहीं मिला");
+  selectedId=id;
+  selectedMatch=snap.val();
+  state=selectedMatch.live||freshState(selectedMatch);
+  state.totalOvers=Number(state.totalOvers||selectedMatch.totalOvers)||10;
+  state.players=state.players||{team1:[],team2:[]};
+  state.history=state.history||[];
+  state.batStats=state.batStats||{};
+  state.bowlStats=state.bowlStats||{};
+  undoStack=[];
+  $("currentMatchTitle").textContent=selectedMatch.matchName+" | "+state.totalOvers+" ओवर";
+  $("scoring").classList.remove("hidden");
+  $("dashboard").classList.add("active");
+  showScore();
+  say("msg","मैच खुल गया। पहले खिलाड़ियों की सूची सेव करें।");
  }catch(e){say("msg","मैच खोलने में त्रुटि: "+e.message);}
 });
 
@@ -451,55 +492,55 @@ $("rosterToggle").addEventListener("click",()=>{
  $("rosterPanel").classList.toggle("open");
  $("rosterPanel").classList.toggle("hidden",!$("rosterPanel").classList.contains("open"));
 });
+
 function parseNames(id){
  return $(id).value.split(/\n|,/).map(x=>x.trim()).filter(Boolean);
 }
+
 $("saveRoster").addEventListener("click",async()=>{
  if(!state)return;
  const a=parseNames("team1Players"),b=parseNames("team2Players");
  if(a.length!==11||b.length!==11){
- say("rosterMsg","दोनों टीमों के ठीक 11-11 खिलाड़ियों के नाम भरें। अभी टीम 1: "+a.length+", टीम 2: "+b.length);
- return;
+  say("rosterMsg","दोनों टीमों के ठीक 11-11 खिलाड़ियों के नाम भरें। अभी टीम 1: "+a.length+", टीम 2: "+b.length);
+  return;
  }
  state.players={team1:a,team2:b};
  fillSelects();
  try{
- await saveLive();
- say("rosterMsg","दोनों टीमों के खिलाड़ी सेव हो गए ✓");
- $("rosterPanel").classList.remove("open");
- $("rosterPanel").classList.add("hidden");
+  await saveLive();
+  say("rosterMsg","दोनों टीमों के खिलाड़ी सेव हो गए ✓");
+  $("rosterPanel").classList.remove("open");
+  $("rosterPanel").classList.add("hidden");
  }catch(e){say("rosterMsg","सेव त्रुटि: "+e.message);}
 });
+
 $("savePlayers").addEventListener("click",async()=>{
  if(!state)return;
  state.striker=$("striker").value.trim();
  state.nonStriker=$("nonStriker").value.trim();
  state.bowler=$("bowlerSelect").value;
  if(!state.striker||!state.nonStriker||!state.bowler){
- say("playerMsg","दोनों बल्लेबाज़ और गेंदबाज़ चुनें");return;
+  say("playerMsg","दोनों बल्लेबाज़ और गेंदबाज़ चुनें");return;
  }
  if(state.striker===state.nonStriker){
- say("playerMsg","दो अलग बल्लेबाज़ चुनें");return;
+  say("playerMsg","दो अलग बल्लेबाज़ चुनें");return;
  }
  try{await saveLive();showScore();say("playerMsg","खिलाड़ी सेव हो गए ✓");}
  catch(e){say("playerMsg","सेव त्रुटि: "+e.message);}
 });
+
 document.querySelectorAll("[data-run]").forEach(btn=>{
  btn.addEventListener("click",()=>{
-   const n=Number(btn.dataset.run);
-   if(pendingExtra){
-     const type=pendingExtra;
-     pendingExtra=null;
-     addDelivery({
-       runs:type==="No Ball"?n:0,
-       extra:1+(type==="Wide"?n:0),
-       kind:type,
-       legal:false
-     });
-     say("msg",type+" रन दर्ज हो गए");
-   }else{
-     addDelivery({runs:n});
-   }
+  const n=Number(btn.dataset.run);
+  if(pendingExtra){
+   const type=pendingExtra;
+   pendingExtra=null;
+   addDelivery({
+    runs:type==="No Ball"?n:0,
+    extra:1+(type==="Wide"?n:0),
+    kind:type,legal:false
+   });
+  }else addDelivery({runs:n});
  });
 });
 
@@ -507,7 +548,6 @@ $("wide").addEventListener("click",()=>{
  pendingExtra="Wide";
  say("msg","अब अतिरिक्त रन चुनें: 0, 1, 2, 3, 4 या 6");
 });
-
 $("noball").addEventListener("click",()=>{
  pendingExtra="No Ball";
  say("msg","अब बैट से बने रन चुनें: 0, 1, 2, 3, 4 या 6");
@@ -520,6 +560,7 @@ $("legbye").addEventListener("click",()=>{
  const n=Number(prompt("कितने लेग बाई रन?"));
  if(Number.isInteger(n)&&n>=1&&n<=6)addDelivery({extra:n,kind:"Leg Bye",legal:true});
 });
+
 $("wicketType").addEventListener("change",()=>{
  $("catcherBox").classList.toggle("hidden",$("wicketType").value!=="Caught");
 });
@@ -531,6 +572,7 @@ $("wicket").addEventListener("click",()=>{
  say("wicketMsg","");
  addDelivery({wicket:true,wicketType:type,kind:"Wicket",fielder});
 });
+
 $("undo").addEventListener("click",async()=>{
  if(!undoStack.length){say("msg","Undo के लिए कोई पिछली गेंद नहीं है");return;}
  state=JSON.parse(undoStack.pop());
@@ -538,80 +580,58 @@ $("undo").addEventListener("click",async()=>{
  try{await saveLive();say("msg","पिछली गेंद Undo हो गई ✓");}
  catch(e){say("msg","Undo सेव त्रुटि: "+e.message);}
 });
+
 $("endInnings").addEventListener("click",async()=>{
  if(!state)return;
- if(state.status!=="Live")return;
+ if(state.status!=="Live"){say("msg","यह पारी पहले ही समाप्त हो चुकी है");return;}
  if(!confirm("क्या यह पारी समाप्त करनी है?"))return;
 
  if(state.innings===1){
   state.innings1=saveInningsResult();
   state.status="Innings Ended";
+  state.striker="";
+  state.nonStriker="";
+  state.bowler="";
  }else{
-  state.innings2=saveInningsResult();
-  const target=state.innings1.runs+1;
-
-  if(state.runs>=target){
-   state.resultText=state.battingTeam+" ने "+(10-state.wickets)+" विकेट से मैच जीता।";
-  }else if(state.runs===state.innings1.runs){
-   state.resultText="मैच टाई हुआ।";
-  }else{
-   state.resultText=state.innings1.battingTeam+" ने "+(state.innings1.runs-state.runs)+" रन से मैच जीता।";
-  }
-  state.status="Completed";
+  makeResult();
+  state.striker="";
+  state.nonStriker="";
+  state.bowler="";
  }
 
  try{
   await saveLive();
   showScore();
-  updateInningsButton();
   say("msg",state.innings===1?"पहली पारी समाप्त। अब दूसरी पारी शुरू करें।":state.resultText);
- }catch(e){
-  say("msg","सेव त्रुटि: "+e.message);
- }
+ }catch(e){say("msg","सेव त्रुटि: "+e.message);}
 });
-window.addEventListener("error",e=>say("msg","JavaScript त्रुटि: "+e.message));
+
 $("startSecondInnings").addEventListener("click",async()=>{
- if(!state){
-  say("msg","मैच का डेटा नहीं मिला");
-  return;
- }
-
- if(state.innings!==1){
-  say("msg","यह पहली पारी नहीं है");
-  return;
- }
-
+ if(!state){say("msg","मैच का डेटा नहीं मिला");return;}
+ if(state.innings!==1){say("msg","यह पहली पारी नहीं है");return;}
  if(!state.innings1){
   state.innings1=saveInningsResult();
-  try{
-   await saveLive();
-  }catch(e){
-   say("msg","पहली पारी सेव नहीं हुई: "+e.message);
-   return;
-  }
+  try{await saveLive();}
+  catch(e){say("msg","पहली पारी सेव नहीं हुई: "+e.message);return;}
  }
-
  if(!confirm("क्या दूसरी पारी शुरू करनी है?"))return;
 
  const first=state.innings1;
-
  state.runs=0;
  state.wickets=0;
  state.balls=0;
  state.extras=0;
  state.innings=2;
-
  state.battingTeam=first.bowlingTeam;
  state.bowlingTeam=first.battingTeam;
-
  state.striker="";
  state.nonStriker="";
  state.bowler="";
-
  state.batStats={};
  state.bowlStats={};
  state.history=[];
  state.lastWicket="";
+ state.resultText="";
  state.status="Live";
  undoStack=[];
  pendingExtra=null;
@@ -621,10 +641,10 @@ $("startSecondInnings").addEventListener("click",async()=>{
   showScore();
   $("startSecondInnings").classList.add("hidden");
   say("msg","दूसरी पारी शुरू! दोनों बल्लेबाज़ और गेंदबाज़ चुनें।");
- }catch(e){
-  say("msg","सेव त्रुटि: "+e.message);
- }
+ }catch(e){say("msg","सेव त्रुटि: "+e.message);}
 });
+
+window.addEventListener("error",e=>say("msg","JavaScript त्रुटि: "+e.message));
 </script>
 </body>
 </html>
