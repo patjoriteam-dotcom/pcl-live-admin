@@ -571,7 +571,25 @@ $("endInnings").addEventListener("click",async()=>{
 });
 window.addEventListener("error",e=>say("msg","JavaScript त्रुटि: "+e.message));
 $("startSecondInnings").addEventListener("click",async()=>{
- if(!state||state.innings!==1||!state.innings1)return;
+ if(!state){
+  say("msg","मैच का डेटा नहीं मिला");
+  return;
+ }
+
+ if(state.innings!==1){
+  say("msg","यह पहली पारी नहीं है");
+  return;
+ }
+
+ if(!state.innings1){
+  state.innings1=saveInningsResult();
+  try{
+   await saveLive();
+  }catch(e){
+   say("msg","पहली पारी सेव नहीं हुई: "+e.message);
+   return;
+  }
+ }
 
  if(!confirm("क्या दूसरी पारी शुरू करनी है?"))return;
 
