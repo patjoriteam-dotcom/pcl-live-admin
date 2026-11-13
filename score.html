@@ -19,12 +19,10 @@ header p{margin:5px 0 0;color:#cbd5e1;font-size:12px}
 .score{font-size:36px;font-weight:800;margin:9px 0 2px}
 .muted{color:#64748b;font-size:13px}
 .status{font-size:13px;color:#64748b}
-.tabs{display:flex;gap:7px;margin:12px 0;flex-wrap:wrap}
-.tab{flex:1;border:0;border-radius:8px;padding:11px 7px;background:#e2e8f0;color:#172033;font-weight:800;font-family:inherit}
-.tab.active{background:#172033;color:white}
 .team-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
 .team-btn{border:2px solid #dbe2ea;background:white;color:#172033;border-radius:10px;padding:12px 7px;font-family:inherit;font-weight:800}
 .team-btn.active{background:#172033;color:white;border-color:#172033}
+.team-btn:disabled{cursor:not-allowed}
 .team-btn small{display:block;font-weight:500;font-size:11px;margin-top:4px}
 .section{font-weight:800;margin:3px 0 12px}
 table{width:100%;border-collapse:collapse;font-size:13px}
@@ -38,12 +36,11 @@ th{color:#64748b;font-weight:600}
 .stat{background:#f1f5f9;border-radius:9px;padding:10px;text-align:center}
 .stat b{display:block;font-size:19px}
 .stat span{font-size:11px;color:#64748b}
-.result{background:#e8f7ed;color:#166534;padding:12px;border-radius:9px;font-weight:800;margin-top:10px}
+.result{background:#e8f7ed;color:#166534;padding:12px;border-radius:9px;font-weight:800;margin-top:10px;line-height:1.8}
 .empty{text-align:center;color:#64748b;padding:20px 8px;font-size:13px}
 footer{text-align:center;background:#171717;color:white;padding:22px 10px;margin-top:15px}
 footer .brand{font-size:23px;font-weight:800;color:#E10600;margin:5px 0}
 footer .tag{font-size:13px}
-small.note{color:#64748b;font-size:11px}
 @media(max-width:390px){
  .score{font-size:32px}
  th,td{padding:8px 3px;font-size:11px}
@@ -184,10 +181,25 @@ function safe(v){
 }
 
 function num(v){return Number(v||0)}
+
+function totalOvers(data){
+ return Math.max(1,num(
+  data?.totalOvers||
+  latestData?.totalOvers||
+  latestData?.innings1?.totalOvers||
+  10
+ ));
+}
+
 function overs(b){
  b=num(b);
  return Math.floor(b/6)+"."+(b%6);
 }
+
+function oversWithLimit(data){
+ return overs(data?.balls)+" / "+totalOvers(data)+" ओवर";
+}
+
 function rate(runs,balls){
  return balls>0?(runs/(balls/6)).toFixed(2):"0.00";
 }
@@ -207,24 +219,23 @@ function getSecond(data){
 function renderSummary(data){
  const first=getFirst(data);
  const second=getSecond(data);
-
  let html="";
 
  if(first){
   html+=`
   <div class="summary">
-   <b>1️⃣ पहली पारी — ${safe(first.battingTeam)}</b><br>
+   <b>1️⃣ पहली पारी — ${safe(first.battingTeam||"टीम 1")}</b><br>
    <span style="font-size:22px;font-weight:800">${num(first.runs)}/${num(first.wickets)}</span>
-   &nbsp; (${overs(first.balls)} ओवर)
+   &nbsp; (${oversWithLimit(first)})
   </div>`;
  }
 
  if(second){
   html+=`
   <div class="summary">
-   <b>2️⃣ दूसरी पारी — ${safe(second.battingTeam)}</b><br>
+   <b>2️⃣ दूसरी पारी — ${safe(second.battingTeam||"टीम 2")}</b><br>
    <span style="font-size:22px;font-weight:800">${num(second.runs)}/${num(second.wickets)}</span>
-   &nbsp; (${overs(second.balls)} ओवर)
+   &nbsp; (${oversWithLimit(second)})
   </div>`;
  }else{
   html+=`
@@ -241,12 +252,16 @@ function renderTarget(data){
  const first=getFirst(data);
  el("targetInfo").innerHTML="";
 
+ const status=String(data.status||"").toLowerCase();
+
+ // मैच पूरा होने के बाद लक्ष्य का लाइव संदेश नहीं दिखेगा
+ if(status==="completed"||status==="innings ended")return;
  if(num(data.innings)!==2||!first)return;
 
  const target=num(first.runs)+1;
  const needed=Math.max(0,target-num(data.runs));
- const totalBalls=num(data.totalOvers||10)*6;
- const ballsLeft=Math.max(0,totalBalls-num(data.balls));
+ const maxBalls=totalOvers(data)*6;
+ const ballsLeft=Math.max(0,maxBalls-num(data.balls));
  const crr=rate(data.runs,data.balls);
  const rrr=ballsLeft>0?(needed/(ballsLeft/6)).toFixed(2):"—";
 
@@ -272,8 +287,10 @@ function renderTarget(data){
 
 function getDismissals(history){
  const result={};
+
  (history||[]).forEach(d=>{
   if(!d.wicket||!d.striker)return;
+
   const wt=String(d.wicketType||"").toLowerCase();
   let detail="out";
 
@@ -293,6 +310,7 @@ function getDismissals(history){
 
   result[d.striker]=detail;
  });
+
  return result;
 }
 
@@ -320,11 +338,17 @@ function renderScorecard(data){
   if(n&&!names.includes(n))names.push(n);
  });
 
+ // उन बल्लेबाजों को भी शामिल करें जिनके आंकड़े मौजूद हैं
+ Object.keys(bats).forEach(n=>{
+  if(n&&!names.includes(n))names.push(n);
+ });
+
  const dismissals=getDismissals(history);
 
  const rows=names.map(name=>{
   const s=bats[name]||{};
-  const runs=num(s.runs),balls=num(s.balls);
+  const runs=num(s.runs);
+  const balls=num(s.balls);
   const sr=balls?(runs*100/balls).toFixed(1):"0.0";
   const detail=dismissals[name]||
    (name===data.striker||name===data.nonStriker?"NOT OUT":"");
@@ -369,8 +393,9 @@ function renderScorecard(data){
   </div>`).join(""):"अभी कोई गेंद नहीं";
 
  el("selectedInningsInfo").textContent=
-  data.battingTeam+" बल्लेबाज़ी | "+num(data.runs)+"/"+num(data.wickets)+
-  " ("+overs(data.balls)+" ओवर)";
+  (data.battingTeam||"टीम")+" बल्लेबाज़ी | "+
+  num(data.runs)+"/"+num(data.wickets)+
+  " ("+oversWithLimit(data)+")";
 
  el("lastWicket").textContent=data.lastWicket||"—";
 }
@@ -400,13 +425,15 @@ function render(data){
   ((data.team1||"")+" VS "+(data.team2||""));
 
  el("currentScore").textContent=num(data.runs)+"/"+num(data.wickets);
- el("currentOvers").textContent=overs(data.balls)+" ओवर";
+ el("currentOvers").textContent=oversWithLimit(data);
+
  el("currentInnings").textContent=
   "पारी "+num(data.innings||1)+" | "+(data.battingTeam||"");
 
  el("teams").textContent=(data.team1||"")+" VS "+(data.team2||"");
 
  const status=data.status||"Live";
+
  el("liveStatus").textContent=
   status==="Completed"?"● MATCH COMPLETED":
   status==="Innings Ended"?"● INNINGS ENDED":"● LIVE MATCH";
@@ -428,16 +455,19 @@ function render(data){
  const second=getSecond(data);
 
  el("firstTeamName").textContent=
-  first?.battingTeam||data.battingTeam||"पहली पारी";
+  first?.battingTeam||data.team1||"पहली पारी";
 
  el("secondTeamName").textContent=
   second?.battingTeam||
-  (first?.bowlingTeam||"दूसरी पारी");
+  first?.bowlingTeam||
+  data.team2||
+  "दूसरी पारी";
 
  el("secondTeamBtn").disabled=!second;
  el("secondTeamBtn").style.opacity=second?"1":".55";
 
  if(selectedInnings===2&&!second)selectedInnings=1;
+
  selectInnings(selectedInnings);
 }
 
