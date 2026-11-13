@@ -181,7 +181,7 @@ const $=id=>document.getElementById(id);
 const teams=["Patjori Warriors","Mithapur Kings","Star Eleven","Royal Tigers","Super Strikers","Rising Lions","Thunder Boys","Dynamic XI","Power Hitters","Master Blasters","Young Champs","Fire Fighters"];
 for(const id of ["team1","team2","tossWinner"])teams.forEach(t=>$(id).add(new Option(t,t)));
 
-let selectedId=null,selectedMatch=null,state=null,undoStack=[];
+let selectedId=null,selectedMatch=null,state=null,undoStack=[],pendingExtra=null;
 const say=(id,msg)=>$(id).textContent=msg;
 
 function freshState(m){
@@ -365,19 +365,32 @@ $("savePlayers").addEventListener("click",async()=>{
  catch(e){say("playerMsg","सेव त्रुटि: "+e.message);}
 });
 document.querySelectorAll("[data-run]").forEach(btn=>{
- btn.addEventListener("click",()=>addDelivery({runs:Number(btn.dataset.run)}));
+ btn.addEventListener("click",()=>{
+   const n=Number(btn.dataset.run);
+   if(pendingExtra){
+     const type=pendingExtra;
+     pendingExtra=null;
+     addDelivery({
+       runs:type==="No Ball"?n:0,
+       extra:1+(type==="Wide"?n:0),
+       kind:type,
+       legal:false
+     });
+     say("msg",type+" रन दर्ज हो गए");
+   }else{
+     addDelivery({runs:n});
+   }
+ });
 });
+
 $("wide").addEventListener("click",()=>{
- const n=Number(prompt("Wide पर 1 रन के अलावा कितने अतिरिक्त रन बने? पीछे से चौका लगा तो 4 लिखें।","0"));
- if(Number.isInteger(n)&&n>=0&&n<=6){
-   addDelivery({extra:1+n,kind:"Wide",legal:false});
- }
+ pendingExtra="Wide";
+ say("msg","अब अतिरिक्त रन चुनें: 0, 1, 2, 3, 4 या 6");
 });
+
 $("noball").addEventListener("click",()=>{
- const n=Number(prompt("No Ball पर बैट से कितने रन बने?","0"));
- if(Number.isInteger(n)&&n>=0&&n<=6){
-   addDelivery({runs:n,extra:1,kind:"No Ball",legal:false});
- }
+ pendingExtra="No Ball";
+ say("msg","अब बैट से बने रन चुनें: 0, 1, 2, 3, 4 या 6");
 });
 $("bye").addEventListener("click",()=>{
  const n=Number(prompt("कितने बाई रन?"));
