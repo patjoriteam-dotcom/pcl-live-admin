@@ -226,7 +226,7 @@ function saveInningsResult(){
   bowlingTeam:state.bowlingTeam,
   batStats:JSON.parse(JSON.stringify(state.batStats||{})),
   bowlStats:JSON.parse(JSON.stringify(state.bowlStats||{})),
-  history:JSON.parse(JSON.stringify(state.history||{}))
+  history:JSON.parse(JSON.stringify(state.history||[]))
  };
 }
 
