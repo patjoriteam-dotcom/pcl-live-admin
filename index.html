@@ -14,7 +14,8 @@
 html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:"Noto Sans Devanagari","Nirmala UI",Mangal,Arial,sans-serif}
 body{padding:7px}.wrap{max-width:760px;margin:auto}
 h1{font-size:20px;color:#ff3838;text-align:center;margin:4px 0 10px;font-weight:800}
-h3{font-size:15px;margin:0 0 8px}.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px;margin:7px 0}
+h3{font-size:15px;margin:0 0 8px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px;margin:7px 0}
 input,select,textarea,button{font:inherit;width:100%;border:0;border-radius:8px;padding:9px;margin:3px 0;font-size:14px}
 input,select,textarea{background:#f5f7fb;color:#111}
 textarea{min-height:88px;resize:vertical}
@@ -42,6 +43,13 @@ label{font-size:12px;color:#dbeafe}
 #scoring>.card:nth-child(8){display:none}
 #rosterToggle{width:auto;float:right;padding:5px 8px;font-size:11px;margin:0}
 #logout{width:auto;float:right;padding:5px 9px;margin:0}
+.table-wrap{overflow-x:auto}
+.points-table{width:100%;border-collapse:collapse;font-size:12px;min-width:480px}
+.points-table th{background:#e10600;color:white;padding:9px 5px;text-align:center}
+.points-table td{border-bottom:1px solid #344258;padding:8px 5px;text-align:center}
+.points-table td:nth-child(2){text-align:left;font-weight:700}
+.points-table tr:nth-child(1) td{color:#ffd166}
+.points-note{font-size:11px;color:#aebbd0;margin-top:8px}
 @media(max-width:390px){body{padding:4px}.score{font-size:32px}#scoring>.card{padding:6px}button,input,select{font-size:13px}}
 @media(max-height:680px){#dashboard.active>#scoring{align-content:start}.card{padding:7px}}
 </style>
@@ -84,6 +92,15 @@ label{font-size:12px;color:#dbeafe}
 <select id="matchSelect"><option value="">मैच चुनें</option></select>
 <button id="loadMatch" class="secondary" type="button">मैच खोलें</button>
 <div id="matchList" class="muted"></div>
+</div>
+
+<div class="card">
+<h3>🏆 PCL POINTS TABLE</h3>
+<p class="muted">मैच पूरा होते ही Points और NRR अपने-आप अपडेट होंगे।</p>
+<div class="table-wrap" id="pointsTableAdmin">Points Table लोड हो रही है...</div>
+<p class="points-note">जीत = 2 अंक | टाई = 1 अंक | हार = 0 अंक। NRR रन और ओवर के आधार पर निकलेगा।</p>
+<button id="refreshPoints" class="secondary" type="button">Points Table Refresh करें</button>
+<p id="pointsMsg"></p>
 </div>
 
 <div id="scoring" class="hidden">
@@ -264,6 +281,145 @@ function makeResult(){
  state.innings2=saveInningsResult();
 }
 
+/* NRR और Points Table की गणना */
+function effectiveBalls(innings){
+ if(!innings)return 0;
+ const quota=Number(innings.totalOvers||10)*6;
+ const balls=Number(innings.balls||0);
+ return Number(innings.wickets||0)>=10?quota:Math.min(balls,quota);
+}
+
+function oversAsDecimal(balls){
+ return Number(balls||0)/6;
+}
+
+function calculateNRR(team){
+ const oversFor=oversAsDecimal(team.ballsFor);
+ const oversAgainst=oversAsDecimal(team.ballsAgainst);
+ if(oversFor<=0||oversAgainst<=0)return 0;
+ return (team.runsFor/oversFor)-(team.runsAgainst/oversAgainst);
+}
+
+async function updatePointsTable(){
+ try{
+  const snap=await get(ref(db,"matches"));
+  const table={};
+
+  function getTeam(name){
+   if(!table[name]){
+    table[name]={
+     team:name,match:0,win:0,loss:0,tie:0,points:0,
+     runsFor:0,ballsFor:0,runsAgainst:0,ballsAgainst:0,nrr:0
+    };
+   }
+   return table[name];
+  }
+
+  if(snap.exists()){
+   snap.forEach(child=>{
+    const match=child.val()||{};
+    const live=match.live||{};
+    if(live.status!=="Completed")return;
+
+    const first=live.innings1;
+    const second=live.innings2;
+    if(!first||!second)return;
+
+    const teamA=String(first.battingTeam||"");
+    const teamB=String(first.bowlingTeam||"");
+    if(!teamA||!teamB||teamA===teamB)return;
+
+    const a=getTeam(teamA),b=getTeam(teamB);
+    const aRuns=Number(first.runs||0);
+    const bRuns=Number(second.runs||0);
+    const aBalls=effectiveBalls(first);
+    const bBalls=effectiveBalls(second);
+
+    a.match++;b.match++;
+    a.runsFor+=aRuns;
+    a.ballsFor+=aBalls;
+    a.runsAgainst+=bRuns;
+    a.ballsAgainst+=bBalls;
+
+    b.runsFor+=bRuns;
+    b.ballsFor+=bBalls;
+    b.runsAgainst+=aRuns;
+    b.ballsAgainst+=aBalls;
+
+    if(bRuns>aRuns){
+     b.win++;b.points+=2;a.loss++;
+    }else if(bRuns===aRuns){
+     a.tie++;b.tie++;a.points++;b.points++;
+    }else{
+     a.win++;a.points+=2;b.loss++;
+    }
+   });
+  }
+
+  const rows=Object.values(table).map(t=>{
+   t.nrr=calculateNRR(t);
+   return t;
+  }).sort((a,b)=>b.points-a.points||b.nrr-a.nrr||a.team.localeCompare(b.team));
+
+  const saveData={
+   updatedAt:Date.now(),
+   teams:rows
+  };
+
+  await set(ref(db,"pointsTable"),saveData);
+  renderPointsTable(rows);
+  say("pointsMsg","Points Table और NRR अपडेट हो गया ✓");
+ }catch(e){
+  say("pointsMsg","Points Table त्रुटि: "+e.message);
+ }
+}
+
+function renderPointsTable(rows){
+ const box=$("pointsTableAdmin");
+ if(!rows||!rows.length){
+  box.innerHTML='<p class="muted">अभी कोई मैच पूरा नहीं हुआ है।</p>';
+  return;
+ }
+
+ let html='<table class="points-table"><thead><tr>'+
+ '<th>Pos</th><th>Team</th><th>Mat</th><th>Won</th><th>Lost</th><th>Tie</th><th>Pts</th><th>NRR</th>'+
+ '</tr></thead><tbody>';
+
+ rows.forEach((t,i)=>{
+  html+='<tr>'+
+  '<td>'+(i+1)+'</td>'+
+  '<td>'+escapeHTML(t.team)+'</td>'+
+  '<td>'+t.match+'</td>'+
+  '<td>'+t.win+'</td>'+
+  '<td>'+t.loss+'</td>'+
+  '<td>'+t.tie+'</td>'+
+  '<td><b>'+t.points+'</b></td>'+
+  '<td>'+(t.nrr>=0?"+":"")+Number(t.nrr).toFixed(3)+'</td>'+
+  '</tr>';
+ });
+ html+='</tbody></table>';
+ box.innerHTML=html;
+}
+
+function escapeHTML(value){
+ return String(value).replace(/[&<>"']/g,ch=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ })[ch]);
+}
+
+async function loadPointsTable(){
+ try{
+  const snap=await get(ref(db,"pointsTable"));
+  if(snap.exists()&&Array.isArray(snap.val().teams)){
+   renderPointsTable(snap.val().teams);
+  }else{
+   renderPointsTable([]);
+  }
+ }catch(e){
+  say("pointsMsg","टेबल लोड नहीं हुई: "+e.message);
+ }
+}
+
 function showScore(){
  if(!state)return;
  state.batStats=state.batStats||{};
@@ -307,6 +463,10 @@ async function saveLive(){
   set(ref(db,"matches/"+selectedId+"/live"),data),
   set(ref(db,"publicScore"),{matchId:selectedId,...data})
  ]);
+
+ if(state.status==="Completed"){
+  await updatePointsTable();
+ }
 }
 
 function addDelivery({runs=0,extra=0,kind="Run",legal=true,wicket=false,wicketType="",fielder=""}={}){
@@ -369,7 +529,6 @@ function addDelivery({runs=0,extra=0,kind="Run",legal=true,wicket=false,wicketTy
   $("nextBatter").value="";
  }
 
- // पारी और मैच का अपने आप अंत
  const limit=Number(state.totalOvers||10)*6;
  if(state.innings===1&&(state.wickets>=10||state.balls>=limit)){
   state.innings1=saveInningsResult();
@@ -407,7 +566,10 @@ $("logout").addEventListener("click",()=>signOut(auth));
 onAuthStateChanged(auth,user=>{
  $("loginBox").classList.toggle("hidden",!!user);
  $("dashboard").classList.toggle("hidden",!user);
- if(user)loadMatches();
+ if(user){
+  loadMatches();
+  loadPointsTable();
+ }
 });
 
 function loadMatches(){
@@ -425,6 +587,8 @@ function loadMatches(){
   });
  },e=>say("saveMsg","मैच लोड त्रुटि: "+e.message));
 }
+
+$("refreshPoints").addEventListener("click",updatePointsTable);
 
 $("saveMatch").addEventListener("click",async()=>{
  const name=$("matchName").value.trim();
