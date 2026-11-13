@@ -27,6 +27,55 @@ body{
  font-family:'Noto Sans Devanagari',Arial,sans-serif;
 }
 button{font-family:inherit}
+
+.container{max-width:760px;margin:auto;padding:12px}
+
+/* JAMUI TIMES PROMOTION - TOP */
+.promo-section{
+ background:white;
+ border-radius:14px;
+ padding:12px;
+ margin-bottom:12px;
+ box-shadow:0 3px 12px #10233e0c;
+}
+.promo-heading{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ font-size:15px;
+ font-weight:900;
+ margin:0 0 12px;
+ color:#14243b;
+}
+.promo-heading .line{
+ height:3px;width:25px;border-radius:5px;background:var(--gold);
+}
+.promo-card{
+ background:linear-gradient(145deg,#071426,#173557);
+ border-radius:15px;
+ padding:17px;
+ color:white;
+ text-align:center;
+}
+.promo-brand{font-size:22px;color:var(--gold);font-weight:900}
+.promo-slogan{font-size:12px;color:#e5edf7;margin-top:4px}
+.promo-text{font-size:11px;color:#b9c8da;margin:12px 0}
+.social-links{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.social-btn{
+ display:block;
+ text-decoration:none;
+ border-radius:9px;
+ padding:11px 6px;
+ font-size:12px;
+ font-weight:900;
+ color:white;
+}
+.youtube{background:#e62117}
+.facebook{background:#1877f2}
+.instagram{background:linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)}
+.whatsapp{background:#159b5b;grid-column:1/-1}
+.promo-footer{font-size:10px;color:#aabbd0;margin-top:12px}
+
 .topbar{
  background:var(--navy);
  color:white;
@@ -42,7 +91,7 @@ button{font-family:inherit}
 }
 .topbar h1{margin:5px 0 2px;font-size:25px;font-weight:900}
 .topbar p{margin:0;color:#b9c5d5;font-size:11px;letter-spacing:1px}
-.container{max-width:760px;margin:auto;padding:12px}
+
 .hero{
  background:linear-gradient(145deg,#071426,#142d4d);
  color:white;border-radius:17px;padding:17px;
@@ -174,25 +223,6 @@ th{color:#748196;font-size:10px;font-weight:800;background:#f7f9fb}
  border-radius:8px;padding:9px;font-size:11px;font-weight:800;
  margin-bottom:10px;
 }
-
-/* JAMUI TIMES PROMOTION */
-.promo-card{
- background:linear-gradient(145deg,#071426,#173557);
- border-radius:15px;padding:17px;color:white;text-align:center;
-}
-.promo-brand{font-size:21px;color:var(--gold);font-weight:900}
-.promo-slogan{font-size:12px;color:#e5edf7;margin-top:4px}
-.promo-text{font-size:11px;color:#b9c8da;margin:12px 0}
-.social-links{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.social-btn{
- display:block;text-decoration:none;border-radius:9px;
- padding:11px 6px;font-size:12px;font-weight:900;color:white;
-}
-.youtube{background:#e62117}
-.facebook{background:#1877f2}
-.instagram{background:linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)}
-.whatsapp{background:#159b5b;grid-column:1/-1}
-.promo-footer{font-size:10px;color:#aabbd0;margin-top:12px}
 .footer{
  margin-top:15px;background:#071426;color:white;text-align:center;
  padding:23px 12px;border-top:3px solid var(--gold);
@@ -202,16 +232,40 @@ th{color:#748196;font-size:10px;font-weight:800;background:#f7f9fb}
 .footer .tag{color:#dbe3ed;font-size:12px}
 .footer .network{color:#9eacbe;font-size:10px;margin-top:8px}
 .footer .pcl{color:var(--gold2);font-size:11px;margin-top:12px;font-weight:800}
+
 @media(max-width:390px){
  .container{padding:8px}
  .score{font-size:41px}
  .topbar h1{font-size:22px}
  .section-card{padding:11px}
+ .promo-brand{font-size:20px}
 }
 </style>
 </head>
 
 <body>
+
+<!-- THE JAMUI TIMES PROMOTION - NOW AT TOP -->
+<main class="container">
+
+<section class="promo-section">
+ <h3 class="promo-heading"><span class="line"></span>📢 FOLLOW THE JAMUI TIMES</h3>
+ <div class="promo-card">
+  <div class="promo-brand">THE JAMUI TIMES</div>
+  <div class="promo-slogan">ख़बर वही जो होगा सही</div>
+  <div class="promo-text">बिहार-झारखंड और आपके गाँव की हर जरूरी खबर से जुड़े रहें। हमारे सोशल मीडिया प्लेटफॉर्म को Follow और Subscribe करें।</div>
+  <div class="social-links">
+   <a class="social-btn youtube" href="https://youtube.com/@thejamuitimes?si=_XZh985G91cpgdnI" target="_blank" rel="noopener">▶ YouTube Subscribe</a>
+   <a class="social-btn facebook" href="https://www.facebook.com/share/1A1yRsrK1H/" target="_blank" rel="noopener">f Facebook Follow</a>
+   <a class="social-btn instagram" href="https://www.instagram.com/rahulpandeythejamuitimes?exln=YmV1bzM5eGNmaHFn" target="_blank" rel="noopener">◎ Instagram Follow</a>
+   <a class="social-btn whatsapp" href="https://wa.me/919973453819?text=Namaste%20The%20Jamui%20Times%2C%20main%20apne%20area%20ki%20khabar%20bhejna%20chahta%20hoon." target="_blank" rel="noopener">✆ WhatsApp पर अपनी खबर भेजें</a>
+  </div>
+  <div class="promo-footer">THE JAMUI TIMES • Digital News & Media Network</div>
+ </div>
+</section>
+
+</main>
+
 <header class="topbar">
  <div class="league">PATJORI CRICKET LEAGUE</div>
  <h1>🏆 PCL LIVE SCORE</h1>
@@ -242,7 +296,6 @@ th{color:#748196;font-size:10px;font-weight:800;background:#f7f9fb}
  <div id="inningsSummaries"><div class="empty">स्कोर लोड हो रहा है...</div></div>
 </section>
 
-<!-- RECENT MATCH HISTORY -->
 <section class="section-card" id="recentSection">
  <h3 class="section-title"><span class="line"></span>🏆 RECENT COMPLETED MATCHES</h3>
  <div id="recentMatches"><div class="empty">पुराने मैच लोड हो रहे हैं...</div></div>
@@ -298,23 +351,6 @@ th{color:#748196;font-size:10px;font-weight:800;background:#f7f9fb}
 <section class="section-card">
  <h3 class="section-title"><span class="line"></span>⚡ LAST WICKET</h3>
  <div id="lastWicket" class="last-wicket">अभी कोई विकेट नहीं</div>
-</section>
-
-<!-- THE JAMUI TIMES PROMOTION -->
-<section class="section-card">
- <h3 class="section-title"><span class="line"></span>📢 FOLLOW THE JAMUI TIMES</h3>
- <div class="promo-card">
-  <div class="promo-brand">THE JAMUI TIMES</div>
-  <div class="promo-slogan">ख़बर वही जो होगा सही</div>
-  <div class="promo-text">बिहार-झारखंड और आपके गाँव की हर जरूरी खबर से जुड़े रहें। हमारे सोशल मीडिया प्लेटफॉर्म को Follow और Subscribe करें।</div>
-  <div class="social-links">
-   <a class="social-btn youtube" href="https://youtube.com/@thejamuitimes?si=_XZh985G91cpgdnI" target="_blank" rel="noopener">▶ YouTube Subscribe</a>
-   <a class="social-btn facebook" href="https://www.facebook.com/share/1A1yRsrK1H/" target="_blank" rel="noopener">f Facebook Follow</a>
-   <a class="social-btn instagram" href="https://www.instagram.com/rahulpandeythejamuitimes?exln=YmV1bzM5eGNmaHFn" target="_blank" rel="noopener">◎ Instagram Follow</a>
-   <a class="social-btn whatsapp" href="https://wa.me/919973453819?text=Namaste%20The%20Jamui%20Times%2C%20main%20apne%20area%20ki%20khabar%20bhejna%20chahta%20hoon." target="_blank" rel="noopener">✆ WhatsApp पर अपनी खबर भेजें</a>
-  </div>
-  <div class="promo-footer">THE JAMUI TIMES • Digital News & Media Network</div>
- </div>
 </section>
 
 </main>
