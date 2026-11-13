@@ -145,10 +145,28 @@ const batRows=names.map(name=>[
  bats[name]||{runs:0,balls:0,fours:0,sixes:0}
 ]);
 
+
+const dismissals={};
+(data.history||[]).forEach(d=>{
+ if(!d.wicket||!d.striker)return;
+ const wt=String(d.wicketType||"").toLowerCase();
+ let detail="out";
+ if(wt.includes("caught")) detail=d.fielder?"c "+d.fielder+" b "+(d.bowler||""):"caught b "+(d.bowler||"");
+ else if(wt.includes("bowled")) detail="b "+(d.bowler||"");
+ else if(wt.includes("lbw")) detail="lbw b "+(d.bowler||"");
+ else if(wt.includes("run out")) detail="run out"+(d.fielder?" ("+d.fielder+")":"");
+ else if(wt.includes("stumped")) detail="st "+(d.fielder||"")+" b "+(d.bowler||"");
+ else if(wt.includes("hit wicket")) detail="hit wicket b "+(d.bowler||"");
+ else detail=String(d.wicketType||"out")+(d.bowler?" b "+d.bowler:"");
+ dismissals[d.striker]=detail;
+});
+
 el("batTable").innerHTML=batRows.length?batRows.map(([name,s])=>{
  const sr=s.balls?(s.runs*100/s.balls).toFixed(1):"0.0";
- return `<tr><td>${safe(name)} ${name===data.striker?"*":""}</td><td class="right">${s.runs||0}</td><td class="right">${s.balls||0}</td><td class="right">${s.fours||0}</td><td class="right">${s.sixes||0}</td><td class="right">${sr}</td></tr>`;
+ const detail=dismissals[name]||(name===data.striker||name===data.nonStriker?"NOT OUT":"");
+ return `<tr><td><div>${safe(name)} ${name===data.striker?"*":""}</div><small style="display:block;color:#64748b;font-size:11px;margin-top:2px">${safe(detail)}</small></td><td class="right">${s.runs||0}</td><td class="right">${s.balls||0}</td><td class="right">${s.fours||0}</td><td class="right">${s.sixes||0}</td><td class="right">${sr}</td></tr>`;
 }).join(""):'<tr><td colspan="6">बल्लेबाज़ी आँकड़े उपलब्ध नहीं</td></tr>';
+
 
  const bowls=data.bowlStats||{};
  const bowlRows=Object.entries(bowls);
