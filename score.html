@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PCL LIVE SCORE</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap" rel="stylesheet">
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f1f3f6;color:#172033;font-family:'Noto Sans Devanagari',Arial,sans-serif}
@@ -27,23 +28,39 @@ th{color:#64748b;font-weight:600}
 .right{text-align:right}
 .section{font-weight:800;margin:4px 0 12px}
 .status{font-size:13px;color:#64748b}
+.summary{background:#edf3ff;padding:11px;border-radius:9px;margin-top:10px;line-height:1.9}
+.result{background:#e8f7ed;color:#166534;padding:12px;border-radius:9px;font-weight:800;margin-top:10px}
+.target{background:#fff7e6;color:#8a5200;padding:12px;border-radius:9px;margin-top:10px;font-weight:700;line-height:1.8}
 footer{text-align:center;color:#64748b;font-size:12px;padding:15px}
+@media(max-width:390px){
+ .score{font-size:32px}
+ th,td{padding:8px 3px;font-size:12px}
+ .container{padding:8px}
+}
 </style>
 </head>
+
 <body>
+
 <header>
 <h2>🏏 PCL LIVE SCORE</h2>
 <p>PATORI CRICKET LEAGUE</p>
 </header>
+
 <div class="container">
+
 <div class="card">
-<div class="live">● LIVE MATCH</div>
+<div class="live" id="liveStatus">● LIVE MATCH</div>
 <div class="match" id="matchName">मैच की जानकारी लोड हो रही है...</div>
 <div class="score" id="score">0/0</div>
 <div id="overs" class="muted">0.0 ओवर</div>
 <p id="innings" class="status">पारी की जानकारी</p>
 <p id="teams" class="status"></p>
 <p id="message" class="status">Firebase से कनेक्ट हो रहा है...</p>
+
+<div id="inningsSummary"></div>
+<div id="targetInfo"></div>
+<div id="resultInfo"></div>
 </div>
 
 <div class="tabs">
@@ -55,16 +72,36 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:15px}
 <div class="card" id="batPanel">
 <div class="section">🏏 बल्लेबाज़ी स्कोरकार्ड</div>
 <table>
-<thead><tr><th>बल्लेबाज़</th><th class="right">रन</th><th class="right">गेंद</th><th class="right">4s</th><th class="right">6s</th><th class="right">SR</th></tr></thead>
-<tbody id="batTable"><tr><td colspan="6">स्कोर उपलब्ध नहीं</td></tr></tbody>
+<thead>
+<tr>
+<th>बल्लेबाज़</th>
+<th class="right">रन</th>
+<th class="right">गेंद</th>
+<th class="right">4s</th>
+<th class="right">6s</th>
+<th class="right">SR</th>
+</tr>
+</thead>
+<tbody id="batTable">
+<tr><td colspan="6">स्कोर उपलब्ध नहीं</td></tr>
+</tbody>
 </table>
 </div>
 
 <div class="card" id="bowlPanel" style="display:none">
 <div class="section">🎯 गेंदबाज़ी स्कोरकार्ड</div>
 <table>
-<thead><tr><th>गेंदबाज़</th><th class="right">ओवर</th><th class="right">रन</th><th class="right">विकेट</th></tr></thead>
-<tbody id="bowlTable"><tr><td colspan="4">स्कोर उपलब्ध नहीं</td></tr></tbody>
+<thead>
+<tr>
+<th>गेंदबाज़</th>
+<th class="right">ओवर</th>
+<th class="right">रन</th>
+<th class="right">विकेट</th>
+</tr>
+</thead>
+<tbody id="bowlTable">
+<tr><td colspan="4">स्कोर उपलब्ध नहीं</td></tr>
+</tbody>
 </table>
 </div>
 
@@ -77,35 +114,41 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:15px}
 <div class="section">आखिरी विकेट</div>
 <p id="lastWicket" class="status">—</p>
 </div>
-</div>
-<footer style="background:#171717;color:white;padding:22px 10px;text-align:center;margin-top:15px">
-  <div style="font-size:12px;letter-spacing:2px;color:#ccc">POWERED BY</div>
-  <div style="font-size:23px;font-weight:800;color:#E10600;margin:5px 0">
-    THE JAMUI TIMES
-  </div>
-  <div style="font-size:13px;color:white">ख़बर वही जो होगा सही</div>
-  <div style="font-size:11px;color:#bbb;margin-top:7px">
-    PCL LIVE SCORE | Digital News & Media Network
-  </div>
-</footer>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-/* अपनी index.html में मौजूद Firebase config यहाँ कॉपी करें */
-const firebaseConfig = {
-  apiKey: "AIzaSyBSDKTq4r-z7XbHpkCkzwc5bkD-IvFokEY",
-  authDomain: "pcl-live-b6221.firebaseapp.com",
-  databaseURL: "https://pcl-live-b6221-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "pcl-live-b6221",
-  storageBucket: "pcl-live-b6221.firebasestorage.app",
-  messagingSenderId: "569868359276",
-  appId: "1:569868359276:web:4cea96b5d8447871352a49"
+</div>
+
+<footer style="background:#171717;color:white;padding:22px 10px;text-align:center;margin-top:15px">
+<div style="font-size:12px;letter-spacing:2px;color:#ccc">POWERED BY</div>
+<div style="font-size:23px;font-weight:800;color:#E10600;margin:5px 0">
+THE JAMUI TIMES
+</div>
+<div style="font-size:13px;color:white">ख़बर वही जो होगा सही</div>
+<div style="font-size:11px;color:#bbb;margin-top:7px">
+PCL LIVE SCORE | Digital News & Media Network
+</div>
+</footer>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getDatabase,ref,onValue} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig={
+ apiKey:"AIzaSyBSDKTq4r-z7XbHpkCkzwc5bkD-IvFokEY",
+ authDomain:"pcl-live-b6221.firebaseapp.com",
+ databaseURL:"https://pcl-live-b6221-default-rtdb.asia-southeast1.firebasedatabase.app",
+ projectId:"pcl-live-b6221",
+ storageBucket:"pcl-live-b6221.firebasestorage.app",
+ messagingSenderId:"569868359276",
+ appId:"1:569868359276:web:4cea96b5d8447871352a49"
 };
 
 const app=initializeApp(firebaseConfig);
 const db=getDatabase(app);
-const safe=(v)=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+const safe=v=>String(v??"").replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
+
 const el=id=>document.getElementById(id);
 
 function showTab(tab,btn){
@@ -118,90 +161,163 @@ function showTab(tab,btn){
 window.showTab=showTab;
 
 function overs(balls){
- return Math.floor(Number(balls||0)/6)+"."+(Number(balls||0)%6);
+ balls=Number(balls||0);
+ return Math.floor(balls/6)+"."+(balls%6);
 }
+
 function render(data){
  if(!data)return;
- el("matchName").textContent=data.matchName||((data.team1||"") +" VS "+(data.team2||""));
+
+ el("matchName").textContent=data.matchName||((data.team1||"")+" VS "+(data.team2||""));
  el("score").textContent=(data.runs||0)+"/"+(data.wickets||0);
  el("overs").textContent=overs(data.balls)+" ओवर";
  el("innings").textContent="पारी "+(data.innings||1)+" | "+(data.battingTeam||"");
  el("teams").textContent=(data.team1||"")+" VS "+(data.team2||"");
- el("message").textContent=data.status||"लाइव स्कोर";
  el("lastWicket").textContent=data.lastWicket||"—";
 
-const bats=data.batStats||{};
+ const status=data.status||"Live";
+ el("liveStatus").textContent=status==="Completed"?"● MATCH COMPLETED":status==="Innings Ended"?"● INNINGS ENDED":"● LIVE MATCH";
+ el("liveStatus").style.color=status==="Completed"?"#16803c":"#d71920";
 
-// पुराने बल्लेबाजों का क्रम बरकरार रखें
+ // पहली पारी का स्कोर
+ const first=data.innings1;
 
-const names=[];
+ if(first){
+  el("inningsSummary").innerHTML=`
+   <div class="summary">
+    <b>पहली पारी का स्कोर</b><br>
+    ${safe(first.battingTeam)}:
+    <b>${first.runs}/${first.wickets}</b>
+    (${overs(first.balls)} ओवर)
+   </div>`;
+ }else{
+  el("inningsSummary").innerHTML="";
+ }
 
-// गेंदों की हिस्ट्री से बल्लेबाज़ों का असली क्रम
-(data.history||[]).forEach(d=>{
-  [d.striker,d.nonStriker].forEach(name=>{
-    if(name && !names.includes(name)){
-      names.push(name);
-    }
-  });
-});
+ // दूसरी पारी का लक्ष्य और रन की जानकारी
+ el("targetInfo").innerHTML="";
 
-// अभी क्रीज़ पर मौजूद बल्लेबाज़
-[data.nonStriker,data.striker].forEach(name=>{
-  if(name && !names.includes(name)){
-    names.push(name);
+ if(data.innings===2 && first){
+  const target=Number(first.runs||0)+1;
+  const needed=Math.max(0,target-Number(data.runs||0));
+  const totalBalls=Number(data.totalOvers||10)*6;
+  const ballsLeft=Math.max(0,totalBalls-Number(data.balls||0));
+
+  let targetText="लक्ष्य: "+target+" रन";
+
+  if(data.status==="Completed"){
+   targetText="";
+  }else if(needed===0){
+   targetText+="<br>लक्ष्य हासिल! पारी समाप्त करें।";
+  }else{
+   targetText+="<br>जीत के लिए "+needed+" रन चाहिए";
+   targetText+="<br>"+ballsLeft+" गेंदें बाकी";
   }
-});
 
-const batRows=names.map(name=>[
-  name,
-  bats[name]||{runs:0,balls:0,fours:0,sixes:0}
-]);
+  if(targetText){
+   el("targetInfo").innerHTML=`
+    <div class="target">${targetText}</div>`;
+  }
+ }
 
+ // मैच का परिणाम
+ if(data.status==="Completed" && data.resultText){
+  el("resultInfo").innerHTML=`
+   <div class="result">🏆 ${safe(data.resultText)}</div>`;
+ }else{
+  el("resultInfo").innerHTML="";
+ }
 
-const dismissals={};
-(data.history||[]).forEach(d=>{
- if(!d.wicket||!d.striker)return;
- const wt=String(d.wicketType||"").toLowerCase();
- let detail="out";
- if(wt.includes("caught")) detail=d.fielder?"c "+d.fielder+" b "+(d.bowler||""):"caught b "+(d.bowler||"");
- else if(wt.includes("bowled")) detail="b "+(d.bowler||"");
- else if(wt.includes("lbw")) detail="lbw b "+(d.bowler||"");
- else if(wt.includes("run out")) detail="run out"+(d.fielder?" ("+d.fielder+")":"");
- else if(wt.includes("stumped")) detail="st "+(d.fielder||"")+" b "+(d.bowler||"");
- else if(wt.includes("hit wicket")) detail="hit wicket b "+(d.bowler||"");
- else detail=String(d.wicketType||"out")+(d.bowler?" b "+d.bowler:"");
- dismissals[d.striker]=detail;
-});
+ // बल्लेबाज़ी स्कोरकार्ड
+ const bats=data.batStats||{};
+ const names=[];
 
-el("batTable").innerHTML=batRows.length?batRows.map(([name,s])=>{
- const sr=s.balls?(s.runs*100/s.balls).toFixed(1):"0.0";
- const detail=dismissals[name]||(name===data.striker||name===data.nonStriker?"NOT OUT":"");
- return `<tr><td><div>${safe(name)} ${name===data.striker?"*":""}</div><small style="display:block;color:#64748b;font-size:11px;margin-top:2px">${safe(detail)}</small></td><td class="right">${s.runs||0}</td><td class="right">${s.balls||0}</td><td class="right">${s.fours||0}</td><td class="right">${s.sixes||0}</td><td class="right">${sr}</td></tr>`;
-}).join(""):'<tr><td colspan="6">बल्लेबाज़ी आँकड़े उपलब्ध नहीं</td></tr>';
+ (data.history||[]).forEach(d=>{
+  [d.striker,d.nonStriker].forEach(name=>{
+   if(name&&!names.includes(name))names.push(name);
+  });
+ });
 
+ [data.nonStriker,data.striker].forEach(name=>{
+  if(name&&!names.includes(name))names.push(name);
+ });
 
+ const batRows=names.map(name=>[
+  name,bats[name]||{runs:0,balls:0,fours:0,sixes:0}
+ ]);
+
+ const dismissals={};
+
+ (data.history||[]).forEach(d=>{
+  if(!d.wicket||!d.striker)return;
+
+  const wt=String(d.wicketType||"").toLowerCase();
+  let detail="out";
+
+  if(wt.includes("caught"))detail=d.fielder?"c "+d.fielder+" b "+(d.bowler||""):"caught b "+(d.bowler||"");
+  else if(wt.includes("bowled"))detail="b "+(d.bowler||"");
+  else if(wt.includes("lbw"))detail="lbw b "+(d.bowler||"");
+  else if(wt.includes("run out"))detail="run out"+(d.fielder?" ("+d.fielder+")":"");
+  else if(wt.includes("stumped"))detail="st "+(d.fielder||"")+" b "+(d.bowler||"");
+  else if(wt.includes("hit wicket"))detail="hit wicket b "+(d.bowler||"");
+  else detail=String(d.wicketType||"out")+(d.bowler?" b "+d.bowler:"");
+
+  dismissals[d.striker]=detail;
+ });
+
+ el("batTable").innerHTML=batRows.length?batRows.map(([name,s])=>{
+  const sr=s.balls?(s.runs*100/s.balls).toFixed(1):"0.0";
+  const detail=dismissals[name]||(name===data.striker||name===data.nonStriker?"NOT OUT":"");
+
+  return `<tr>
+   <td>
+    <div>${safe(name)} ${name===data.striker?"*":""}</div>
+    <small style="display:block;color:#64748b;font-size:11px;margin-top:2px">${safe(detail)}</small>
+   </td>
+   <td class="right">${s.runs||0}</td>
+   <td class="right">${s.balls||0}</td>
+   <td class="right">${s.fours||0}</td>
+   <td class="right">${s.sixes||0}</td>
+   <td class="right">${sr}</td>
+  </tr>`;
+ }).join(""):'<tr><td colspan="6">बल्लेबाज़ी आँकड़े उपलब्ध नहीं</td></tr>';
+
+ // गेंदबाज़ी स्कोरकार्ड
  const bowls=data.bowlStats||{};
  const bowlRows=Object.entries(bowls);
+
  el("bowlTable").innerHTML=bowlRows.length?bowlRows.map(([name,s])=>
- `<tr><td>${safe(name)} ${name===data.bowler?"*":""}</td><td class="right">${overs(s.balls)}</td><td class="right">${s.runs||0}</td><td class="right">${s.wickets||0}</td></tr>`
+  `<tr>
+   <td>${safe(name)} ${name===data.bowler?"*":""}</td>
+   <td class="right">${overs(s.balls)}</td>
+   <td class="right">${s.runs||0}</td>
+   <td class="right">${s.wickets||0}</td>
+  </tr>`
  ).join(""):'<tr><td colspan="4">गेंदबाज़ी आँकड़े उपलब्ध नहीं</td></tr>';
 
+ // हाल की गेंदें
  const history=Array.isArray(data.history)?data.history.slice(-12).reverse():[];
+
  el("ballList").innerHTML=history.length?history.map(d=>
- `<div style="padding:8px 0;border-bottom:1px solid #e5e7eb">${safe(d.bowler||"")} → ${safe(d.striker||"")} : <b>${d.wicket?"WICKET":(d.runs||0)+(d.extra||0)+" रन"}</b>${d.wicketType?" ("+safe(d.wicketType)+")":""}</div>`
+  `<div style="padding:8px 0;border-bottom:1px solid #e5e7eb">
+   ${safe(d.bowler||"")} → ${safe(d.striker||"")} :
+   <b>${d.wicket?"WICKET":(Number(d.runs||0)+Number(d.extra||0))+" रन"}</b>
+   ${d.wicketType?" ("+safe(d.wicketType)+")":""}
+  </div>`
  ).join(""):"अभी कोई गेंद नहीं";
 }
 
 onValue(ref(db,"publicScore"),snap=>{
  if(snap.exists()){
- render(snap.val());
- el("message").textContent="लाइव स्कोर अपडेट हो रहा है ✓";
+  render(snap.val());
+  el("message").textContent="लाइव स्कोर अपडेट हो रहा है ✓";
  }else{
- el("message").textContent="अभी कोई लाइव मैच उपलब्ध नहीं है";
+  el("message").textContent="अभी कोई लाइव मैच उपलब्ध नहीं है";
  }
 },error=>{
  el("message").textContent="स्कोर लोड नहीं हुआ: "+error.message;
 });
 </script>
+
 </body>
 </html>
