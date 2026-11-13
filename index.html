@@ -426,7 +426,6 @@ $("loadMatch").addEventListener("click",async()=>{
  if(!snap.exists())throw new Error("मैच नहीं मिला");
  selectedId=id;selectedMatch=snap.val();
  state=selectedMatch.live||freshState(selectedMatch);
- state.status="Live";
  state.players=state.players||{team1:[],team2:[]};
  state.history=state.history||[];
  undoStack=[];
