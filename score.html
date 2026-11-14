@@ -85,7 +85,7 @@ button{font-family:inherit}
 .dot{width:7px;height:7px;border-radius:50%;background:#ff4d4d;animation:blink 1.2s infinite}
 @keyframes blink{50%{opacity:.3}}
 
-/* HORIZONTAL SCROLLABLE TABS (EXACT VIDEO STYLE) */
+/* HORIZONTAL SCROLLABLE TABS */
 .cb-tabs-bar{
  background:var(--cb-green);
  border-top:1px solid rgba(255,255,255,0.15);
@@ -125,12 +125,8 @@ button{font-family:inherit}
 }
 .status-strip.done{color:var(--cb-green)}
 
-/* SCORE BLOCK (0:00 VIDEO STYLE) */
+/* SCORE BLOCK */
 .score-hero{padding:14px}
-.team-score-row{
- display:flex;justify-content:space-between;align-items:center;
- margin-bottom:6px;
-}
 .team-code{font-size:18px;font-weight:800;color:#222}
 .main-runs{font-size:28px;font-weight:900;color:#111;margin-top:2px}
 .main-overs{font-size:18px;font-weight:500;color:#555}
@@ -156,11 +152,12 @@ button{font-family:inherit}
 .b-circle{
  min-width:24px;height:24px;border-radius:50%;
  display:inline-flex;align-items:center;justify-content:center;
- font-size:11px;font-weight:700;background:#e5e7eb;color:#222;
+ font-size:10px;font-weight:700;background:#e5e7eb;color:#222;
 }
 .b-4{background:#1866db;color:white}
 .b-6{background:var(--cb-green);color:white}
 .b-w{background:#d93025;color:white}
+.b-ret{background:#ea580c;color:white}
 
 /* CRICBUZZ CLEAN TABLES */
 table{width:100%;border-collapse:collapse;font-size:13px}
@@ -177,9 +174,10 @@ td:first-child{text-align:left;padding-left:14px}
 tr:last-child td{border-bottom:0}
 .player-link{color:var(--blue-link);font-weight:700;font-size:13px;display:block}
 .dismissal-txt{display:block;font-size:11px;color:#666;margin-top:3px;line-height:1.35}
+.dismissal-txt.retired-out{color:#c2410c;font-weight:600}
 .bold-stat{font-weight:800;color:#111}
 
-/* SCORECARD INNINGS PILLS (0:10 VIDEO STYLE) */
+/* SCORECARD INNINGS PILLS */
 .inn-pill-bar{
  display:flex;gap:8px;padding:12px 14px;background:white;border-bottom:1px solid var(--border);
 }
@@ -211,10 +209,11 @@ tr:last-child td{border-bottom:0}
  display:flex;gap:12px;align-items:flex-start;font-size:13px;
 }
 .comm-badge{
- min-width:32px;padding:3px 6px;border-radius:4px;text-align:center;
+ min-width:34px;padding:3px 6px;border-radius:4px;text-align:center;
  font-size:11px;font-weight:800;background:#eef0f3;color:#333;
 }
 .comm-badge.w{background:#fce8e6;color:#d93025}
+.comm-badge.ret{background:#ffedd5;color:#c2410c}
 .comm-badge.four{background:#e8f0fe;color:#1866db}
 .comm-badge.six{background:#e6f5f1;color:#009270}
 
@@ -267,7 +266,7 @@ tr:last-child td{border-bottom:0}
 .ig{background:linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)}
 .wa{background:#159b5b;grid-column:1/-1}
 
-/* FLOATING MOVE TO TOP BUTTON (VIDEO 0:20 STYLE) */
+/* FLOATING MOVE TO TOP BUTTON */
 .move-top-btn{
  position:fixed;bottom:66px;left:50%;transform:translateX(-50%);
  background:#333;color:white;border:0;padding:7px 15px;border-radius:20px;
@@ -275,7 +274,7 @@ tr:last-child td{border-bottom:0}
  cursor:pointer;z-index:850;display:none;
 }
 
-/* BOTTOM NAVIGATION BAR (CRICBUZZ STYLE) */
+/* BOTTOM NAVIGATION BAR */
 .cb-bottom-nav{
  position:fixed;bottom:0;left:0;right:0;
  background:white;border-top:1px solid #d1d5db;
@@ -365,7 +364,7 @@ tr:last-child td{border-bottom:0}
    <div id="recentBallsChips" style="display:flex;gap:5px"></div>
   </div>
 
-  <!-- LIVE BATTERS TABLE (CRICBUZZ EXACT FORMAT) -->
+  <!-- LIVE BATTERS TABLE -->
   <table>
    <thead>
     <tr>
@@ -459,7 +458,7 @@ tr:last-child td{border-bottom:0}
    </tbody>
   </table>
 
-  <!-- FALL OF WICKETS (VIDEO 0:21 STYLE) -->
+  <!-- FALL OF WICKETS -->
   <div class="sec-subhead">Fall of Wickets</div>
   <table>
    <thead>
@@ -527,7 +526,7 @@ tr:last-child td{border-bottom:0}
 
 </main>
 
-<!-- MOVE TO TOP FLOATING BUTTON (VIDEO 0:20 STYLE) -->
+<!-- MOVE TO TOP FLOATING BUTTON -->
 <button class="move-top-btn" id="moveTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">Move to Top ↑</button>
 
 <!-- CRICBUZZ BOTTOM NAVIGATION -->
@@ -601,7 +600,17 @@ function getSecond(data){
  return null;
 }
 
-/* RENDER LIVE TAB (CRICBUZZ STYLE) */
+/* HELPER: CHECK RETIRED OUT / HURT */
+function isRetiredOutEvent(d){
+ const wt=String(d?.wicketType||"").toLowerCase();
+ return wt.includes("retired out") || wt==="retired";
+}
+function isRetiredHurtEvent(d){
+ const wt=String(d?.wicketType||"").toLowerCase();
+ return wt.includes("retired hurt");
+}
+
+/* RENDER LIVE TAB */
 function renderLiveTab(data){
  const first=getFirst(data);
  const second=getSecond(data);
@@ -627,7 +636,7 @@ function renderLiveTab(data){
   banner.className = "status-strip";
  }
 
- // Previous Innings Line (if 2nd innings)
+ // Previous Innings Line
  if(num(data.innings)===2 && first){
   el("prevInningsLine").style.display="block";
   el("prevInningsLine").textContent=`${first.battingTeam||data.team1||"1st Team"}: ${num(first.runs)}-${num(first.wickets)} (${overs(first.balls)})`;
@@ -654,11 +663,13 @@ function renderLiveTab(data){
   el("rrrWrap").style.display="none";
  }
 
- // Last 6 Balls
+ // Last 6 Balls (Including Retired Out badge)
  const hist=Array.isArray(activeInn.history)?activeInn.history:(Array.isArray(data.history)?data.history:[]);
  if(hist.length){
   el("recentBallsBar").style.display="flex";
   el("recentBallsChips").innerHTML=hist.slice(-6).map(d=>{
+   if(isRetiredOutEvent(d))return `<span class="b-circle b-ret" title="Retired Out">RO</span>`;
+   if(isRetiredHurtEvent(d))return `<span class="b-circle b-ret" title="Retired Hurt">RH</span>`;
    if(d.wicket)return `<span class="b-circle b-w">W</span>`;
    const r=num(d.runs)+num(d.extra);
    const cls=num(d.runs)===4?"b-4":num(d.runs)===6?"b-6":"";
@@ -710,23 +721,44 @@ function renderLiveTab(data){
  // Commentary
  const recent=hist.slice(-15).reverse();
  el("ballList").innerHTML=recent.length?recent.map(d=>{
-  const isW=!!d.wicket;
+  const retOut=isRetiredOutEvent(d);
+  const retHurt=isRetiredHurtEvent(d);
+  const isW=!!d.wicket || retOut;
   const r=num(d.runs)+num(d.extra);
-  const badge=isW?"W":r;
-  const cls=isW?"w":num(d.runs)===6?"six":num(d.runs)===4?"four":"";
+  const badge=retOut?"RO":retHurt?"RH":isW?"W":r;
+  const cls=(retOut||retHurt)?"ret":isW?"w":num(d.runs)===6?"six":num(d.runs)===4?"four":"";
+  const batterName=d.outBatter||d.striker||"";
+  let text="";
+  if(retOut)text=`<b>${safe(batterName)}</b> — Retired Out`;
+  else if(retHurt)text=`<b>${safe(batterName)}</b> — Retired Hurt`;
+  else if(isW)text=`<b>${safe(d.bowler||"")}</b> to <b>${safe(batterName)}</b> — OUT (${safe(d.wicketType||"Wicket")})`;
+  else text=`<b>${safe(d.bowler||"")}</b> to <b>${safe(d.striker||"")}</b> — ${r} run(s)`;
+
   return `<div class="comm-item">
    <span class="comm-badge ${cls}">${badge}</span>
-   <div><b>${safe(d.bowler||"")}</b> to <b>${safe(d.striker||"")}</b> — ${isW?"OUT ("+safe(d.wicketType||"Wicket")+")":r+" run(s)"}</div>
+   <div>${text}</div>
   </div>`;
  }).join(""):'<div class="empty">अभी कोई गेंद नहीं</div>';
 }
 
-/* RENDER FULL SCORECARD TAB */
-function getDismissals(history){
+/* RENDER FULL SCORECARD TAB WITH RETIRED OUT SUPPORT */
+function getDismissals(history, batStats){
  const result={};
  (history||[]).forEach(d=>{
-  if(!d.wicket||!d.striker)return;
   const wt=String(d.wicketType||"").toLowerCase();
+  const targetBatter=d.outBatter||d.striker;
+  if(!targetBatter)return;
+
+  if(wt.includes("retired hurt")){
+   result[targetBatter]={text:"retired hurt", isRetiredOut:false};
+   return;
+  }
+  if(wt.includes("retired out") || wt==="retired"){
+   result[targetBatter]={text:"retired out", isRetiredOut:true};
+   return;
+  }
+  if(!d.wicket)return;
+
   let detail="out";
   if(wt.includes("caught"))detail=d.fielder?"c "+d.fielder+" b "+(d.bowler||""):"caught b "+(d.bowler||"");
   else if(wt.includes("bowled"))detail="b "+(d.bowler||"");
@@ -735,8 +767,20 @@ function getDismissals(history){
   else if(wt.includes("stumped"))detail="st "+(d.fielder||"")+" b "+(d.bowler||"");
   else if(wt.includes("hit wicket"))detail="hit wicket b "+(d.bowler||"");
   else detail=String(d.wicketType||"out");
-  result[d.striker]=detail;
+  result[targetBatter]={text:detail, isRetiredOut:false};
  });
+
+ // Also check if admin stored dismissal directly inside batStats[player]
+ Object.entries(batStats||{}).forEach(([name,s])=>{
+  if(s && s.outType && !result[name]){
+   const low=String(s.outType).toLowerCase();
+   result[name]={
+    text:s.outType,
+    isRetiredOut:low.includes("retired out")
+   };
+  }
+ });
+
  return result;
 }
 
@@ -756,18 +800,21 @@ function renderScorecard(data){
  const bats=data.batStats||{};
  const history=Array.isArray(data.history)?data.history:[];
  const names=[];
- history.forEach(d=>{[d.striker,d.nonStriker].forEach(n=>{if(n&&!names.includes(n))names.push(n)})});
+ history.forEach(d=>{[d.striker,d.nonStriker,d.outBatter].forEach(n=>{if(n&&!names.includes(n))names.push(n)})});
  [data.striker,data.nonStriker].forEach(n=>{if(n&&!names.includes(n))names.push(n)});
  Object.keys(bats).forEach(n=>{if(n&&!names.includes(n))names.push(n)});
- const dismissals=getDismissals(history);
+ const dismissals=getDismissals(history, bats);
 
  const rows=names.map(name=>{
   const s=bats[name]||{};
   const r=num(s.runs),b=num(s.balls);
   const sr=b?(r*100/b).toFixed(2):"0.00";
-  const detail=dismissals[name]||(name===data.striker||name===data.nonStriker?"batting":"not out");
+  const dis=dismissals[name];
+  const isAtCrease=(name===data.striker||name===data.nonStriker);
+  const detail=isAtCrease?"batting":(dis?dis.text:"not out");
+  const extraCls=(!isAtCrease && dis?.isRetiredOut)?"retired-out":"";
   return `<tr>
-   <td><span class="player-link">${safe(name)}</span><span class="dismissal-txt">${safe(detail)}</span></td>
+   <td><span class="player-link">${safe(name)}</span><span class="dismissal-txt ${extraCls}">${safe(detail)}</span></td>
    <td class="bold-stat">${r}</td><td>${b}</td><td>${num(s.fours)}</td><td>${num(s.sixes)}</td><td>${sr}</td>
   </tr>`;
  });
@@ -780,7 +827,7 @@ function renderScorecard(data){
  }
  el("batTable").innerHTML=rows.length?rows.join(""):'<tr><td colspan="6" class="empty">बल्लेबाज़ी आँकड़े उपलब्ध नहीं</td></tr>';
 
- // Bowling Table with Economy
+ // Bowling Table
  const bowls=data.bowlStats||{};
  const bowlRows=Object.entries(bowls);
  el("bowlTable").innerHTML=bowlRows.length?bowlRows.map(([name,s])=>`<tr>
@@ -788,16 +835,21 @@ function renderScorecard(data){
   <td>${overs(s.balls)}</td><td>${num(s.runs)}</td><td class="bold-stat">${num(s.wickets)}</td><td>${rate(s.runs,s.balls)}</td>
  </tr>`).join(""):'<tr><td colspan="5" class="empty">गेंदबाज़ी स्कोर उपलब्ध नहीं</td></tr>';
 
- // Fall of Wickets auto-calculated from ball history
+ // Fall of Wickets (Counts Retired Out as a wicket, skips Retired Hurt)
  let cumRuns=0,wktCount=0,legalBalls=0;
  const fowRows=[];
  history.forEach(d=>{
   cumRuns+=num(d.runs)+num(d.extra);
-  if(!d.wide && !d.noBall)legalBalls++;
-  if(d.wicket){
+  const retOut=isRetiredOutEvent(d);
+  const retHurt=isRetiredHurtEvent(d);
+  if(!d.wide && !d.noBall && !retOut && !retHurt)legalBalls++;
+
+  if((d.wicket || retOut) && !retHurt){
    wktCount++;
+   const batterName=d.outBatter||d.striker||"Batter";
+   const note=retOut?" (retired out)":"";
    fowRows.push(`<tr>
-    <td><span class="player-link">${safe(d.striker||"Batter")}</span></td>
+    <td><span class="player-link">${safe(batterName)}${note}</span></td>
     <td class="bold-stat">${cumRuns}-${wktCount}</td>
     <td>${overs(legalBalls)}</td>
    </tr>`);
