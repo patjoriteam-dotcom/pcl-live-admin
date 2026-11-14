@@ -210,7 +210,7 @@ tr:last-child td{border-bottom:0}
  display:flex;gap:12px;align-items:flex-start;font-size:13px;
 }
 .comm-badge{
- min-width:42px;padding:3px 6px;border-radius:4px;text-align:center;
+ min-width:44px;padding:3px 6px;border-radius:4px;text-align:center;
  font-size:11px;font-weight:800;background:#eef0f3;color:#333;
 }
 .comm-badge.w{background:#fce8e6;color:#d93025}
@@ -360,7 +360,7 @@ tr:last-child td{border-bottom:0}
    </div>
   </div>
 
-  <!-- LAST BALLS (MATCHING ADMIN "THIS OVER") -->
+  <!-- LAST BALLS -->
   <div class="recent-strip" id="recentBallsBar" style="display:none">
    <span>This Over / Recent:</span>
    <div id="recentBallsChips" style="display:flex;gap:6px"></div>
@@ -614,12 +614,15 @@ function isRetiredHurtEvent(d){
 
 /* HELPER: DETECT WIDE / NO-BALL / ADMIN LABEL EXACTLY */
 function getExtraInfo(d){
- // Check if Admin saved a direct label like "Wd", "Wd1", "Nb", "Nb+1", "1LB", "1B"
+ // Scan all string values inside object in case admin saved "Nb", "nb", "noball", "no-ball", "Wd", etc. under any key
+ const allStrValues = Object.values(d || {}).filter(v => typeof v === "string").join(" ");
  const adminTag = String(d?.text || d?.short || d?.badge || d?.display || d?.ball || d?.label || d?.event || "").trim();
- const rawType = String(d?.extraType || d?.ballType || d?.type || adminTag || "").toLowerCase();
+ const rawType = String(d?.extraType || d?.ballType || d?.type || d?.extraKind || d?.mode || adminTag || "").toLowerCase();
 
- const isWide = !!d?.wide || d?.isWide === true || /^wd/i.test(adminTag) || rawType.includes("wide");
- const isNoBall = !!d?.noBall || !!d?.noball || d?.isNoBall === true || /^nb/i.test(adminTag) || rawType.includes("no ball") || rawType.includes("noball");
+ const isWide = !!d?.wide || d?.isWide === true || /^wd/i.test(adminTag) || /\b(wd|wide)\b/i.test(allStrValues) || rawType.includes("wide");
+ const isNoBall = !!d?.noBall || !!d?.noball || !!d?.no_ball || d?.isNoBall === true || d?.isNoball === true ||
+                  /^nb/i.test(adminTag) || /\b(nb|noball|no-ball|no ball)\b/i.test(allStrValues) ||
+                  rawType.includes("no") || rawType.includes("nb");
  const isBye = !!d?.bye || /^\d*b$/i.test(adminTag) || rawType === "bye";
  const isLegBye = !!d?.legBye || !!d?.legbye || /^\d*lb$/i.test(adminTag) || rawType.includes("leg");
 
@@ -628,7 +631,6 @@ function getExtraInfo(d){
 
 /* HELPER: FORMAT BALL CHIP & COMMENTARY TEXT */
 function formatBallDisplay(d){
- // If d itself is a string (e.g. from thisOver array ["Wd", "W", "Wd1", "Nb+1"])
  if(typeof d === "string"){
   const s = d.trim();
   const low = s.toLowerCase();
@@ -675,14 +677,23 @@ function formatBallDisplay(d){
   };
  }
 
- // Fallback: if Admin saved extra > 0 with 0 batRuns and legal===false (classic Admin Wide save)
- if(extRuns > 0 && batRuns === 0 && (d.legal === false || d.countBall === false || d.isExtra === true)){
+ // Fallback when Admin saved illegal ball (extra > 0 and legal === false)
+ if(extRuns > 0 && (d.legal === false || d.countBall === false || d.isExtra === true)){
+  if(batRuns > 0){
+   // If batsman also scored runs on an illegal delivery, it's a No Ball!
+   return {
+    chip: `Nb+${batRuns}${d.wicket ? "+W" : ""}`,
+    cls: d.wicket ? "b-w" : "b-ext",
+    commCls: d.wicket ? "w" : "ext",
+    label: `No Ball + ${batRuns} run${d.wicket ? " + WICKET" : ""}`
+   };
+  }
   const plus = extRuns > 1 ? (extRuns - 1) : "";
   return {
-   chip: `Wd${plus}`,
-   cls: "b-ext",
-   commCls: "ext",
-   label: `Wide${plus ? " + " + plus + " run" : ""}`
+   chip: `Wd${plus}${d.wicket ? "+W" : ""}`,
+   cls: d.wicket ? "b-w" : "b-ext",
+   commCls: d.wicket ? "w" : "ext",
+   label: `Wide${plus ? " + " + plus + " run" : ""}${d.wicket ? " + WICKET" : ""}`
   };
  }
 
@@ -785,7 +796,7 @@ function renderLiveTab(data){
   el("rrrWrap").style.display="none";
  }
 
- // Recent / This Over Balls (Checks data.thisOver first, then history)
+ // Recent / This Over Balls
  const hist=Array.isArray(activeInn.history)?activeInn.history:(Array.isArray(data.history)?data.history:[]);
  const adminOver=Array.isArray(activeInn.thisOver)?activeInn.thisOver:(Array.isArray(data.thisOver)?data.thisOver:null);
  const chipsSource = (adminOver && adminOver.length) ? adminOver : hist.slice(-6);
@@ -964,7 +975,7 @@ function renderScorecard(data){
   const retOut=isRetiredOutEvent(d);
   const retHurt=isRetiredHurtEvent(d);
   const { isWide, isNoBall } = getExtraInfo(d);
-  const isIllegal = isWide || isNoBall || d.legal === false;
+  const isIllegal = isWide || isNoBall || d.legal === false || d.countBall === false;
   if(!isIllegal && !retOut && !retHurt)legalBalls++;
 
   if((d.wicket || retOut) && !retHurt){
