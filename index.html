@@ -7,50 +7,26 @@
 <title>PCL PREMIUM LIVE ADMIN</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
 <style>
-:root{
- --green:#287d37;--green2:#368d47;--bg:#f0f0f0;
- --white:#fff;--text:#222;--muted:#777;--line:#ddd;
- --red:#df2020;--shadow:0 2px 7px #0002;
-}
+:root{--green:#287d37;--green2:#368d47;--bg:#f0f0f0;--white:#fff;--text:#222;--muted:#777;--line:#ddd;--red:#df2020;--shadow:0 2px 7px #0002}
 *{box-sizing:border-box}
-html,body{
- margin:0;min-height:100%;background:var(--bg);color:var(--text);
- font-family:"Noto Sans Devanagari",Arial,sans-serif
-}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:"Noto Sans Devanagari",Arial,sans-serif}
 body{padding:8px}
 .wrap{max-width:760px;margin:auto}
 h1{text-align:center;color:var(--green);font-size:21px;margin:5px}
 h3{font-size:15px;margin:0 0 9px}
-.card{
- background:#fff;border-radius:15px;padding:12px;margin:8px 0;
- box-shadow:var(--shadow);border:1px solid #e8e8e8
-}
-input,select,textarea,button{
- font:inherit;width:100%;border:1px solid #ddd;border-radius:9px;
- padding:10px;margin:4px 0;font-size:14px
-}
+.card{background:#fff;border-radius:15px;padding:12px;margin:8px 0;box-shadow:var(--shadow);border:1px solid #e8e8e8}
+input,select,textarea,button{font:inherit;width:100%;border:1px solid #ddd;border-radius:9px;padding:10px;margin:4px 0;font-size:14px}
 input,select,textarea{background:#fff;color:#222}
 textarea{min-height:100px}
-button{
- border:0;background:var(--green);color:#fff;font-weight:700;
- cursor:pointer;padding:12px
-}
+button{border:0;background:var(--green);color:#fff;font-weight:700;cursor:pointer;padding:12px}
 button:active{transform:scale(.98)}
-.secondary{background:#667085}
-.danger{background:#d62828}
-.hidden{display:none!important}
+.secondary{background:#667085}.danger{background:#d62828}.hidden{display:none!important}
 .muted,small{color:var(--muted)}
 label{font-size:12px;color:#555}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-#msg,#playerMsg,#rosterMsg,#wicketMsg,#saveMsg,#pointsMsg,#loginMsg{
- font-size:12px;color:#b77900;white-space:pre-wrap;min-height:16px
-}
-.score-top{
- background:var(--green);color:#fff;border-radius:14px;
- padding:14px;margin-bottom:8px
-}
+#msg,#playerMsg,#rosterMsg,#wicketMsg,#saveMsg,#pointsMsg,#loginMsg{font-size:12px;color:#b77900;white-space:pre-wrap;min-height:16px}
+.score-top{background:var(--green);color:#fff;border-radius:14px;padding:14px;margin-bottom:8px}
 .score-top h2{font-size:18px;margin:0 0 12px;text-align:center}
 .score-flex{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .score-big{font-size:43px;font-weight:800;line-height:1.1}
@@ -64,20 +40,12 @@ label{font-size:12px;color:#555}
 .score-table td:first-child{color:var(--green);font-weight:600}
 .score-table .active-player{font-weight:800;color:var(--green)}
 .over-balls{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.ball{
- width:39px;height:39px;border:2px solid #ddd;border-radius:50%;
- display:flex;align-items:center;justify-content:center;font-size:14px;
- background:#fff
-}
+.ball{width:39px;height:39px;border:2px solid #ddd;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;background:#fff}
 .ball.boundary{border-color:var(--green);color:var(--green);font-weight:800}
 .ball.wicket{border-color:var(--red);color:var(--red);font-weight:800}
 .ball.extra{border-color:#d99b20;color:#a36a00}
 .control-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.run-btn{
- width:100%;height:68px;border:3px solid var(--green);
- border-radius:50%;background:#fff;color:#222;font-size:22px;
- font-weight:500;margin:0;padding:0
-}
+.run-btn{width:100%;height:68px;border:3px solid var(--green);border-radius:50%;background:#fff;color:#222;font-size:22px;font-weight:500;margin:0;padding:0}
 .run-btn:active{background:var(--green);color:#fff}
 .action-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
 .action-grid button{margin:0}
@@ -92,22 +60,12 @@ label{font-size:12px;color:#555}
 .points-table td{border-bottom:1px solid #ddd;padding:8px 5px;text-align:center}
 .points-table td:nth-child(2){text-align:left;font-weight:700}
 #dashboard.active{height:calc(100dvh - 16px);display:flex;flex-direction:column;overflow:hidden}
-#dashboard.active>.card:nth-child(2),
-#dashboard.active>.card:nth-child(3),
-#dashboard.active>.card:nth-child(4){display:none}
+#dashboard.active>.card:nth-child(2),#dashboard.active>.card:nth-child(3),#dashboard.active>.card:nth-child(4){display:none}
 #dashboard.active>#scoring{flex:1;min-height:0;overflow-y:auto;padding-bottom:25px}
 #scoring>.card{margin:7px 0}
-@media(max-width:390px){
- body{padding:4px}
- .score-big{font-size:36px}
- .card{padding:9px}
- .run-btn{height:59px;font-size:19px}
- .ball{width:34px;height:34px}
- .score-table{font-size:12px}
-}
+@media(max-width:390px){body{padding:4px}.score-big{font-size:36px}.card{padding:9px}.run-btn{height:59px;font-size:19px}.ball{width:34px;height:34px}.score-table{font-size:12px}}
 </style>
 </head>
-
 <body>
 <div class="wrap">
 <h1>🏏 PCL LIVE ADMIN</h1>
@@ -116,17 +74,13 @@ label{font-size:12px;color:#555}
 <h3>एडमिन लॉगिन</h3>
 <input id="email" type="email" placeholder="Admin Email">
 <input id="password" type="password" placeholder="Password">
-<button id="loginBtn">LOGIN</button>
-<p id="loginMsg"></p>
+<button id="loginBtn">LOGIN</button><p id="loginMsg"></p>
 </div>
 
 <div id="dashboard" class="hidden">
-
-<div class="card">
-Welcome Admin!
+<div class="card">Welcome Admin!
 <button id="logout" class="secondary" style="width:auto;float:right;padding:6px 12px">LOGOUT</button>
-<div style="clear:both"></div>
-</div>
+<div style="clear:both"></div></div>
 
 <div class="card">
 <h3>नया मैच बनाएं</h3>
@@ -137,13 +91,8 @@ Welcome Admin!
 <input id="totalOvers" type="number" min="1" max="50" value="10">
 <input id="matchDate" type="date">
 <select id="tossWinner"><option value="">टॉस किसने जीता?</option></select>
-<select id="decision">
-<option value="">टॉस जीतकर क्या करेंगे?</option>
-<option value="Batting">पहले बल्लेबाज़ी</option>
-<option value="Bowling">पहले गेंदबाज़ी</option>
-</select>
-<button id="saveMatch">मैच सेव करें</button>
-<p id="saveMsg"></p>
+<select id="decision"><option value="">टॉस जीतकर क्या करेंगे?</option><option value="Batting">पहले बल्लेबाज़ी</option><option value="Bowling">पहले गेंदबाज़ी</option></select>
+<button id="saveMatch">मैच सेव करें</button><p id="saveMsg"></p>
 </div>
 
 <div class="card">
@@ -157,162 +106,90 @@ Welcome Admin!
 <h3>🏆 PCL POINTS TABLE</h3>
 <div class="table-wrap" id="pointsTableAdmin">लोड हो रही है...</div>
 <p class="muted">जीत = 2 अंक | टाई = 1 अंक | हार = 0 अंक</p>
-<button id="refreshPoints" class="secondary">Points Table Refresh करें</button>
-<p id="pointsMsg"></p>
+<button id="refreshPoints" class="secondary">Points Table Refresh करें</button><p id="pointsMsg"></p>
 </div>
 
 <div id="scoring" class="hidden">
-
-<!-- SCORE HEADER -->
 <div class="score-top">
 <h2 id="currentMatchTitle">PCL LIVE MATCH</h2>
-<div class="score-flex">
-<div>
+<div class="score-flex"><div>
 <div class="score-small" id="battingTeamText">बल्लेबाज़ी</div>
 <div class="score-big" id="score">0/0</div>
 <div class="score-small" id="overs">0.0 ओवर</div>
-</div>
-<div>
-<div class="score-small">CRR</div>
-<div class="crr" id="crr">0.00</div>
-</div>
-</div>
-<div class="score-meta">
-<span id="inningsInfo">पारी 1</span>
-<span id="targetInfo">लक्ष्य: —</span>
-</div>
-<div class="score-meta">
-<span id="needInfo">—</span>
-<span id="currentBowlerText">गेंदबाज़: —</span>
-</div>
+</div><div><div class="score-small">CRR</div><div class="crr" id="crr">0.00</div></div></div>
+<div class="score-meta"><span id="inningsInfo">पारी 1</span><span id="targetInfo">लक्ष्य: —</span></div>
+<div class="score-meta"><span id="needInfo">—</span><span id="currentBowlerText">गेंदबाज़: —</span></div>
 </div>
 
-<!-- BATSMAN AND BOWLER -->
 <div class="card">
-<div class="panel-title">
-<h3>🏏 बल्लेबाज़ी स्कोरकार्ड</h3>
-<button id="rosterToggle" class="secondary">खिलाड़ी सेटिंग</button>
-</div>
-<div class="table-wrap">
-<table class="score-table">
+<div class="panel-title"><h3>🏏 बल्लेबाज़ी स्कोरकार्ड</h3><button id="rosterToggle" class="secondary">खिलाड़ी सेटिंग</button></div>
+<div class="table-wrap"><table class="score-table">
 <thead><tr><th>Batsman</th><th>R</th><th>B</th><th>4s</th><th>6s</th><th>SR</th></tr></thead>
-<tbody id="battingRows"></tbody>
-</table>
-</div>
-<hr>
-<h3>🎯 गेंदबाज़ी स्कोरकार्ड</h3>
-<div class="table-wrap">
-<table class="score-table">
+<tbody id="battingRows"></tbody></table></div>
+<hr><h3>🎯 गेंदबाज़ी स्कोरकार्ड</h3>
+<div class="table-wrap"><table class="score-table">
 <thead><tr><th>Bowler</th><th>O</th><th>R</th><th>W</th><th>ER</th></tr></thead>
-<tbody id="bowlingRows"></tbody>
-</table>
-</div>
+<tbody id="bowlingRows"></tbody></table></div>
 <p id="lastWicket" class="muted"></p>
 </div>
 
-<!-- ROSTER -->
 <div class="card hidden" id="rosterPanel">
 <h3>दोनों टीमों के 11 खिलाड़ियों के नाम (हर लाइन में एक नाम)</h3>
-<div class="row">
-<div><b id="team1Label"></b><textarea id="team1Players" placeholder="हर लाइन में एक खिलाड़ी"></textarea></div>
-<div><b id="team2Label"></b><textarea id="team2Players" placeholder="हर लाइन में एक खिलाड़ी"></textarea></div>
-</div>
-<button id="saveRoster" class="secondary">खिलाड़ियों की सूची सेव करें</button>
-<p id="rosterMsg"></p>
+<div class="row"><div><b id="team1Label"></b><textarea id="team1Players" placeholder="हर लाइन में एक खिलाड़ी"></textarea></div><div><b id="team2Label"></b><textarea id="team2Players" placeholder="हर लाइन में एक खिलाड़ी"></textarea></div></div>
+<button id="saveRoster" class="secondary">खिलाड़ियों की सूची सेव करें</button><p id="rosterMsg"></p>
 </div>
 
-<!-- PLAYER SELECT -->
 <div class="card">
 <h3>बल्लेबाज़ और गेंदबाज़ चुनें</h3>
-<div class="row">
-<div><label>स्ट्राइकर</label><input id="striker" placeholder="स्ट्राइकर"></div>
-<div><label>नॉन-स्ट्राइकर</label><input id="nonStriker" placeholder="नॉन-स्ट्राइकर"></div>
-</div>
-<label>गेंदबाज़ चुनें</label>
-<select id="bowlerSelect"><option value="">गेंदबाज़ चुनें</option></select>
-<button id="savePlayers" class="secondary">खिलाड़ी सेव करें</button>
-<p id="playerMsg"></p>
+<div class="row"><div><label>स्ट्राइकर</label><input id="striker" placeholder="स्ट्राइकर"></div><div><label>नॉन-स्ट्राइकर</label><input id="nonStriker" placeholder="नॉन-स्ट्राइकर"></div></div>
+<label>गेंदबाज़ चुनें</label><select id="bowlerSelect"><option value="">गेंदबाज़ चुनें</option></select>
+<button id="savePlayers" class="secondary">खिलाड़ी सेव करें</button><p id="playerMsg"></p>
 </div>
 
-<!-- THIS OVER -->
-<div class="card">
-<h3>This Over</h3>
-<div class="over-balls" id="thisOver">
-<span class="muted">अभी कोई गेंद नहीं</span>
-</div>
-</div>
+<div class="card"><h3>This Over</h3><div class="over-balls" id="thisOver"><span class="muted">अभी कोई गेंद नहीं</span></div></div>
 
-<!-- EXTRAS -->
 <div class="card">
 <h3>अतिरिक्त रन</h3>
-<div class="extra-grid">
-<button id="wide">WIDE</button>
-<button id="noball">NO BALL</button>
-<button id="bye">BYE</button>
-<button id="legbye">LEG BYE</button>
-</div>
+<div class="extra-grid"><button id="wide">WIDE</button><button id="noball">NO BALL</button><button id="bye">BYE</button><button id="legbye">LEG BYE</button></div>
 <p class="muted" id="extraHelp">Wide / No Ball चुनने के बाद रन बटन दबाएँ।</p>
 </div>
 
-<!-- RUN BUTTONS -->
 <div class="card">
 <h3>रन जोड़ें</h3>
 <div class="control-grid">
-<button class="run-btn" data-run="0">0</button>
-<button class="run-btn" data-run="1">1</button>
-<button class="run-btn" data-run="2">2</button>
-<button class="run-btn" data-run="3">3</button>
-<button class="run-btn" data-run="4">4</button>
-<button class="run-btn" data-run="5">5</button>
-<button class="run-btn" data-run="6">6</button>
-<button class="run-btn" id="cancelExtra">×</button>
-</div>
-</div>
+<button class="run-btn" data-run="0">0</button><button class="run-btn" data-run="1">1</button>
+<button class="run-btn" data-run="2">2</button><button class="run-btn" data-run="3">3</button>
+<button class="run-btn" data-run="4">4</button><button class="run-btn" data-run="5">5</button>
+<button class="run-btn" data-run="6">6</button><button class="run-btn" id="cancelExtra">×</button>
+</div></div>
 
-<!-- WICKET -->
 <div class="card">
 <h3>❌ विकेट दर्ज करें</h3>
 <select id="wicketType">
-<option>Bowled</option>
-<option>Caught</option>
-<option>LBW</option>
-<option>Run Out</option>
-<option>Stumped</option>
-<option>Hit Wicket</option>
-<option>Retired Hurt</option>
+<option>Bowled</option><option>Caught</option><option>LBW</option><option>Run Out</option><option>Stumped</option><option>Hit Wicket</option>
 </select>
-<div id="catcherBox" class="hidden">
-<label>कैच किस फील्डर ने पकड़ा?</label>
-<select id="catcherSelect"><option value="">फील्डर चुनें</option></select>
-</div>
+<div id="catcherBox" class="hidden"><label>कैच किस फील्डर ने पकड़ा?</label><select id="catcherSelect"><option value="">फील्डर चुनें</option></select></div>
 <input id="nextBatter" placeholder="नए बल्लेबाज़ का नाम">
-<button id="wicket" class="danger">WICKET</button>
-<p id="wicketMsg"></p>
+<button id="wicket" class="danger">WICKET</button><p id="wicketMsg"></p>
 </div>
 
-<!-- ACTIONS -->
 <div class="card">
 <h3>मैच कंट्रोल</h3>
 <div class="action-grid">
-<button id="undo" class="secondary">↶ UNDO</button>
-<button id="swapBatsman" class="secondary">STRIKE बदलें</button>
-<button id="partnerships" class="secondary">Partnership</button>
-<button id="retire" class="secondary">Retire Batsman</button>
-<button id="endInnings" class="danger">पारी समाप्त करें</button>
-<button id="startSecondInnings" class="hidden">दूसरी पारी शुरू करें</button>
+<button id="undo" class="secondary">↶ UNDO</button><button id="swapBatsman" class="secondary">STRIKE बदलें</button>
+<button id="partnerships" class="secondary">Partnership</button><button id="retire" class="secondary">Retire Batsman</button>
+<button id="endInnings" class="danger">पारी समाप्त करें</button><button id="startSecondInnings" class="hidden">दूसरी पारी शुरू करें</button>
 </div>
-<p id="partnershipInfo" class="muted"></p>
-<p id="msg"></p>
+<p id="partnershipInfo" class="muted"></p><p id="msg"></p>
 </div>
-
 </div>
 </div>
 </div>
 
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-import {getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-import {getDatabase,ref,push,set,onValue,get} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+import{initializeApp}from"https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+import{getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+import{getDatabase,ref,push,set,onValue,get}from"https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
 
 const firebaseConfig={
  apiKey:"AIzaSyBSDKTq4r-z7XbHpkCkzwc5bkD-IvFokEY",
@@ -323,259 +200,178 @@ const firebaseConfig={
  messagingSenderId:"569868359276",
  appId:"1:569868359276:web:4cea96b5d8447871352a49"
 };
-
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getDatabase(app);
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
 const $=id=>document.getElementById(id);
-
-let selectedId=null,selectedMatch=null,state=null;
-let undoStack=[],pendingExtra=null;
-
+let selectedId=null,selectedMatch=null,state=null,undoStack=[],pendingExtra=null;
 const say=(id,msg)=>$(id).textContent=msg;
 const oversText=b=>Math.floor(Number(b||0)/6)+"."+(Number(b||0)%6);
 
 function updateTossOptions(){
- const a=$("team1").value.trim(),b=$("team2").value.trim();
- const sel=$("tossWinner"),old=sel.value;
+ const a=$("team1").value.trim(),b=$("team2").value.trim(),sel=$("tossWinner"),old=sel.value;
  sel.innerHTML='<option value="">टॉस किसने जीता?</option>';
- if(a)sel.add(new Option(a,a));
- if(b&&b!==a)sel.add(new Option(b,b));
+ if(a)sel.add(new Option(a,a));if(b&&b!==a)sel.add(new Option(b,b));
  if(old===a||old===b)sel.value=old;
 }
 $("team1").addEventListener("input",updateTossOptions);
 $("team2").addEventListener("input",updateTossOptions);
 
 function freshState(m){
- return {
-  runs:0,wickets:0,balls:0,innings:1,
-  battingTeam:m.battingFirst,
-  bowlingTeam:m.battingFirst===m.team1?m.team2:m.team1,
-  striker:"",nonStriker:"",bowler:"",
-  totalOvers:Number(m.totalOvers)||10,
-  extras:0,history:[],status:"Live",
-  players:{team1:[],team2:[]},
-  lastWicket:"",innings1:null,innings2:null,
-  batStats:{},bowlStats:{},
-  partnershipRuns:0,partnershipBalls:0
- };
+ return{runs:0,wickets:0,balls:0,innings:1,battingTeam:m.battingFirst,
+ bowlingTeam:m.battingFirst===m.team1?m.team2:m.team1,striker:"",nonStriker:"",bowler:"",
+ totalOvers:Number(m.totalOvers)||10,extras:0,history:[],status:"Live",
+ players:{team1:[],team2:[]},lastWicket:"",innings1:null,innings2:null,
+ batStats:{},bowlStats:{},partnershipRuns:0,partnershipBalls:0};
 }
-
 function playersOf(team){
- if(!state||!selectedMatch)return [];
+ if(!state||!selectedMatch)return[];
  return team===selectedMatch.team1?(state.players.team1||[]):(state.players.team2||[]);
 }
-
 function fillSelects(){
- const bowlers=playersOf(state.bowlingTeam);
- const b=$("bowlerSelect"),c=$("catcherSelect");
+ const bowlers=playersOf(state.bowlingTeam),b=$("bowlerSelect"),c=$("catcherSelect");
  b.innerHTML='<option value="">गेंदबाज़ चुनें</option>';
  c.innerHTML='<option value="">फील्डर चुनें</option>';
- bowlers.forEach(n=>{
-  b.add(new Option(n,n));
-  c.add(new Option(n,n));
- });
+ bowlers.forEach(n=>{b.add(new Option(n,n));c.add(new Option(n,n));});
  if(state.bowler&&bowlers.includes(state.bowler))b.value=state.bowler;
 }
-
 function saveInningsResult(){
- return {
-  runs:state.runs,wickets:state.wickets,balls:state.balls,
-  battingTeam:state.battingTeam,bowlingTeam:state.bowlingTeam,
-  totalOvers:state.totalOvers,
-  batStats:JSON.parse(JSON.stringify(state.batStats||{})),
-  bowlStats:JSON.parse(JSON.stringify(state.bowlStats||{})),
-  history:JSON.parse(JSON.stringify(state.history||[]))
- };
+ return{runs:state.runs,wickets:state.wickets,balls:state.balls,
+ battingTeam:state.battingTeam,bowlingTeam:state.bowlingTeam,totalOvers:state.totalOvers,
+ batStats:JSON.parse(JSON.stringify(state.batStats||{})),
+ bowlStats:JSON.parse(JSON.stringify(state.bowlStats||{})),
+ history:JSON.parse(JSON.stringify(state.history||[]))};
 }
-
 function updateInningsButton(){
- $("startSecondInnings").classList.toggle("hidden",
- !(state&&state.innings===1&&state.status==="Innings Ended"));
+ $("startSecondInnings").classList.toggle("hidden",!(state&&state.innings===1&&state.status==="Innings Ended"));
 }
-
 function makeResult(){
- const first=state.innings1;
- if(!first)return;
+ const first=state.innings1;if(!first)return;
  const target=first.runs+1;
- if(state.runs>=target){
-  state.resultText=state.battingTeam+" ने "+(10-state.wickets)+" विकेट से मैच जीता।";
- }else if(state.runs===first.runs){
-  state.resultText="मैच टाई हुआ।";
- }else{
-  state.resultText=first.battingTeam+" ने "+(first.runs-state.runs)+" रन से मैच जीता।";
- }
- state.status="Completed";
- state.innings2=saveInningsResult();
+ if(state.runs>=target)state.resultText=state.battingTeam+" ने "+(10-state.wickets)+" विकेट से मैच जीता।";
+ else if(state.runs===first.runs)state.resultText="मैच टाई हुआ।";
+ else state.resultText=first.battingTeam+" ने "+(first.runs-state.runs)+" रन से मैच जीता।";
+ state.status="Completed";state.innings2=saveInningsResult();
 }
-
-function effectiveBalls(innings){
- if(!innings)return 0;
- const quota=Number(innings.totalOvers||10)*6;
- const balls=Number(innings.balls||0);
- return Number(innings.wickets||0)>=10?quota:Math.min(balls,quota);
+function effectiveBalls(i){
+ if(!i)return 0;
+ const quota=Number(i.totalOvers||10)*6,balls=Number(i.balls||0);
+ return Number(i.wickets||0)>=10?quota:Math.min(balls,quota);
 }
 function calculateNRR(t){
- const of=Number(t.ballsFor||0)/6;
- const oa=Number(t.ballsAgainst||0)/6;
+ const of=Number(t.ballsFor||0)/6,oa=Number(t.ballsAgainst||0)/6;
  if(of<=0||oa<=0)return 0;
- return (t.runsFor/of)-(t.runsAgainst/oa);
+ return(t.runsFor/of)-(t.runsAgainst/oa);
 }
-
 async function updatePointsTable(){
  try{
-  const snap=await get(ref(db,"matches"));
-  const table={};
-  function getTeam(name){
-   if(!table[name])table[name]={
-    team:name,match:0,win:0,loss:0,tie:0,points:0,
-    runsFor:0,ballsFor:0,runsAgainst:0,ballsAgainst:0,nrr:0
-   };
-   return table[name];
+  const snap=await get(ref(db,"matches")),table={};
+  function getTeam(n){
+   if(!table[n])table[n]={team:n,match:0,win:0,loss:0,tie:0,points:0,runsFor:0,ballsFor:0,runsAgainst:0,ballsAgainst:0,nrr:0};
+   return table[n];
   }
-  if(snap.exists()){
-   snap.forEach(child=>{
-    const m=child.val()||{},l=m.live||{};
-    if(l.status!=="Completed")return;
-    const a=l.innings1,b=l.innings2;
-    if(!a||!b)return;
-    const nameA=a.battingTeam,nameB=a.bowlingTeam;
-    if(!nameA||!nameB||nameA===nameB)return;
-    const A=getTeam(nameA),B=getTeam(nameB);
-    const ar=Number(a.runs||0),br=Number(b.runs||0);
-    const ab=effectiveBalls(a),bb=effectiveBalls(b);
-    A.match++;B.match++;
-    A.runsFor+=ar;A.ballsFor+=ab;
-    A.runsAgainst+=br;A.ballsAgainst+=bb;
-    B.runsFor+=br;B.ballsFor+=bb;
-    B.runsAgainst+=ar;B.ballsAgainst+=ab;
-    if(br>ar){B.win++;B.points+=2;A.loss++;}
-    else if(br===ar){A.tie++;B.tie++;A.points++;B.points++;}
-    else{A.win++;A.points+=2;B.loss++;}
-   });
-  }
-  const rows=Object.values(table).map(t=>{
-   t.nrr=calculateNRR(t);return t;
-  }).sort((a,b)=>b.points-a.points||b.nrr-a.nrr||a.team.localeCompare(b.team));
+  if(snap.exists())snap.forEach(child=>{
+   const m=child.val()||{},l=m.live||{};
+   if(l.status!=="Completed")return;
+   const a=l.innings1,b=l.innings2;if(!a||!b)return;
+   const nameA=a.battingTeam,nameB=a.bowlingTeam;
+   if(!nameA||!nameB||nameA===nameB)return;
+   const A=getTeam(nameA),B=getTeam(nameB),ar=Number(a.runs||0),br=Number(b.runs||0),ab=effectiveBalls(a),bb=effectiveBalls(b);
+   A.match++;B.match++;A.runsFor+=ar;A.ballsFor+=ab;A.runsAgainst+=br;A.ballsAgainst+=bb;
+   B.runsFor+=br;B.ballsFor+=bb;B.runsAgainst+=ar;B.ballsAgainst+=ab;
+   if(br>ar){B.win++;B.points+=2;A.loss++;}
+   else if(br===ar){A.tie++;B.tie++;A.points++;B.points++;}
+   else{A.win++;A.points+=2;B.loss++;}
+  });
+  const rows=Object.values(table).map(t=>{t.nrr=calculateNRR(t);return t;})
+   .sort((a,b)=>b.points-a.points||b.nrr-a.nrr||a.team.localeCompare(b.team));
   await set(ref(db,"pointsTable"),{updatedAt:Date.now(),teams:rows});
-  renderPointsTable(rows);
-  say("pointsMsg","Points Table अपडेट हो गई ✓");
+  renderPointsTable(rows);say("pointsMsg","Points Table अपडेट हो गई ✓");
  }catch(e){say("pointsMsg","त्रुटि: "+e.message);}
 }
-
 function renderPointsTable(rows){
  const box=$("pointsTableAdmin");
  if(!rows||!rows.length){box.innerHTML="अभी कोई मैच पूरा नहीं हुआ है।";return;}
  let html='<table class="points-table"><thead><tr><th>Pos</th><th>Team</th><th>Mat</th><th>Won</th><th>Lost</th><th>Tie</th><th>Pts</th><th>NRR</th></tr></thead><tbody>';
- rows.forEach((t,i)=>{
-  html+='<tr><td>'+(i+1)+'</td><td>'+escapeHTML(t.team)+'</td><td>'+t.match+'</td><td>'+t.win+'</td><td>'+t.loss+'</td><td>'+t.tie+'</td><td><b>'+t.points+'</b></td><td>'+(t.nrr>=0?"+":"")+Number(t.nrr).toFixed(3)+'</td></tr>';
- });
+ rows.forEach((t,i)=>html+='<tr><td>'+(i+1)+'</td><td>'+escapeHTML(t.team)+'</td><td>'+t.match+'</td><td>'+t.win+'</td><td>'+t.loss+'</td><td>'+t.tie+'</td><td><b>'+t.points+'</b></td><td>'+(t.nrr>=0?"+":"")+Number(t.nrr).toFixed(3)+'</td></tr>');
  box.innerHTML=html+'</tbody></table>';
 }
 function escapeHTML(v){
  return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 async function loadPointsTable(){
- try{
-  const s=await get(ref(db,"pointsTable"));
-  renderPointsTable(s.exists()&&Array.isArray(s.val().teams)?s.val().teams:[]);
- }catch(e){say("pointsMsg","टेबल लोड नहीं हुई: "+e.message);}
+ try{const s=await get(ref(db,"pointsTable"));renderPointsTable(s.exists()&&Array.isArray(s.val().teams)?s.val().teams:[]);}
+ catch(e){say("pointsMsg","टेबल लोड नहीं हुई: "+e.message);}
 }
 
+/* Batting scorecard: सभी बल्लेबाज़ और उनका dismissal दिखेगा */
 function renderBatting(){
- const body=$("battingRows");
- body.innerHTML="";
- [state.striker,state.nonStriker].filter(Boolean).forEach(name=>{
-  const s=state.batStats[name]||{runs:0,balls:0,fours:0,sixes:0};
+ const body=$("battingRows");body.innerHTML="";
+ const stats=state.batStats||{},names=Object.keys(stats);
+ [state.striker,state.nonStriker].filter(n=>n&&!names.includes(n)).forEach(n=>names.push(n));
+ names.forEach(name=>{
+  const s=stats[name]||{runs:0,balls:0,fours:0,sixes:0};
+  const dismissal=(state.history||[]).find(d=>d.wicket&&d.striker===name);
   const sr=s.balls?(s.runs*100/s.balls).toFixed(2):"0.00";
   const tr=document.createElement("tr");
-  tr.innerHTML='<td class="'+(name===state.striker?'active-player':'')+'">'+escapeHTML(name)+(name===state.striker?' *':'')+'</td><td>'+s.runs+'</td><td>'+s.balls+'</td><td>'+s.fours+'</td><td>'+s.sixes+'</td><td>'+sr+'</td>';
+  const status=dismissal?(dismissal.wicketType+(dismissal.fielder?" ("+dismissal.fielder+")":"")):
+   (name===state.striker||name===state.nonStriker?"Not out":"");
+  tr.innerHTML='<td class="'+(name===state.striker?'active-player':'')+'">'+escapeHTML(name)+(name===state.striker?' *':'')+
+   (status?'<br><small>'+escapeHTML(status)+'</small>':'')+'</td><td>'+s.runs+'</td><td>'+s.balls+'</td><td>'+s.fours+'</td><td>'+s.sixes+'</td><td>'+sr+'</td>';
   body.appendChild(tr);
  });
 }
 function renderBowling(){
- const body=$("bowlingRows");
- body.innerHTML="";
+ const body=$("bowlingRows");body.innerHTML="";
  Object.entries(state.bowlStats||{}).forEach(([name,b])=>{
-  const overs=oversText(b.balls);
-  const er=b.balls?(b.runs/(b.balls/6)).toFixed(2):"0.00";
-  const tr=document.createElement("tr");
-  tr.innerHTML='<td>'+escapeHTML(name)+(name===state.bowler?' *':'')+'</td><td>'+overs+'</td><td>'+b.runs+'</td><td>'+b.wickets+'</td><td>'+er+'</td>';
+  const er=b.balls?(b.runs/(b.balls/6)).toFixed(2):"0.00",tr=document.createElement("tr");
+  tr.innerHTML='<td>'+escapeHTML(name)+(name===state.bowler?' *':'')+'</td><td>'+oversText(b.balls)+'</td><td>'+b.runs+'</td><td>'+b.wickets+'</td><td>'+er+'</td>';
   body.appendChild(tr);
  });
 }
-
 function ballLabel(d){
- if(d.wicket)return "W";
+ if(d.wicket)return"W";
  if(d.kind==="Wide")return d.extra>1?"Wd"+(d.extra-1):"Wd";
  if(d.kind==="No Ball")return d.runs>0?"Nb+"+d.runs:"Nb";
- if(d.kind==="Bye")return "B"+d.extra;
- if(d.kind==="Leg Bye")return "Lb"+d.extra;
+ if(d.kind==="Bye")return"B"+d.extra;
+ if(d.kind==="Leg Bye")return"Lb"+d.extra;
  return String(d.runs);
 }
 function renderThisOver(){
- const box=$("thisOver");
- const h=state.history||[];
- const last=h.slice(-6);
- box.innerHTML="";
+ const box=$("thisOver"),h=state.history||[],last=h.slice(-6);box.innerHTML="";
  if(!last.length){box.innerHTML='<span class="muted">अभी कोई गेंद नहीं</span>';return;}
  last.forEach(d=>{
-  const span=document.createElement("span");
-  span.className="ball";
+  const span=document.createElement("span");span.className="ball";
   if(d.wicket)span.classList.add("wicket");
   else if(d.runs===4||d.runs===6)span.classList.add("boundary");
   else if(!d.legal)span.classList.add("extra");
-  span.textContent=ballLabel(d);
-  box.appendChild(span);
+  span.textContent=ballLabel(d);box.appendChild(span);
  });
 }
-
 function showScore(){
  if(!state)return;
- state.batStats=state.batStats||{};
- state.bowlStats=state.bowlStats||{};
- state.history=state.history||[];
- state.partnershipRuns=Number(state.partnershipRuns||0);
- state.partnershipBalls=Number(state.partnershipBalls||0);
-
+ state.batStats=state.batStats||{};state.bowlStats=state.bowlStats||{};state.history=state.history||[];
+ state.partnershipRuns=Number(state.partnershipRuns||0);state.partnershipBalls=Number(state.partnershipBalls||0);
  $("score").textContent=state.runs+"/"+state.wickets;
  $("overs").textContent=oversText(state.balls)+" / "+state.totalOvers+" ओवर";
  $("battingTeamText").textContent=state.battingTeam+" बल्लेबाज़ी";
  $("crr").textContent=state.balls?(state.runs/(state.balls/6)).toFixed(2):"0.00";
  $("inningsInfo").textContent="पारी "+state.innings+" | "+state.status;
  $("currentBowlerText").textContent="गेंदबाज़: "+(state.bowler||"—");
-
  if(state.innings===2&&state.innings1){
-  const target=state.innings1.runs+1;
-  const need=Math.max(0,target-state.runs);
-  const ballsLeft=Math.max(0,state.totalOvers*6-state.balls);
+  const target=state.innings1.runs+1,need=Math.max(0,target-state.runs),left=Math.max(0,state.totalOvers*6-state.balls);
   $("targetInfo").textContent="लक्ष्य: "+target;
-  $("needInfo").textContent=need===0?"लक्ष्य हासिल!":""+need+" रन "+ballsLeft+" गेंद में | RRR: "+(ballsLeft?(need*6/ballsLeft).toFixed(2):"—");
- }else{
-  $("targetInfo").textContent="लक्ष्य: पहली पारी";
-  $("needInfo").textContent="CRR: "+$("crr").textContent;
- }
-
- renderBatting();
- renderBowling();
- renderThisOver();
-
+  $("needInfo").textContent=need===0?"लक्ष्य हासिल!":need+" रन "+left+" गेंद में | RRR: "+(left?(need*6/left).toFixed(2):"—");
+ }else{$("targetInfo").textContent="लक्ष्य: पहली पारी";$("needInfo").textContent="CRR: "+$("crr").textContent;}
+ renderBatting();renderBowling();renderThisOver();
  $("lastWicket").textContent=state.lastWicket?"पिछला विकेट: "+state.lastWicket:"";
- $("striker").value=state.striker||"";
- $("nonStriker").value=state.nonStriker||"";
+ $("striker").value=state.striker||"";$("nonStriker").value=state.nonStriker||"";
  $("team1Players").value=(state.players.team1||[]).join("\n");
  $("team2Players").value=(state.players.team2||[]).join("\n");
- $("team1Label").textContent=selectedMatch.team1;
- $("team2Label").textContent=selectedMatch.team2;
- fillSelects();
- updateInningsButton();
+ $("team1Label").textContent=selectedMatch.team1;$("team2Label").textContent=selectedMatch.team2;
+ fillSelects();updateInningsButton();
 }
-
 async function saveLive(){
  if(!selectedId||!state)throw new Error("पहले मैच खोलें");
- const data={...state,matchName:selectedMatch.matchName,
- team1:selectedMatch.team1,team2:selectedMatch.team2,
- totalOvers:state.totalOvers,updatedAt:Date.now()};
+ const data={...state,matchName:selectedMatch.matchName,team1:selectedMatch.team1,team2:selectedMatch.team2,totalOvers:state.totalOvers,updatedAt:Date.now()};
  await Promise.all([
   set(ref(db,"matches/"+selectedId+"/live"),data),
   set(ref(db,"publicScore"),{matchId:selectedId,...data})
@@ -583,6 +379,7 @@ async function saveLive(){
  if(state.status==="Completed")await updatePointsTable();
 }
 
+/* मुख्य सुधार: टीम विकेट काउंट, रन आउट पर गेंदबाज़ को विकेट नहीं */
 function addDelivery({runs=0,extra=0,kind="Run",legal=true,wicket=false,wicketType="",fielder=""}={}){
  if(!state){say("msg","पहले मैच खोलें");return;}
  if(state.status!=="Live"){say("msg","यह पारी समाप्त हो चुकी है");return;}
@@ -592,8 +389,7 @@ function addDelivery({runs=0,extra=0,kind="Run",legal=true,wicket=false,wicketTy
  if(!state.striker||!state.nonStriker||!state.bowler){say("msg","पहले दोनों बल्लेबाज़ और गेंदबाज़ सेव करें");return;}
 
  undoStack.push(JSON.stringify(state));
- state.batStats=state.batStats||{};
- state.bowlStats=state.bowlStats||{};
+ state.batStats=state.batStats||{};state.bowlStats=state.bowlStats||{};
  const batter=state.striker,bowler=state.bowler;
  if(!state.batStats[batter])state.batStats[batter]={runs:0,balls:0,fours:0,sixes:0};
  if(!state.bowlStats[bowler])state.bowlStats[bowler]={balls:0,runs:0,wickets:0};
@@ -608,18 +404,17 @@ function addDelivery({runs=0,extra=0,kind="Run",legal=true,wicket=false,wicketTy
  bw.runs+=isBye?0:(runs+extra);
  if(legal)bw.balls++;
 
- if(wicket){
-  const wt=String(wicketType).toLowerCase();
-  const noBowler=wt.includes("run out")||wt.includes("retired");
-  if(!noBowler)bw.wickets++;
- }
+ const wt=String(wicketType).toLowerCase();
+ const retiredHurt=wt.includes("retired hurt");
+ const noBowler=wt.includes("run out")||wt.includes("retired");
+ if(wicket&&!retiredHurt&&!noBowler)bw.wickets++;
 
  const totalAdded=runs+extra;
- const d={runs,extra,kind,legal,wicket,wicketType,fielder,
-  striker:batter,nonStriker:state.nonStriker,bowler,time:Date.now()};
+ const d={runs,extra,kind,legal,wicket,wicketType,fielder,striker:batter,nonStriker:state.nonStriker,bowler,time:Date.now()};
  state.runs+=totalAdded;
  state.extras=(state.extras||0)+extra;
  if(legal)state.balls++;
+ if(wicket&&!retiredHurt)state.wickets++; /* टीम का विकेट बढ़ेगा */
  state.partnershipRuns+=totalAdded;
  if(legal)state.partnershipBalls++;
  state.history.push(d);
@@ -630,35 +425,25 @@ function addDelivery({runs=0,extra=0,kind="Run",legal=true,wicket=false,wicketTy
 
  if(wicket){
   state.lastWicket=wicketType+(fielder?" — कैच: "+fielder:"");
-  state.partnershipRuns=0;
-  state.partnershipBalls=0;
-  state.striker=$("nextBatter").value.trim();
-  $("nextBatter").value="";
+  state.partnershipRuns=0;state.partnershipBalls=0;
+  state.striker=$("nextBatter").value.trim();$("nextBatter").value="";
  }
-
  if(legal&&state.balls%6===0){
-  [state.striker,state.nonStriker]=[state.nonStriker,state.striker];
-  state.bowler="";
+  [state.striker,state.nonStriker]=[state.nonStriker,state.striker];state.bowler="";
  }
-
  const limit=Number(state.totalOvers||10)*6;
  if(state.innings===1&&(state.wickets>=10||state.balls>=limit)){
-  state.innings1=saveInningsResult();
-  state.status="Innings Ended";
+  state.innings1=saveInningsResult();state.status="Innings Ended";
   state.striker="";state.nonStriker="";state.bowler="";
  }else if(state.innings===2){
   const target=state.innings1?state.innings1.runs+1:Infinity;
   if(state.runs>=target||state.wickets>=10||state.balls>=limit){
-   makeResult();
-   state.striker="";state.nonStriker="";state.bowler="";
+   makeResult();state.striker="";state.nonStriker="";state.bowler="";
   }
  }
-
- showScore();
- say("msg","स्कोर सेव हो रहा है…");
- saveLive().then(()=>{
-  say("msg",state.status==="Completed"?state.resultText:state.status==="Innings Ended"?"पारी समाप्त! दूसरी पारी शुरू करें।":"स्कोर सेव हो गया ✓");
- }).catch(e=>say("msg","सेव नहीं हुआ: "+e.message));
+ showScore();say("msg","स्कोर सेव हो रहा है…");
+ saveLive().then(()=>say("msg",state.status==="Completed"?state.resultText:state.status==="Innings Ended"?"पारी समाप्त! दूसरी पारी शुरू करें।":"स्कोर सेव हो गया ✓"))
+ .catch(e=>say("msg","सेव नहीं हुआ: "+e.message));
 }
 
 $("loginBtn").addEventListener("click",async()=>{
@@ -667,131 +452,81 @@ $("loginBtn").addEventListener("click",async()=>{
  catch(e){say("loginMsg","Login Error: "+e.message);}
 });
 $("logout").addEventListener("click",()=>signOut(auth));
-
 onAuthStateChanged(auth,user=>{
- $("loginBox").classList.toggle("hidden",!!user);
- $("dashboard").classList.toggle("hidden",!user);
+ $("loginBox").classList.toggle("hidden",!!user);$("dashboard").classList.toggle("hidden",!user);
  if(user){loadMatches();loadPointsTable();}
 });
-
 function loadMatches(){
  onValue(ref(db,"matches"),snap=>{
-  const sel=$("matchSelect");
-  sel.innerHTML='<option value="">मैच चुनें</option>';
-  $("matchList").innerHTML="";
+  const sel=$("matchSelect");sel.innerHTML='<option value="">मैच चुनें</option>';$("matchList").innerHTML="";
   if(!snap.exists())return;
   snap.forEach(ch=>{
    const m=ch.val()||{};
    sel.add(new Option((m.matchName||"Match")+" | "+m.team1+" VS "+m.team2,ch.key));
-   const p=document.createElement("p");
-   p.textContent=(m.matchName||"Match")+" | "+m.team1+" VS "+m.team2+" | "+(m.totalOvers||10)+" ओवर";
+   const p=document.createElement("p");p.textContent=(m.matchName||"Match")+" | "+m.team1+" VS "+m.team2+" | "+(m.totalOvers||10)+" ओवर";
    $("matchList").appendChild(p);
   });
  },e=>say("saveMsg","मैच लोड त्रुटि: "+e.message));
 }
-
 $("refreshPoints").addEventListener("click",updatePointsTable);
-
 $("saveMatch").addEventListener("click",async()=>{
- const name=$("matchName").value.trim();
- const a=$("team1").value.trim(),b=$("team2").value.trim();
- const totalOvers=Number($("totalOvers").value);
- const date=$("matchDate").value,tw=$("tossWinner").value,decision=$("decision").value;
+ const name=$("matchName").value.trim(),a=$("team1").value.trim(),b=$("team2").value.trim(),
+ totalOvers=Number($("totalOvers").value),date=$("matchDate").value,tw=$("tossWinner").value,decision=$("decision").value;
  if(!name||!a||!b||!date||!tw||!decision||!totalOvers){say("saveMsg","सभी जानकारी भरें");return;}
  if(a.toLowerCase()===b.toLowerCase()){say("saveMsg","दो अलग-अलग टीमों के नाम लिखें");return;}
  if(!Number.isInteger(totalOvers)||totalOvers<1||totalOvers>50){say("saveMsg","ओवर 1 से 50 के बीच लिखें");return;}
  const battingFirst=decision==="Batting"?tw:(tw===a?b:a);
  try{
   const r=push(ref(db,"matches"));
-  await set(r,{
-   matchName:name,team1:a,team2:b,totalOvers,matchDate:date,
-   tossWinner:tw,tossDecision:decision,battingFirst,
-   status:"Upcoming",createdAt:Date.now(),createdBy:auth.currentUser.uid
-  });
+  await set(r,{matchName:name,team1:a,team2:b,totalOvers,matchDate:date,tossWinner:tw,tossDecision:decision,battingFirst,status:"Upcoming",createdAt:Date.now(),createdBy:auth.currentUser.uid});
   say("saveMsg","मैच सेव हो गया ✓");
-  $("matchName").value="";$("team1").value="";$("team2").value="";
-  $("totalOvers").value="10";$("matchDate").value="";$("decision").value="";
-  updateTossOptions();
+  $("matchName").value="";$("team1").value="";$("team2").value="";$("totalOvers").value="10";$("matchDate").value="";$("decision").value="";updateTossOptions();
  }catch(e){say("saveMsg","सेव त्रुटि: "+e.message);}
 });
-
 $("loadMatch").addEventListener("click",async()=>{
- const id=$("matchSelect").value;
- if(!id){say("msg","पहले मैच चुनें");return;}
+ const id=$("matchSelect").value;if(!id){say("msg","पहले मैच चुनें");return;}
  try{
-  const snap=await get(ref(db,"matches/"+id));
-  if(!snap.exists())throw new Error("मैच नहीं मिला");
-  selectedId=id;selectedMatch=snap.val();
-  state=selectedMatch.live||freshState(selectedMatch);
+  const snap=await get(ref(db,"matches/"+id));if(!snap.exists())throw new Error("मैच नहीं मिला");
+  selectedId=id;selectedMatch=snap.val();state=selectedMatch.live||freshState(selectedMatch);
   state.totalOvers=Number(state.totalOvers||selectedMatch.totalOvers)||10;
-  state.players=state.players||{team1:[],team2:[]};
-  state.history=state.history||[];
-  state.batStats=state.batStats||{};
-  state.bowlStats=state.bowlStats||{};
-  state.partnershipRuns=Number(state.partnershipRuns||0);
-  state.partnershipBalls=Number(state.partnershipBalls||0);
+  state.players=state.players||{team1:[],team2:[]};state.history=state.history||[];
+  state.batStats=state.batStats||{};state.bowlStats=state.bowlStats||{};
+  state.partnershipRuns=Number(state.partnershipRuns||0);state.partnershipBalls=Number(state.partnershipBalls||0);
   undoStack=[];pendingExtra=null;
   $("currentMatchTitle").textContent=selectedMatch.matchName+" | "+selectedMatch.team1+" VS "+selectedMatch.team2;
-  $("scoring").classList.remove("hidden");
-  $("dashboard").classList.add("active");
-  showScore();
-  say("msg","मैच खुल गया। खिलाड़ी चुनकर सेव करें।");
+  $("scoring").classList.remove("hidden");$("dashboard").classList.add("active");
+  showScore();say("msg","मैच खुल गया। खिलाड़ी चुनकर सेव करें।");
  }catch(e){say("msg","मैच खोलने में त्रुटि: "+e.message);}
 });
-
-$("rosterToggle").addEventListener("click",()=>{
- $("rosterPanel").classList.toggle("hidden");
-});
-
-function parseNames(id){
- return $(id).value.split(/\n|,/).map(x=>x.trim()).filter(Boolean);
-}
+$("rosterToggle").addEventListener("click",()=>$("rosterPanel").classList.toggle("hidden"));
+function parseNames(id){return $(id).value.split(/\n|,/).map(x=>x.trim()).filter(Boolean);}
 $("saveRoster").addEventListener("click",async()=>{
  if(!state)return;
  const a=parseNames("team1Players"),b=parseNames("team2Players");
- if(a.length!==11||b.length!==11){
-  say("rosterMsg","दोनों टीमों के ठीक 11-11 खिलाड़ी भरें। टीम 1: "+a.length+", टीम 2: "+b.length);return;
- }
- state.players={team1:a,team2:b};
- fillSelects();
+ if(a.length!==11||b.length!==11){say("rosterMsg","दोनों टीमों के ठीक 11-11 खिलाड़ी भरें। टीम 1: "+a.length+", टीम 2: "+b.length);return;}
+ state.players={team1:a,team2:b};fillSelects();
  try{await saveLive();say("rosterMsg","खिलाड़ियों की सूची सेव हो गई ✓");$("rosterPanel").classList.add("hidden");}
  catch(e){say("rosterMsg","सेव त्रुटि: "+e.message);}
 });
-
 $("savePlayers").addEventListener("click",async()=>{
  if(!state)return;
- state.striker=$("striker").value.trim();
- state.nonStriker=$("nonStriker").value.trim();
- state.bowler=$("bowlerSelect").value;
+ state.striker=$("striker").value.trim();state.nonStriker=$("nonStriker").value.trim();state.bowler=$("bowlerSelect").value;
  if(!state.striker||!state.nonStriker||!state.bowler){say("playerMsg","दोनों बल्लेबाज़ और गेंदबाज़ चुनें");return;}
  if(state.striker===state.nonStriker){say("playerMsg","दो अलग बल्लेबाज़ चुनें");return;}
  try{await saveLive();showScore();say("playerMsg","खिलाड़ी सेव हो गए ✓");}
  catch(e){say("playerMsg","सेव त्रुटि: "+e.message);}
 });
-
-document.querySelectorAll("[data-run]").forEach(btn=>{
- btn.addEventListener("click",()=>{
-  const n=Number(btn.dataset.run);
-  if(pendingExtra){
-   const type=pendingExtra;pendingExtra=null;
-   if(type==="Wide"){
-    addDelivery({runs:0,extra:1+n,kind:"Wide",legal:false});
-   }else{
-    addDelivery({runs:n,extra:1,kind:"No Ball",legal:false});
-   }
-   say("extraHelp","अतिरिक्त रन दर्ज हो गया।");
-  }else addDelivery({runs:n,kind:"Run",legal:true});
- });
-});
-
-$("wide").addEventListener("click",()=>{
- pendingExtra="Wide";
- say("extraHelp","अब अतिरिक्त रन चुनें। 0 दबाने पर केवल 1 Wide जुड़ेगा।");
-});
-$("noball").addEventListener("click",()=>{
- pendingExtra="No Ball";
- say("extraHelp","अब बल्ले से बने रन चुनें। 0 दबाने पर केवल 1 No Ball जुड़ेगा।");
-});
+document.querySelectorAll("[data-run]").forEach(btn=>btn.addEventListener("click",()=>{
+ const n=Number(btn.dataset.run);
+ if(pendingExtra){
+  const type=pendingExtra;pendingExtra=null;
+  if(type==="Wide")addDelivery({runs:0,extra:1+n,kind:"Wide",legal:false});
+  else addDelivery({runs:n,extra:1,kind:"No Ball",legal:false});
+  say("extraHelp","अतिरिक्त रन दर्ज हो गया।");
+ }else addDelivery({runs:n,kind:"Run",legal:true});
+}));
+$("wide").addEventListener("click",()=>{pendingExtra="Wide";say("extraHelp","अब अतिरिक्त रन चुनें। 0 दबाने पर केवल 1 Wide जुड़ेगा।");});
+$("noball").addEventListener("click",()=>{pendingExtra="No Ball";say("extraHelp","अब बल्ले से बने रन चुनें। 0 दबाने पर केवल 1 No Ball जुड़ेगा।");});
 $("bye").addEventListener("click",()=>{
  const n=Number(prompt("कितने Bye रन?"));
  if(Number.isInteger(n)&&n>=1&&n<=6)addDelivery({runs:0,extra:n,kind:"Bye",legal:true});
@@ -800,96 +535,63 @@ $("legbye").addEventListener("click",()=>{
  const n=Number(prompt("कितने Leg Bye रन?"));
  if(Number.isInteger(n)&&n>=1&&n<=6)addDelivery({runs:0,extra:n,kind:"Leg Bye",legal:true});
 });
-$("cancelExtra").addEventListener("click",()=>{
- pendingExtra=null;say("extraHelp","अतिरिक्त रन का चयन रद्द कर दिया गया।");
-});
-
-$("wicketType").addEventListener("change",()=>{
- $("catcherBox").classList.toggle("hidden",$("wicketType").value!=="Caught");
-});
+$("cancelExtra").addEventListener("click",()=>{pendingExtra=null;say("extraHelp","अतिरिक्त रन का चयन रद्द कर दिया गया।");});
+$("wicketType").addEventListener("change",()=>$("catcherBox").classList.toggle("hidden",$("wicketType").value!=="Caught"));
 $("wicket").addEventListener("click",()=>{
  if(!state)return;
- const type=$("wicketType").value;
- const fielder=type==="Caught"?$("catcherSelect").value:"";
+ const type=$("wicketType").value,fielder=type==="Caught"?$("catcherSelect").value:"";
  if(type==="Caught"&&!fielder){say("wicketMsg","कैच लेने वाले फील्डर का नाम चुनें");return;}
- if(!$("nextBatter").value.trim()&&state.wickets<9&&type!=="Retired Hurt"){
-  say("wicketMsg","नए बल्लेबाज़ का नाम लिखें");return;
- }
+ if(!$("nextBatter").value.trim()&&state.wickets<9){say("wicketMsg","नए बल्लेबाज़ का नाम लिखें");return;}
  if(!confirm(type+" विकेट दर्ज करें?"))return;
- say("wicketMsg","");
- addDelivery({wicket:true,wicketType:type,kind:"Wicket",fielder});
+ say("wicketMsg","");addDelivery({wicket:true,wicketType:type,kind:"Wicket",fielder});
 });
-
 $("undo").addEventListener("click",async()=>{
  if(!undoStack.length){say("msg","Undo के लिए पिछली गेंद नहीं है");return;}
- state=JSON.parse(undoStack.pop());
- showScore();
+ state=JSON.parse(undoStack.pop());showScore();
  try{await saveLive();say("msg","पिछली गेंद Undo हो गई ✓");}
  catch(e){say("msg","Undo सेव त्रुटि: "+e.message);}
 });
-
 $("swapBatsman").addEventListener("click",async()=>{
- if(!state)return;
- [state.striker,state.nonStriker]=[state.nonStriker,state.striker];
- showScore();
+ if(!state)return;[state.striker,state.nonStriker]=[state.nonStriker,state.striker];showScore();
  try{await saveLive();say("msg","स्ट्राइक बदल गई ✓");}
  catch(e){say("msg","सेव त्रुटि: "+e.message);}
 });
-
 $("partnerships").addEventListener("click",()=>{
- if(!state)return;
- say("partnershipInfo","वर्तमान साझेदारी: "+(state.partnershipRuns||0)+" रन, "+(state.partnershipBalls||0)+" गेंद");
+ if(state)say("partnershipInfo","वर्तमान साझेदारी: "+(state.partnershipRuns||0)+" रन, "+(state.partnershipBalls||0)+" गेंद");
 });
-
 $("retire").addEventListener("click",async()=>{
  if(!state)return;
  const who=prompt("कौन-सा बल्लेबाज़ रिटायर होगा?\n1 = "+state.striker+"\n2 = "+state.nonStriker);
- let oldName=who==="1"?state.striker:who==="2"?state.nonStriker:"";
+ const oldName=who==="1"?state.striker:who==="2"?state.nonStriker:"";
  if(!oldName){say("msg","सही बल्लेबाज़ चुनें");return;}
- const newName=prompt("नए बल्लेबाज़ का नाम लिखें");
- if(!newName||!newName.trim())return;
+ const newName=prompt("नए बल्लेबाज़ का नाम लिखें");if(!newName||!newName.trim())return;
  undoStack.push(JSON.stringify(state));
- if(oldName===state.striker)state.striker=newName.trim();
- else state.nonStriker=newName.trim();
+ if(oldName===state.striker)state.striker=newName.trim();else state.nonStriker=newName.trim();
  state.lastWicket=oldName+" Retired Hurt";
  try{await saveLive();showScore();say("msg",oldName+" रिटायर हुए। "+newName+" आए।");}
  catch(e){say("msg","सेव त्रुटि: "+e.message);}
 });
-
 $("endInnings").addEventListener("click",async()=>{
- if(!state)return;
- if(state.status!=="Live"){say("msg","यह पारी पहले ही समाप्त है");return;}
+ if(!state)return;if(state.status!=="Live"){say("msg","यह पारी पहले ही समाप्त है");return;}
  if(!confirm("क्या यह पारी समाप्त करनी है?"))return;
- if(state.innings===1){
-  state.innings1=saveInningsResult();
-  state.status="Innings Ended";
-  state.striker="";state.nonStriker="";state.bowler="";
- }else{
-  makeResult();
-  state.striker="";state.nonStriker="";state.bowler="";
- }
+ if(state.innings===1){state.innings1=saveInningsResult();state.status="Innings Ended";state.striker="";state.nonStriker="";state.bowler="";}
+ else{makeResult();state.striker="";state.nonStriker="";state.bowler="";}
  try{await saveLive();showScore();say("msg",state.innings===1?"पहली पारी समाप्त। दूसरी पारी शुरू करें।":state.resultText);}
  catch(e){say("msg","सेव त्रुटि: "+e.message);}
 });
-
 $("startSecondInnings").addEventListener("click",async()=>{
  if(!state||state.innings!==1){say("msg","पहली पारी का डेटा नहीं मिला");return;}
- if(!state.innings1){state.innings1=saveInningsResult();}
+ if(!state.innings1)state.innings1=saveInningsResult();
  if(!confirm("क्या दूसरी पारी शुरू करनी है?"))return;
  const first=state.innings1;
- state.runs=0;state.wickets=0;state.balls=0;state.extras=0;
- state.innings=2;
- state.battingTeam=first.bowlingTeam;
- state.bowlingTeam=first.battingTeam;
+ state.runs=0;state.wickets=0;state.balls=0;state.extras=0;state.innings=2;
+ state.battingTeam=first.bowlingTeam;state.bowlingTeam=first.battingTeam;
  state.striker="";state.nonStriker="";state.bowler="";
- state.batStats={};state.bowlStats={};state.history=[];
- state.lastWicket="";state.resultText="";state.status="Live";
- state.partnershipRuns=0;state.partnershipBalls=0;
- undoStack=[];pendingExtra=null;
+ state.batStats={};state.bowlStats={};state.history=[];state.lastWicket="";state.resultText="";state.status="Live";
+ state.partnershipRuns=0;state.partnershipBalls=0;undoStack=[];pendingExtra=null;
  try{await saveLive();showScore();say("msg","दूसरी पारी शुरू! खिलाड़ी चुनें।");}
  catch(e){say("msg","सेव त्रुटि: "+e.message);}
 });
-
 window.addEventListener("error",e=>say("msg","JavaScript त्रुटि: "+e.message));
 </script>
 </body>
