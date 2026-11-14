@@ -140,7 +140,7 @@ button{font-family:inherit}
 }
 .crr-row b{color:#222}
 
-/* RECENT BALLS STRIP */
+/* THIS OVER STRIP */
 .recent-strip{
  padding:9px 14px;
  background:#f8f9fa;
@@ -150,7 +150,7 @@ button{font-family:inherit}
  font-size:12px;color:var(--muted);font-weight:700;
 }
 .b-circle{
- min-width:28px;height:28px;padding:0 6px;border-radius:14px;
+ min-width:30px;height:28px;padding:0 7px;border-radius:14px;
  display:inline-flex;align-items:center;justify-content:center;
  font-size:11px;font-weight:800;background:#e5e7eb;color:#222;
 }
@@ -360,9 +360,9 @@ tr:last-child td{border-bottom:0}
    </div>
   </div>
 
-  <!-- LAST BALLS -->
+  <!-- CURRENT OVER ALL BALLS -->
   <div class="recent-strip" id="recentBallsBar" style="display:none">
-   <span>This Over / Recent:</span>
+   <span>This Over:</span>
    <div id="recentBallsChips" style="display:flex;gap:6px"></div>
   </div>
 
@@ -604,96 +604,44 @@ function getSecond(data){
 
 /* HELPER: CHECK RETIRED OUT / HURT */
 function isRetiredOutEvent(d){
- const wt=String(d?.wicketType||d?.text||d?.label||"").toLowerCase();
- return wt.includes("retired out") || wt==="retired" || wt==="ro";
+ const wt=String(d?.wicketType||"").toLowerCase();
+ return wt.includes("retired out") || wt==="retired";
 }
 function isRetiredHurtEvent(d){
- const wt=String(d?.wicketType||d?.text||d?.label||"").toLowerCase();
- return wt.includes("retired hurt") || wt==="rh";
+ const wt=String(d?.wicketType||"").toLowerCase();
+ return wt.includes("retired hurt");
 }
 
-/* HELPER: DETECT WIDE / NO-BALL / ADMIN LABEL EXACTLY */
-function getExtraInfo(d){
- // Scan all string values inside object in case admin saved "Nb", "nb", "noball", "no-ball", "Wd", etc. under any key
- const allStrValues = Object.values(d || {}).filter(v => typeof v === "string").join(" ");
- const adminTag = String(d?.text || d?.short || d?.badge || d?.display || d?.ball || d?.label || d?.event || "").trim();
- const rawType = String(d?.extraType || d?.ballType || d?.type || d?.extraKind || d?.mode || adminTag || "").toLowerCase();
-
- const isWide = !!d?.wide || d?.isWide === true || /^wd/i.test(adminTag) || /\b(wd|wide)\b/i.test(allStrValues) || rawType.includes("wide");
- const isNoBall = !!d?.noBall || !!d?.noball || !!d?.no_ball || d?.isNoBall === true || d?.isNoball === true ||
-                  /^nb/i.test(adminTag) || /\b(nb|noball|no-ball|no ball)\b/i.test(allStrValues) ||
-                  rawType.includes("no") || rawType.includes("nb");
- const isBye = !!d?.bye || /^\d*b$/i.test(adminTag) || rawType === "bye";
- const isLegBye = !!d?.legBye || !!d?.legbye || /^\d*lb$/i.test(adminTag) || rawType.includes("leg");
-
- return { adminTag, isWide, isNoBall, isBye, isLegBye };
-}
-
-/* HELPER: FORMAT BALL CHIP & COMMENTARY TEXT */
+/* EXACT MATCH WITH ADMIN PANEL'S `kind` FIELD ("Wide", "No Ball", "Bye", "Leg Bye", "Wicket", "Run") */
 function formatBallDisplay(d){
- if(typeof d === "string"){
-  const s = d.trim();
-  const low = s.toLowerCase();
-  if(low.startsWith("wd") || low.startsWith("nb") || low.includes("wide") || low.includes("no")){
-   return { chip: s, cls: "b-ext", commCls: "ext", label: s };
-  }
-  if(low === "w" || low.includes("out")){
-   return { chip: s, cls: "b-w", commCls: "w", label: "WICKET" };
-  }
-  if(low === "4") return { chip: "4", cls: "b-4", commCls: "four", label: "4 runs" };
-  if(low === "6") return { chip: "6", cls: "b-6", commCls: "six", label: "6 runs" };
-  return { chip: s, cls: "", commCls: "", label: s };
- }
-
+ const kind = String(d?.kind || "").trim();
  const retOut = isRetiredOutEvent(d);
  const retHurt = isRetiredHurtEvent(d);
- const { adminTag, isWide, isNoBall, isBye, isLegBye } = getExtraInfo(d);
  const batRuns = num(d.runs);
  const extRuns = num(d.extra);
- const totalR = batRuns + extRuns;
 
  if(retOut) return { chip:"RO", cls:"b-ret", commCls:"ret", label:"Retired Out" };
  if(retHurt) return { chip:"RH", cls:"b-ret", commCls:"ret", label:"Retired Hurt" };
 
- if(isWide){
-  const extraRunsOnWide = batRuns > 0 ? batRuns : (extRuns > 1 ? extRuns - 1 : 0);
-  const chipTxt = /^wd/i.test(adminTag) ? adminTag : (`Wd${extraRunsOnWide > 0 ? extraRunsOnWide : ""}${d.wicket ? "+W" : ""}`);
+ if(kind === "Wide" || d?.wide){
+  const plus = extRuns > 1 ? (extRuns - 1) : batRuns;
+  const chip = d.label || (`Wd${plus > 0 ? plus : ""}`);
   return {
-   chip: chipTxt,
+   chip,
    cls: d.wicket ? "b-w" : "b-ext",
    commCls: d.wicket ? "w" : "ext",
-   label: `Wide${extraRunsOnWide > 0 ? " + " + extraRunsOnWide + " run" : ""}${d.wicket ? " + WICKET" : ""}`
+   label: `Wide${plus > 0 ? " + " + plus + " run" : ""}${d.wicket ? " + WICKET" : ""}`
   };
  }
 
- if(isNoBall){
-  const extraRunsOnNb = batRuns > 0 ? batRuns : (extRuns > 1 ? extRuns - 1 : 0);
-  const chipTxt = /^nb/i.test(adminTag) ? adminTag : (`Nb${extraRunsOnNb > 0 ? "+" + extraRunsOnNb : ""}${d.wicket ? "+W" : ""}`);
+ if(kind === "No Ball" || d?.noBall){
+  const extraRun = batRuns > 0 ? batRuns : (extRuns > 1 ? extRuns - 1 : 0);
+  const chip = d.label || (`Nb${extraRun > 0 ? "+" + extraRun : ""}`);
   return {
-   chip: chipTxt,
+   chip,
    cls: d.wicket ? "b-w" : "b-ext",
    commCls: d.wicket ? "w" : "ext",
-   label: `No Ball${extraRunsOnNb > 0 ? " + " + extraRunsOnNb + " run" : ""}${d.wicket ? " + WICKET" : ""}`
-  };
- }
-
- // Fallback when Admin saved illegal ball (extra > 0 and legal === false)
- if(extRuns > 0 && (d.legal === false || d.countBall === false || d.isExtra === true)){
-  if(batRuns > 0){
-   // If batsman also scored runs on an illegal delivery, it's a No Ball!
-   return {
-    chip: `Nb+${batRuns}${d.wicket ? "+W" : ""}`,
-    cls: d.wicket ? "b-w" : "b-ext",
-    commCls: d.wicket ? "w" : "ext",
-    label: `No Ball + ${batRuns} run${d.wicket ? " + WICKET" : ""}`
-   };
-  }
-  const plus = extRuns > 1 ? (extRuns - 1) : "";
-  return {
-   chip: `Wd${plus}${d.wicket ? "+W" : ""}`,
-   cls: d.wicket ? "b-w" : "b-ext",
-   commCls: d.wicket ? "w" : "ext",
-   label: `Wide${plus ? " + " + plus + " run" : ""}${d.wicket ? " + WICKET" : ""}`
+   label: `No Ball${extraRun > 0 ? " + " + extraRun + " run" : ""}${d.wicket ? " + WICKET" : ""}`
   };
  }
 
@@ -706,24 +654,48 @@ function formatBallDisplay(d){
   };
  }
 
- if(isLegBye){
-  return { chip: adminTag || `${totalR}LB`, cls:"", commCls:"", label:`${totalR} Leg Bye` };
+ if(kind === "Bye" || d?.bye){
+  const r = extRuns || batRuns;
+  return { chip: d.label || `B${r}`, cls:"b-ext", commCls:"ext", label:`${r} Bye` };
  }
- if(isBye){
-  return { chip: adminTag || `${totalR}B`, cls:"", commCls:"", label:`${totalR} Bye` };
+
+ if(kind === "Leg Bye" || d?.legBye){
+  const r = extRuns || batRuns;
+  return { chip: d.label || `Lb${r}`, cls:"b-ext", commCls:"ext", label:`${r} Leg Bye` };
  }
 
  const cls = batRuns===4 ? "b-4" : batRuns===6 ? "b-6" : "";
  const commCls = batRuns===4 ? "four" : batRuns===6 ? "six" : "";
  return {
-  chip: adminTag && isNaN(Number(adminTag)) ? adminTag : String(totalR),
+  chip: String(batRuns),
   cls,
   commCls,
-  label: `${totalR} run${totalR===1?"":"s"}`
+  label: `${batRuns} run${batRuns===1?"":"s"}`
  };
 }
 
-/* HELPER: ACCURATE BOWLER WICKETS */
+/* GET ALL BALLS OF THE CURRENT OVER (NO 6-BALL TRUNCATION) */
+function getCurrentOverBalls(history){
+ const h = Array.isArray(history) ? history : [];
+ if(!h.length) return [];
+ let legalCount = 0;
+ h.forEach(d=>{
+  const isLegal = d.legal !== undefined ? !!d.legal : (d.kind !== "Wide" && d.kind !== "No Ball" && d.kind !== "Retire");
+  if(isLegal) legalCount++;
+ });
+ const targetOverIdx = legalCount > 0 && legalCount % 6 === 0 ? (Math.floor(legalCount / 6) - 1) : Math.floor(legalCount / 6);
+ let curLegal = 0;
+ const overBalls = [];
+ h.forEach(d=>{
+  const ovIdx = Math.floor(curLegal / 6);
+  if(ovIdx === targetOverIdx) overBalls.push(d);
+  const isLegal = d.legal !== undefined ? !!d.legal : (d.kind !== "Wide" && d.kind !== "No Ball" && d.kind !== "Retire");
+  if(isLegal) curLegal++;
+ });
+ return overBalls;
+}
+
+/* ACCURATE BOWLER WICKETS */
 function getBowlerWickets(bowlerName, bowlObj, history){
  const direct = num(bowlObj?.wickets ?? bowlObj?.wicket ?? bowlObj?.w);
  if(direct > 0) return direct;
@@ -731,11 +703,10 @@ function getBowlerWickets(bowlerName, bowlObj, history){
  if(Array.isArray(history) && bowlerName){
   let count = 0;
   history.forEach(d=>{
-   if(typeof d !== "object" || !d) return;
    if(d.bowler !== bowlerName) return;
    if(isRetiredOutEvent(d) || isRetiredHurtEvent(d)) return;
    const wt = String(d.wicketType || "").toLowerCase();
-   if(wt.includes("run out") || wt.includes("obstructing") || wt.includes("timed out")) return;
+   if(wt.includes("run out") || wt.includes("retired")) return;
    if(d.wicket) count++;
   });
   return count;
@@ -796,14 +767,12 @@ function renderLiveTab(data){
   el("rrrWrap").style.display="none";
  }
 
- // Recent / This Over Balls
+ // Full Current Over Balls (Matches Admin "This Over")
  const hist=Array.isArray(activeInn.history)?activeInn.history:(Array.isArray(data.history)?data.history:[]);
- const adminOver=Array.isArray(activeInn.thisOver)?activeInn.thisOver:(Array.isArray(data.thisOver)?data.thisOver:null);
- const chipsSource = (adminOver && adminOver.length) ? adminOver : hist.slice(-6);
-
- if(chipsSource.length){
+ const currentOverBalls = getCurrentOverBalls(hist);
+ if(currentOverBalls.length){
   el("recentBallsBar").style.display="flex";
-  el("recentBallsChips").innerHTML=chipsSource.map(d=>{
+  el("recentBallsChips").innerHTML=currentOverBalls.map(d=>{
    const info = formatBallDisplay(d);
    return `<span class="b-circle ${info.cls}">${safe(info.chip)}</span>`;
   }).join("");
@@ -860,6 +829,7 @@ function renderLiveTab(data){
   const batterName=d.outBatter||d.striker||"";
   let text="";
   if(retOut || retHurt) text=`<b>${safe(batterName)}</b> — ${info.label}`;
+  else if(d.wicket) text=`<b>${safe(d.bowler||"")}</b> to <b>${safe(batterName)}</b> — ${info.label}`;
   else text=`<b>${safe(d.bowler||"")}</b> to <b>${safe(d.striker||"")}</b> — ${info.label}`;
 
   return `<div class="comm-item">
@@ -870,10 +840,9 @@ function renderLiveTab(data){
 }
 
 /* RENDER FULL SCORECARD TAB */
-function getDismissals(history, batStats){
+function getDismissals(history){
  const result={};
  (history||[]).forEach(d=>{
-  if(typeof d !== "object" || !d) return;
   const wt=String(d.wicketType||"").toLowerCase();
   const targetBatter=d.outBatter||d.striker;
   if(!targetBatter)return;
@@ -882,7 +851,7 @@ function getDismissals(history, batStats){
    result[targetBatter]={text:"retired hurt", isRetiredOut:false};
    return;
   }
-  if(wt.includes("retired out") || wt==="retired"){
+  if(wt.includes("retired out")){
    result[targetBatter]={text:"retired out", isRetiredOut:true};
    return;
   }
@@ -898,17 +867,6 @@ function getDismissals(history, batStats){
   else detail=String(d.wicketType||"out");
   result[targetBatter]={text:detail, isRetiredOut:false};
  });
-
- Object.entries(batStats||{}).forEach(([name,s])=>{
-  if(s && s.outType && !result[name]){
-   const low=String(s.outType).toLowerCase();
-   result[name]={
-    text:s.outType,
-    isRetiredOut:low.includes("retired out")
-   };
-  }
- });
-
  return result;
 }
 
@@ -928,10 +886,10 @@ function renderScorecard(data){
  const bats=data.batStats||{};
  const history=Array.isArray(data.history)?data.history:[];
  const names=[];
- history.forEach(d=>{if(typeof d==="object"&&d)[d.striker,d.nonStriker,d.outBatter].forEach(n=>{if(n&&!names.includes(n))names.push(n)})});
+ history.forEach(d=>{[d.striker,d.nonStriker,d.outBatter].forEach(n=>{if(n&&!names.includes(n))names.push(n)})});
  [data.striker,data.nonStriker].forEach(n=>{if(n&&!names.includes(n))names.push(n)});
  Object.keys(bats).forEach(n=>{if(n&&!names.includes(n))names.push(n)});
- const dismissals=getDismissals(history, bats);
+ const dismissals=getDismissals(history);
 
  const rows=names.map(name=>{
   const s=bats[name]||{};
@@ -970,13 +928,11 @@ function renderScorecard(data){
  let cumRuns=0,wktCount=0,legalBalls=0;
  const fowRows=[];
  history.forEach(d=>{
-  if(typeof d!=="object"||!d)return;
   cumRuns+=num(d.runs)+num(d.extra);
   const retOut=isRetiredOutEvent(d);
   const retHurt=isRetiredHurtEvent(d);
-  const { isWide, isNoBall } = getExtraInfo(d);
-  const isIllegal = isWide || isNoBall || d.legal === false || d.countBall === false;
-  if(!isIllegal && !retOut && !retHurt)legalBalls++;
+  const isLegal=d.legal!==undefined?!!d.legal:(d.kind!=="Wide"&&d.kind!=="No Ball"&&d.kind!=="Retire");
+  if(isLegal)legalBalls++;
 
   if((d.wicket || retOut) && !retHurt){
    wktCount++;
